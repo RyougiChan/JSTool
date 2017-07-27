@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>360° views</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    html, body {padding: 0; margin: 0;}
+    #main-container {width: 100%; height: 500px; background: #469fff;}
+    #img-container {width: 80%; height: 100%; margin: 0 auto; background: url("https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-1.jpg") no-repeat 50% 50%;}
+    #img-loader {float: left; height: 2px; width: 0; background: red;}
+  </style>
+</head>
+
+<body>
+  <div id="main-container">
+    <div id="img-loader"></div>
+    <div id="img-container"></div>
+  </div>
+  <script type="text/javascript">
+    // This script performs not so well in IE, especially in IE8 and below.
+    var yuko = {
+      "dom": {
+        "ic": document.getElementById("img-container"),
+        "loader": document.getElementById("img-loader")
+      },
+      "preload": function (arr) {
+        var images = [];
+        for (var i = 0; i < arr.length; i++) {
+          (function (i) {
+            var image = new Image();
+            // if (image.complete) return;
+            image.onload = function () {
+              image.onload = null;
+              // console.log((i+1) * 100 / arr.length + "%");
+              // There is a bug with the setting of width,
+              // which the width will not be correct set where the network is in badly state.
+              // In fact, this bug is result from the loading speed of a image.
+              yuko.dom.loader.style.width = (i + 1) * 100 / arr.length + "%";
+              if (i + 1 == arr.length)
+                yuko.dom.loader.style.display = "none";
+            };
+            image.src = arr[i];
+            images.push(image);
+          })(i)
+        }
+      },
+      "entry": function () {
+        var obj = {
+          "ox": 0, "fx": 0, "ex": 0, "dtx": 0, "dx": 0, "index": 0
+        }
+        var moveListener = function (e) {
+          // This is one of the methods to prevent images from flashing in chrome,
+          // but fail in edge, there will be brighter way to achieve it.
+          yuko.preload(yuko.imgs)
+          obj.fx = e.clientX || e.changedTouches[0].pageX;
+          obj.dtx = obj.fx - obj.ox;
+          obj.index = Math.floor(((Math.abs(obj.dx + obj.dtx)) / 20) % (yuko.imgs.length));
+
+          (obj.dx + obj.dtx) >= 0 ? changeBg(yuko.dom.ic, yuko.imgs[obj.index]) : changeBg(yuko.dom.ic, yuko.imgs[(yuko.imgs.length - obj.index - 1)]);
+        }
+        var touchStartListener = function (e) {
+          obj.ox = e.clientX || e.changedTouches[0].pageX;
+        }
+        var touchMoveListener = function (e) {
+          moveListener(e);
+        }
+        var touchEndListener = function (e) {
+          obj.ex = e.clientX || e.changedTouches[0].pageX;
+          obj.dx += (obj.ex - obj.ox);
+        }
+        var mouseMoveListener = function (e) {
+          moveListener(e);
+        };
+        var mouseDownListener = function (e) {
+          obj.ox = e.clientX || e.changedTouches[0].pageX;
+          if (document.addEventListener) 
+          yuko.dom.ic.addEventListener("mousemove", mouseMoveListener);
+          else 
+          yuko.dom.ic.detachEvent("onmousemove", mouseMoveListener);
+        };
+        var mouseUpListener = function (e) {
+          obj.ex = e.clientX || e.changedTouches[0].pageX;
+          obj.dx += (obj.ex - obj.ox);
+          if (document.addEventListener) 
+          yuko.dom.ic.removeEventListener("mousemove", mouseMoveListener);
+          else 
+          yuko.dom.ic.attachEvent("onmousemove", mouseMoveListener);
+        };
+        var changeBg = function (obj, bg) {
+          obj.style.background = "url(" + bg + ") 50% 50% no-repeat";
+        }
+        if(document.addEventListener) {
+          yuko.dom.ic.addEventListener("touchstart", touchStartListener);
+          yuko.dom.ic.addEventListener("touchmove", touchMoveListener);
+          yuko.dom.ic.addEventListener("touchend", touchEndListener);
+          yuko.dom.ic.addEventListener("mousedown", mouseDownListener);
+          yuko.dom.ic.addEventListener("mouseup", mouseUpListener);
+        } else {
+          yuko.dom.ic.attachEvent("ontouchstart", touchStartListener);
+          yuko.dom.ic.attachEvent("ontouchmove", touchMoveListener);
+          yuko.dom.ic.attachEvent("ontouchend", touchEndListener);
+          yuko.dom.ic.attachEvent("onmousedown", mouseDownListener);
+          yuko.dom.ic.attachEvent("onmouseup", mouseUpListener);
+        }
+      },
+      "imgs": [
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-1.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-2.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-3.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-4.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-5.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-6.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-7.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-8.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-9.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-10.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-11.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-12.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-13.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-14.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-15.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-16.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-17.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-18.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-19.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-20.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-21.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-22.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-23.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-24.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-25.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-26.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-27.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-28.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-29.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-30.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-31.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-32.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-33.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-34.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-35.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-36.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-37.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-38.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-39.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-40.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-41.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-42.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-43.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-44.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-45.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-46.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-47.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-48.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-49.jpg",
+        "https://360view.hum3d.com/standard/Microsoft/Microsoft_Surface_Pro_4_Blue_360_720_50-50.jpg",
+
+      ]
+    };
+    yuko.preload(yuko.imgs);
+    yuko.entry();
+  </script>
+</body>
+
+</html>
