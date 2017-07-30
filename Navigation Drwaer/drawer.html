@@ -22,14 +22,14 @@
         }
 
         #nav-drawer {
-            width: 200px;
+            width: 300px;
             height: 100%;
             position: absolute;
-            left: -190px;
+            left: -290px;
         }
         #nav-list {
             background: lightblue;
-            width: 190px;
+            width: 290px;
             height: 100%;
         }
         #nav-white {
@@ -62,11 +62,13 @@
                 var touchStartListener, touchMoveListener, touchEndListener;
                 touchStartListener = function (event) {
                     // Set start point's coordinate.
+                    event.preventDefault();
                     yuko.value.ox = event.changedTouches[0].pageX;
                     yuko.value.oy = event.changedTouches[0].pageY;
                     relative_distance = yuko.value.ox - drawerX;
                 }
                 touchMoveListener = function (event) {
+                    event.preventDefault();
                     yuko.value.ofx = event.changedTouches[0].pageX;
                     yuko.value.ofy = event.changedTouches[0].pageY;
                     yuko.value.dtx = yuko.value.ofx - yuko.value.ox;
@@ -76,13 +78,14 @@
                         // If the drawer style => left is 0.
                         if (yuko.value.el >= -(drawerW-10) / 2) {
                             // Slide from right to left
-                            yuko.value.dtx < 0 ? changeLeft(drawer, yuko.value.dtx) : changeLeft(drawer, drawerX + yuko.value.dtx);
+                            yuko.value.dtx < 0 ? changeLeft(drawer, yuko.value.dtx) : drawer.offsetLeft == 0 ? undefined : changeLeft(drawer, drawerX + yuko.value.dtx);
                         } else {
                             changeLeft(drawer, drawerX + yuko.value.dtx);
                         }
                     }
                 }
                 touchEndListener = function (event) {
+                    event.preventDefault();
                     yuko.value.ex = event.changedTouches[0].pageX;
                     yuko.value.ey = event.changedTouches[0].pageY;
                     yuko.value.dx = yuko.value.ex - yuko.value.ox;
@@ -119,7 +122,7 @@
 
             }
         }
-        yuko.drag(document.getElementById("nav-drawer"), 150);
+        yuko.drag(document.getElementById("nav-drawer"), 100);
     </script>
 </body>
 
