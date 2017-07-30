@@ -50,85 +50,76 @@
     </div>
     <script>
         var yuko = {
-      // "value": "ox" : start touch point x,"oy" : start touch point y,"ofx" : offset touch point x,"ofy" : offset touch point y,"ex" : end touch point x,"ey" : end touch point y, "dtx" : temp touch distance x, "dty" : temp touch distance x, "dx" : total touch distance x, "dy" : total touch distance y
-      "value": { "ox": 0, "oy": 0, "ofx": 0, "ofy": 0, "ex": 0, "ey": 0, "dtx": 0, "dty": 0, "dx": 0, "dy": 0, "el": 0 },
-      "slide": (dom) => {
-        var drawer = dom;
-        var drawerX = drawer.offsetLeft;
-        var drawerY = drawer.offsetTop;
-        var drawerW = drawer.offsetWidth;
-        var relative_distance = 0;
-        var touchStartListener;
-        var touchMoveListener;
-        var touchEndListener;
-        document.body.addEventListener("touchstart", (event) => {
-          if (event.changedTouches[0].pageX > 0 && event.changedTouches[0].pageX < 10) {
-            touchStartListener = (event) => {
-              yuko.value.ox = event.changedTouches[0].pageX;
-              yuko.value.oy = event.changedTouches[0].pageY;
-              relative_distance = yuko.value.ox - drawerX;
-            }
-            touchMoveListener = (event) => {
-              yuko.log(event, yuko.value);
-              yuko.value.dtx = yuko.value.ofx - yuko.value.ox;
-              yuko.value.dty = yuko.value.ofy - yuko.value.oy;
-              if (yuko.value.dtx < drawerW && drawer.offsetLeft >= 0) {
-                if (yuko.value.el >= drawerW / 2) {
-                  if (yuko.value.dtx < 0)
-                    changeLeft(drawer, drawerW + yuko.value.dtx);
-                  else undefined;
+            // "value": "ox" : start touch point x,"oy" : start touch point y,"ofx" : offset touch point x,"ofy" : offset touch point y,"ex" : end touch point x,"ey" : end touch point y, "dtx" : temp touch distance x, "dty" : temp touch distance x, "dx" : total touch distance x, "dy" : total touch distance y
+            "value": { "ox": 0, "oy": 0, "ofx": 0, "ofy": 0, "ex": 0, "ey": 0, "dtx": 0, "dty": 0, "dx": 0, "dy": 0, "el": 0 },
+            "drag": function (dom, duration) {
+                var drawer = dom;
+                var drawerX = drawer.offsetLeft;
+                var drawerY = drawer.offsetTop;
+                var drawerW = drawer.offsetWidth;
+                var relative_distance = 0;
+                // Touch listener.
+                var touchStartListener, touchMoveListener, touchEndListener;
+                touchStartListener = function (event) {
+                    // Set start point's coordinate.
+                    yuko.value.ox = event.changedTouches[0].pageX;
+                    yuko.value.oy = event.changedTouches[0].pageY;
+                    relative_distance = yuko.value.ox - drawerX;
                 }
-                else changeLeft(drawer, drawerX + yuko.value.dtx);
-              }
-            }
-            touchEndListener = (event) => {
-              yuko.value.ex = event.changedTouches[0].pageX;
-              yuko.value.ey = event.changedTouches[0].pageY;
-              yuko.value.dx = yuko.value.ex - yuko.value.ox;
-              yuko.value.dy = yuko.value.ey - yuko.value.oy;
-              yuko.value.dx < drawerW / 2 ? drawer.offsetLeft < drawerW / 2 ? yuko.timer(drawer, drawer.offsetLeft, 0, 100) : yuko.timer(drawer, drawer.offsetLeft, drawerW, 300) : yuko.timer(drawer, drawer.offsetLeft, drawerW, 300);
-              yuko.value.el = drawer.offsetLeft;
-            }
-            document.body.addEventListener("touchstart", touchStartListener);
-            document.body.addEventListener("touchmove", touchMoveListener);
-            document.body.addEventListener("touchend", touchEndListener);
-          }
-        });
-        // if (drawer.offsetLeft == 0) {
-        //   document.body.removeEventListener("touchstart",touchStartListener);
-        //   document.body.removeEventListener("touchmove",touchMoveListener);
-        //   document.body.removeEventListener("touchend",touchEndListener);
-        // }
-        var changeLeft = (dom, x) => {
-          dom.style.left = x + "px";
-        }
-      },
-      "log": (event, obj) => {
-        obj.ofx = event.changedTouches[0].pageX;
-        obj.ofy = event.changedTouches[0].pageY;
-      },
-      "timer": (dom, start, stop, duration) => {
-        var distance = start - stop;
-        var intID = setInterval(
-          () => {
-            if (start == stop) {
-              clearInterval(intID);
-              return;
-            }
-            if (start > stop) {
-              start--;
-              dom.style.left = start + "px";
-            } else {
-              start++;
-              dom.style.left = start + "px";
-            }
-          }
-          , duration / distance
-        );
+                touchMoveListener = function (event) {
+                    yuko.value.ofx = event.changedTouches[0].pageX;
+                    yuko.value.ofy = event.changedTouches[0].pageY;
+                    yuko.value.dtx = yuko.value.ofx - yuko.value.ox;
+                    yuko.value.dty = yuko.value.ofy - yuko.value.oy;
+                    // Between the allowing slide area.
+                    if (yuko.value.dtx < drawerW-10 && drawer.offsetLeft >= drawerX) {
+                        // If the drawer style => left is 0.
+                        if (yuko.value.el >= -(drawerW-10) / 2) {
+                            // Slide from right to left
+                            yuko.value.dtx < 0 ? changeLeft(drawer, yuko.value.dtx) : changeLeft(drawer, drawerX + yuko.value.dtx);
+                        } else {
+                            changeLeft(drawer, drawerX + yuko.value.dtx);
+                        }
+                    }
+                }
+                touchEndListener = function (event) {
+                    yuko.value.ex = event.changedTouches[0].pageX;
+                    yuko.value.ey = event.changedTouches[0].pageY;
+                    yuko.value.dx = yuko.value.ex - yuko.value.ox;
+                    yuko.value.dy = yuko.value.ey - yuko.value.oy;
+                    yuko.value.dx < (drawerW-10) / 2 ? drawer.offsetLeft < -(drawerW-10) / 2 ? yuko.timer(drawer, drawer.offsetLeft, drawerX, duration) : yuko.timer(drawer, drawer.offsetLeft, 0, duration) : yuko.timer(drawer, drawer.offsetLeft, 0, duration);
+                    yuko.value.el = drawer.offsetLeft;
+                }
+                drawer.addEventListener("touchstart", touchStartListener);
+                drawer.addEventListener("touchmove", touchMoveListener);
+                drawer.addEventListener("touchend", touchEndListener);
+                
+                var changeLeft = function (dom, x) {
+                    dom.style.left = x + "px";
+                }
+            },
+            "timer": function (dom, start, stop, duration) {
+                var distance = start - stop;
+                var intID = setInterval(
+                    function () {
+                        if (start == stop) {
+                            clearInterval(intID);
+                            return;
+                        }
+                        if (start > stop) {
+                            start--;
+                            dom.style.left = start + "px";
+                        } else {
+                            start++;
+                            dom.style.left = start + "px";
+                        }
+                    }
+                    , duration / distance
+                );
 
-      }
-    }
-    yuko.slide(document.getElementById("nav-drawer"));
+            }
+        }
+        yuko.drag(document.getElementById("nav-drawer"), 150);
     </script>
 </body>
 
