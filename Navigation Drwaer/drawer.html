@@ -90,7 +90,8 @@
                     yuko.value.ey = event.changedTouches[0].pageY;
                     yuko.value.dx = yuko.value.ex - yuko.value.ox;
                     yuko.value.dy = yuko.value.ey - yuko.value.oy;
-                    yuko.value.dx < (drawerW-10) / 2 ? drawer.offsetLeft < -(drawerW-10) / 2 ? yuko.timer(drawer, drawer.offsetLeft, drawerX, duration) : yuko.timer(drawer, drawer.offsetLeft, 0, duration) : yuko.timer(drawer, drawer.offsetLeft, 0, duration);
+                    // yuko.value.dx < (drawerW-10) / 2 ? drawer.offsetLeft < -(drawerW-10) / 2 ? yuko.timer(drawer, drawer.offsetLeft, drawerX, duration) : yuko.timer(drawer, drawer.offsetLeft, 0, duration) : yuko.timer(drawer, drawer.offsetLeft, 0, duration);
+                    yuko.requestAnimation(drawer, yuko.value.dx);
                     yuko.value.el = drawer.offsetLeft;
                 }
                 drawer.addEventListener("touchstart", touchStartListener);
@@ -109,17 +110,31 @@
                             clearInterval(intID);
                             return;
                         }
-                        if (start > stop) {
-                            start--;
-                            dom.style.left = start + "px";
-                        } else {
-                            start++;
-                            dom.style.left = start + "px";
-                        }
+                        start > stop ? start-- : start++;
+                        dom.style.left = start + "px";
                     }
                     , duration / distance
                 );
 
+            },
+            "requestAnimation": function (dom, dx) {
+                window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+                window.msRequestAnimationFrame || window.webkitRequestAnimationFrame || window.oRequestAnimationFrame;
+                var curPos = dom.offsetLeft;
+                var animate = function () {
+                    dx > 0 ? curPos > (10 - dom.offsetWidth) * 2 / 3 ? curPos += 5 : curPos -= 5 : curPos < (10 - dom.offsetWidth) / 3 ? curPos -= 5 : curPos += 5;
+                    curPos > 0 ? curPos = 0 : undefined;
+                    curPos < 10 - dom.offsetWidth ? curPos = 10 - dom.offsetWidth : undefined;
+                    dom.style.left = curPos + "px";
+                    console.log();
+
+                    dx > 0 ? curPos > (10 - dom.offsetWidth) * 2 / 3 ? curPos != 0 ? 
+                    window.requestAnimationFrame(animate) : undefined : curPos != 10-dom.offsetWidth ? 
+                    window.requestAnimationFrame(animate) : undefined : curPos < (10 - dom.offsetWidth) / 3 ? 
+                    curPos != 10 - dom.offsetWidth ? window.requestAnimationFrame(animate) : undefined : 
+                    curPos != 0 ? window.requestAnimationFrame(animate) : undefined;
+                }
+                window.requestAnimationFrame(animate);
             }
         }
         yuko.drag(document.getElementById("nav-drawer"), 100);
