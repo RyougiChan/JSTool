@@ -1,7 +1,7 @@
 <center>
   <h2 style="border-bottom: none;"> RyougiChan's JavaScript Tools </h2>
 </center><br/>
-<img src="https://github.com/RyougiChan/NewsSystem/blob/master/WebContent/img/ryougi_logo.png" alt="RyougiChan!"/>
+<img src="https://github.com/RyougiChan/NewsSystem/blob/master/WebContent/img/ryougi_logo.png" alt="RyougiChan!" width="384"/>
 <!-- anchor -->
 
 <h3>Description</h3>
