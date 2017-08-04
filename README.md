@@ -5,11 +5,11 @@
 <!-- anchor -->
 
 <h3>Description</h3>
- => A JavaScript tools library.
+ -> A JavaScript tools library.
 <h3>Tech</h3>
- => Those demos all program with simple HTML, CSS, and JavaScript
+ -> Those demos all program with simple HTML, CSS, and JavaScript
 <h3>Declaration</h3>
- => All resources in this project are based on <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>, that means  you can copy and reissue the contents of this project, but you will also have to provide the <strong>original author information</strong> as well as the <strong>agreement statement</strong>. At the same time, it <strong>cannot be used for commercial purposes</strong>. In accordance with our narrow understanding (Additional subsidiary terms), <strong>All activities that are profitable are of commercial use</strong>.
+ -> All resources in this project are based on <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>, that means  you can copy and reissue the contents of this project, but you will also have to provide the <strong>original author information</strong> as well as the <strong>agreement statement</strong>. At the same time, it <strong>cannot be used for commercial purposes</strong>. In accordance with our narrow understanding (Additional subsidiary terms), <strong>All activities that are profitable are of commercial use</strong>.
 
 
 <!-- anchor -->
