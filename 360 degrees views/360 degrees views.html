@@ -62,16 +62,20 @@
         }
         var touchStartListener = function (e) {
           obj.ox = e.clientX || e.changedTouches[0].pageX;
+          e.preventDefault();
         }
         var touchMoveListener = function (e) {
-          moveListener(e);
+            moveListener(e);
+            e.preventDefault();
         }
         var touchEndListener = function (e) {
           obj.ex = e.clientX || e.changedTouches[0].pageX;
           obj.dx += (obj.ex - obj.ox);
+          e.preventDefault();
         }
         var mouseMoveListener = function (e) {
-          moveListener(e);
+            moveListener(e);
+            e.preventDefault();
         };
         var mouseDownListener = function (e) {
           obj.ox = e.clientX || e.changedTouches[0].pageX;
@@ -79,6 +83,7 @@
           yuko.dom.ic.addEventListener("mousemove", mouseMoveListener);
           else 
           yuko.dom.ic.detachEvent("onmousemove", mouseMoveListener);
+          e.preventDefault();
         };
         var mouseUpListener = function (e) {
           obj.ex = e.clientX || e.changedTouches[0].pageX;
@@ -87,6 +92,7 @@
           yuko.dom.ic.removeEventListener("mousemove", mouseMoveListener);
           else 
           yuko.dom.ic.attachEvent("onmousemove", mouseMoveListener);
+          e.preventDefault();
         };
         var changeBg = function (obj, bg) {
           obj.style.background = "url(" + bg + ") 50% 50% no-repeat";
