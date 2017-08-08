@@ -40,7 +40,7 @@ var yuko = {
     var drawerW = drawer.offsetWidth;
     var relative_distance = 0;
     // Touch listener.
-    var touchStartListener, touchMoveListener, touchEndListener, clickListener;
+    var touchStartListener, touchMoveListener, touchEndListener, clickListener, rippleEffectListener;
     touchStartListener = function (event) {
       // Set start point's coordinate.
       yuko.value.ox = event.changedTouches[0].pageX;
@@ -87,26 +87,46 @@ var yuko = {
       if (dom.offsetLeft === 0)
         yuko.requestAnimation(drawer, -1, duration, true);
     }
+    rippleEffectListener = function (event) {
+      var target = event.target;
+      var rect = target.getBoundingClientRect();
+      var ripple = target.querySelector('.ripple');
+      if (!ripple) {
+        ripple = document.createElement('span');
+        ripple.className = 'ripple';
+        ripple.style.height = ripple.style.width = Math.max(rect.width, rect.height) + 'px';
+        target.appendChild(ripple);
+      }
+      ripple.classList.remove('show');
+      var top = event.changedTouches[0].pageY - rect.top - ripple.offsetHeight / 2 - document.body.scrollTop;
+      var left = event.changedTouches[0].pageX - rect.left - ripple.offsetWidth / 2 - document.body.scrollLeft;
+      ripple.style.top = top + 'px';
+      ripple.style.left = left + 'px';
+      ripple.classList.add('show');
+      return false;
+    }
     var changeStyle = function (dom, x) {
       dom.style.left = x + "px";
       drawerMask.style.background = "rgba(0,0,0," + (1 - Math.abs(x) / dom.offsetWidth) * 2 / 5 + ")";
     }
     // Attach event
-    drawer.addEventListener("touchstart", touchStartListener);
-    drawer.addEventListener("touchmove", touchMoveListener);
-    drawer.addEventListener("touchend", touchEndListener);
-    drawerMask.addEventListener("touchend", maskClickListener);
-    drawerButton.addEventListener("touchend", buttonClickListener);
-    drawerNavList.addEventListener("touchend", navItemClickListener);
+    
+    drawer.addEventListener("touchstart", touchStartListener, false);
+    drawer.addEventListener("touchmove", touchMoveListener, false);
+    drawer.addEventListener("touchend", touchEndListener, false);
+    drawerMask.addEventListener("touchend", maskClickListener, false);
+    drawerButton.addEventListener("touchend", buttonClickListener, false);
+    drawerNavList.addEventListener("touchend", navItemClickListener, false);
     drawerNavItem.forEach(function (e) {
-      e.addEventListener("touchstart",function (){
+      e.addEventListener("touchstart", function () {
         drawerNavItem.forEach(function (ele) {
           ele.className = "yuko-nav-item";
-        });
+        }, false);
       });
       e.addEventListener("touchend", function () {
         e.className = "yuko-nav-item item-selected";
-      });
+      }, false);
+      e.addEventListener("touchstart", rippleEffectListener, false);
     });
   },
   "requestAnimation": function (dom, dx, duration, isClicked) {
@@ -123,7 +143,7 @@ var yuko = {
       curPos > 0 ? curPos = 0 : undefined;
       curPos < 10 - dom.offsetWidth ? curPos = 10 - dom.offsetWidth : undefined;
       dom.style.left = curPos + "px";
-      drawerMask.style.background = "rgba(0,0,0," + (1 - Math.abs(curPos) / (dom.offsetWidth-10)) * 2 / 5 + ")";
+      drawerMask.style.background = "rgba(0,0,0," + (1 - Math.abs(curPos) / (dom.offsetWidth - 10)) * 2 / 5 + ")";
 
       dx > 0 ? curPos > (10 - dom.offsetWidth) * 2 / 3 ? curPos != 0 ?
         window.requestAnimationFrame(animate) : undefined : curPos != 10 - dom.offsetWidth ?
