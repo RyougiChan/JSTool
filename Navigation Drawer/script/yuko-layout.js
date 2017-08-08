@@ -114,8 +114,9 @@ var yuko = {
     drawer.addEventListener("touchstart", touchStartListener, false);
     drawer.addEventListener("touchmove", touchMoveListener, false);
     drawer.addEventListener("touchend", touchEndListener, false);
-    drawerMask.addEventListener("touchend", maskClickListener, false);
+    document.addEventListener("touchend", maskClickListener, false);
     drawerButton.addEventListener("touchend", buttonClickListener, false);
+    drawerButton.addEventListener("touchend", rippleEffectListener, false);
     drawerNavList.addEventListener("touchend", navItemClickListener, false);
     drawerNavItem.forEach(function (e) {
       e.addEventListener("touchstart", function () {
