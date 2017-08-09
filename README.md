@@ -1,13 +1,15 @@
+<img src="https://github.com/RyougiChan/NewsSystem/blob/master/WebContent/img/ryougi_logo.png" alt="RyougiChan!" width="384"/>
 <center>
   <h2 style="border-bottom: none;"> RyougiChan's JavaScript Tools </h2>
-</center><br
-
+</center><br/>
 <!-- anchor -->
 
-
-- Description => A JavaScript tools library.
-- Tech => This a demo with simple HTML, CSS, and JavaScript
-- All resources in this project are based on [CC BY-NC-SA 4.0 ](https://creativecommons.org/licenses/by-nc-sa/4.0/), that means  you can copy and reissue the contents of this project, but you will also have to provide the **original author information** as well as the **agreement statement**. At the same time, it **cannot be used for commercial purposes**. In accordance with our narrow understanding (Additional subsidiary terms), **All activities that are profitable are of commercial use**.
+<h3>Description</h3>
+ -> A JavaScript tools library.
+<h3>Tech</h3>
+ -> Those demos all program with simple HTML, CSS, and JavaScript
+<h3>Declaration</h3>
+ -> All resources in this project are based on <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>, that means  you can copy and reissue the contents of this project, but you will also have to provide the <strong>original author information</strong> as well as the <strong>agreement statement</strong>. At the same time, it <strong>cannot be used for commercial purposes</strong>. In accordance with our narrow understanding (Additional subsidiary terms), <strong>All activities that are profitable are of commercial use</strong>.
 
 
 <!-- anchor -->
