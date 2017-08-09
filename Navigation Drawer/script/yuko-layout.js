@@ -43,12 +43,14 @@ var yuko = {
     var touchStartListener, touchMoveListener, touchEndListener, clickListener, rippleEffectListener;
     touchStartListener = function (event) {
       // Set start point's coordinate.
+      event.preventDefault();
       yuko.value.ox = event.changedTouches[0].pageX;
       yuko.value.oy = event.changedTouches[0].pageY;
       relative_distance = yuko.value.ox - drawerX;
       event.stopImmediatePropagation();
     }
     touchMoveListener = function (event) {
+      event.preventDefault();
       yuko.value.ofx = event.changedTouches[0].pageX;
       yuko.value.ofy = event.changedTouches[0].pageY;
       yuko.value.dtx = yuko.value.ofx - yuko.value.ox;
@@ -66,6 +68,7 @@ var yuko = {
       event.stopImmediatePropagation();
     }
     touchEndListener = function (event) {
+      event.preventDefault();
       yuko.value.ex = event.changedTouches[0].pageX;
       yuko.value.ey = event.changedTouches[0].pageY;
       yuko.value.dx = yuko.value.ex - yuko.value.ox;
@@ -110,7 +113,7 @@ var yuko = {
       drawerMask.style.background = "rgba(0,0,0," + (1 - Math.abs(x) / dom.offsetWidth) * 2 / 5 + ")";
     }
     // Attach event
-    
+
     drawer.addEventListener("touchstart", touchStartListener, false);
     drawer.addEventListener("touchmove", touchMoveListener, false);
     drawer.addEventListener("touchend", touchEndListener, false);
@@ -145,7 +148,9 @@ var yuko = {
       curPos < 10 - dom.offsetWidth ? curPos = 10 - dom.offsetWidth : undefined;
       dom.style.left = curPos + "px";
       drawerMask.style.background = "rgba(0,0,0," + (1 - Math.abs(curPos) / (dom.offsetWidth - 10)) * 2 / 5 + ")";
-
+      // prevent iphone's default event      
+      if (drawer.offsetLeft == 0) drawerMask.style.position = "fixed";
+      if (drawer.offsetLeft == 10 - drawer.offsetWidth) drawerMask.style.position = "";
       dx > 0 ? curPos > (10 - dom.offsetWidth) * 2 / 3 ? curPos != 0 ?
         window.requestAnimationFrame(animate) : undefined : curPos != 10 - dom.offsetWidth ?
           window.requestAnimationFrame(animate) : undefined : curPos < (10 - dom.offsetWidth) / 3 ? curPos != 10 - dom.offsetWidth ? window.requestAnimationFrame(animate) : undefined : curPos != 0 ? window.requestAnimationFrame(animate) : undefined;
