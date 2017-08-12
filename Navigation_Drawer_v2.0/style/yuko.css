@@ -6,7 +6,7 @@
     height: 100%;
 }
 /* Header css */
-#yuko-header
+header#yuko-header
 {
     display: flex;
     float: left;
@@ -17,6 +17,8 @@
     background: #3f51b5;
     box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12);
     position: fixed;
+    top: 0;
+    z-index: 0;
 }
 
 /* Drawer css */
@@ -31,17 +33,18 @@
 {
     width: 100%;
     height: 100%;
-
+    z-index: 2;
     background: rgba(0, 0, 0, 0);
 }
 
 #yuko-nav-drawer
 {
-    position: absolute;
+    position: fixed;
     width: 80%;
     height: 100%;
     left: -80%;
     color: #111;
+    z-index: 2
 }
 
 #yuko-nav-list
@@ -94,7 +97,45 @@
 .yuko-nav-item.item-selected {
     background-color: #e0e0e0;
 }
-/* Define click ripple */
+
+/* Main css */
+/* Main | Content css */
+.yuko-content {
+    /* min-height: 100%;  */
+    width: 100%; 
+    font-size: 36px; 
+    font-weight: 800; 
+    text-align:center
+}
+.yuko-page-container {
+    overflow: hidden; 
+    position: absolute !important; 
+    z-index: -1;
+}
+
+.yuko-page {
+    position: absolute !important;
+    display: block;
+    /*height: 100%;*/
+    /* width: 100%; */
+}
+
+main {
+    width: 100%;
+    /* height: calc(100% - 56px);  */
+    float: left;
+    margin: 56px auto 0 auto;
+}
+/* Footer css */
+footer {
+    position: absolute;
+    top: 100%;
+    width: 100%;
+    height: 56px;
+    background: #3f51b5;
+}
+
+/* Define effect */
 @keyframes ripple {
   to {
     transform: scale(2);
@@ -110,19 +151,4 @@
 }
 .ripple.show {
   animation: ripple .75s ease-out;
-}
-
-/* Main css */
-main {
-    width: 100%;
-    height: calc(100% - 56px);
-    float: left;
-    margin: 56px auto 0 auto;
-    overflow: scroll;
-}
-/* Footer css */
-footer {
-    width: 100%;
-    height: 56px;
-    background: #3f51b5;
 }

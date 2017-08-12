@@ -5,10 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Navigation Drawer</title>
+    <title>Navigation_Drawer_v2.0</title>
     <link href="style/yuko-reset.css" rel="stylesheet">
     <link href="style/material-icons.css" rel="stylesheet">
-    <link href="style/yuko-layout.css" rel="stylesheet">
+    <link href="style/yuko.css" rel="stylesheet">
 </head>
 
 <body>
@@ -21,17 +21,26 @@
         </header>
         <!-- Header E -->
         <!-- Main S -->
-        <main>
-            <div style="height: 1000px; width: 100%; font-size: 36px; font-weight: 800; text-align:center">
-                Hello! RyougiCHan!
+        <main id="yuko-main-content">
+            <div class="yuko-content" style="height: 300px; background: pink">
+                Hello! RyougiChan!
             </div>
-        <!-- Footer S -->
-        <footer>
-            
-        </footer>
-        <!-- Footer E -->
+            <div class="yuko-content" style="height: 600px; background: #666fff">
+                Hello! RyougiChan! Again!
+            </div>
+            <div class="yuko-content" style="height: 900px; background:#fff000">
+                Hello! RyougiChan! Third Time!
+            </div>
+            <div class="yuko-content" style="height: 1200px; background: lightgreen">
+                Hello! RyougiChan! Fourth Time!
+            </div>
         </main>
         <!-- Main E -->
+        <!-- Footer S -->
+        <footer>
+
+        </footer>
+        <!-- Footer E -->
         <!-- Navigation Drawer S -->
         <div id="yuko-nav-drawer-container" class="yuko-nav-backgroung-mask">
             <div id="yuko-nav-drawer">
@@ -51,20 +60,10 @@
         </div>
         <!-- Navigation Drawer E -->
     </div>
-    <script src="script/yuko-layout.js"></script>
+    <script src="script/Yuko.js"></script>
     <script>
-        var drawer = document.getElementById("yuko-nav-drawer");
-        window.onload = function () {
-            drawer.style.left = 10 - drawer.offsetWidth + 'px';
-            yuko.drawer(drawer);
-            if (document.documentElement.scrollHeight <= document.documentElement.clientHeight) {
-                bodyTag = document.getElementsByTagName('body')[0];
-                bodyTag.style.height = document.documentElement.clientWidth / screen.width * screen.height + 'px';
-            }
-        }
-
+        
     </script>
-
 </body>
 
 </html>
