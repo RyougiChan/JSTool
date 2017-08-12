@@ -110,8 +110,20 @@
         }
     })();
 
+    // Default style for Yuko's layout
     Yuko.style = (function () {
-
+        // Document element
+        var header = document.getElementsByTagName('header').item(0);
+        var footer = document.getElementsByTagName('footer').item(0);
+        var main = document.getElementsByTagName('main').item(0);
+        var firstYukoContent = document.querySelectorAll('.yuko-content').item(0);
+        // Element property
+        var headerHeight = Yuko.utility.getComputedSizeInPx(header, 'height');
+        var firstPageHeight = Yuko.utility.getComputedSizeInPx(firstYukoContent, 'height');
+        // Default footer style
+        footer.style.top = (firstPageHeight < win.innerHeight - headerHeight ? win.innerHeight - headerHeight : firstPageHeight + headerHeight) + 'px';
+        // Default main style
+        main.style.height = (win.innerHeight - 112) + "px";
     })();
 
     Yuko.event = (function () {
@@ -119,7 +131,33 @@
     })();
 
     Yuko.effect = (function () {
-
+        /**
+         * Create a ripple effect
+         * @param {Event} event The DOM Event which was triggered
+         * @return {Boolean} Return true all the time
+         */
+        function rippleEffect(event) {
+            var target = event.target;
+            var rect = target.getBoundingClientRect();
+            var ripple = target.querySelector('.ripple');
+            if (!ripple) {
+                ripple = document.createElement('span');
+                ripple.className = 'ripple';
+                ripple.style.height = ripple.style.width = Math.max(rect.width, rect.height) + 'px';
+                target.appendChild(ripple);
+            }
+            ripple.classList.remove('show');
+            var top = event.changedTouches[0].pageY - rect.top - ripple.offsetHeight / 2 - document.body.scrollTop;
+            var left = event.changedTouches[0].pageX - rect.left - ripple.offsetWidth / 2 - document.body.scrollLeft;
+            ripple.style.top = top + 'px';
+            ripple.style.left = left + 'px';
+            ripple.classList.add('show');
+            return true;
+        }
+        
+        return {
+            rippleEffect: rippleEffect
+        }
     })();
 
     Yuko.widget = (function () {
