@@ -9,7 +9,6 @@
         global.Yuko = global.Yuko = global.yuko = Object();
     }
 
-    // Util tools for Yuko.js
     Yuko.utility = (function () {
         /**
          * Calculation for cubic equation : y = a * x * x * x + b * x * x + c * x + d
@@ -130,6 +129,7 @@
 
     })();
 
+    // Yuko's effect
     Yuko.effect = (function () {
         /**
          * Create a ripple effect
@@ -154,13 +154,119 @@
             ripple.classList.add('show');
             return true;
         }
-        
+
         return {
             rippleEffect: rippleEffect
         }
     })();
 
     Yuko.widget = (function () {
+        /**
+         * Make the drawer a touch sensitive android like navigation drawer
+         * @param {Element} drawer The Element to be manipulated
+         * @param {Element} hamburger A hamburger button to trigger the drawer
+         * @param {{timespan : (string|undefined), mask : (Boolean|undefined), animationType : (string|undefined)}=} options
+         *         timespan=: Time span of animation in milliseconds. Default: 300.
+         *         mask=: Indicate whether there is a mask for drawer.
+         *         animationType=: The functional relationship between time and position. optional:'none','linear','quadratic'
+         */
+        function navigationDrawer (drawer, hamburger, options) {
+            // Load parameters
+            var button, options;
+            switch (arguments.length) {
+                case 0:
+                case 1:
+                    return;
+                case 2:
+                    if (arguments[1] instanceof Element) {
+                        button = arguments[1];
+                    } else {
+                        options = arguments[1];
+                    }
+                    break;
+                case 3:
+                    button = arguments[1];
+                    options = arguments[2];
+                    break;
+                default:
+                    return;
+            }
+
+            // Initial drawer option
+            var width = Math.floor(Yuko.utility.getComputedSizeInPx(drawer, 'width'));
+            var timeSpan = options.timeSpan ? options.timeSpan : 300;
+            var animationType = options.animationType ? options.animationType : 'linear';
+            var mask = options.mask ? true : false;
+
+            /**
+             * Curried function for position calculation (time as variable)
+             * @param {number} progress A timespan
+             */ 
+            var curriedTimeFunction = (function () {
+                switch (options.animationType) {
+                    case 'linear':
+                        var a = width / timeSpan;
+                        var b = -width;
+                        return function (progress) {
+                            return a * progress + b;
+                        };
+                        break;
+                    case 'quadratic':
+                        var a = -width / (timeSpan * timeSpan);
+                        var b = 2 * width / timeSpan;
+                        var c = -width;
+                        return function (progress) {
+                            return Yuko.utility.calcQuadraticEquation(a, b, c, progress);
+                        };
+                        break;
+                    default:
+                        break;
+                }
+            })();
+
+            /**
+             * Curried function for time calculation (position as variable)
+             * @param {number} left CSS property of left with drawer
+             */
+            var curriedPositionFunction = (function () {
+                switch (options.animationType) {
+                    case 'linear':
+                        var a = timeSpan / width;
+                        var b = timeSpan;
+                        return function (left) {
+                            return a * left + b;
+                        };
+                        break;
+                    case 'quadratic':
+                        return function (left) {
+                            return timeSpan * (1 - Math.sqrt(-left / width));
+                        };
+                        break;
+                    default:
+                        break;
+                }
+            })();
+
+            // Save position for each progress
+            var keyTimeFrames = [];
+            for (var i = 0; i <= timeSpan; i++) {
+                keyTimeFrames.push(curriedTimeFunction(i));
+            }
+            for (var i = 0; i < 16; i++) {
+                keyTimeFrames.push(curriedTimeFunction(timeSpan));
+            }
+
+            // Save progress for each position
+            var keyPositionFrames = [];
+            for (var i = -width; i <= 0; i++) {
+                keyPositionFrames.push(curriedPositionFunction(i));
+            }
+            for (var i = 0; i < 16; i++) {
+                keyPositionFrames.push(curriedPositionFunction(0));
+            }
+
+            
+        }
 
     })();
 
