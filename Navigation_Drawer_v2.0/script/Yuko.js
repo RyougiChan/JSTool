@@ -44,7 +44,7 @@
          * @return {number} Return the index of the first element that is greater than the given value in an array.
          *                  Return -1 if there exists no element greater than the given value.
          */
-        function firstGreaterThan (array, value) {
+        function firstGreaterThan(array, value) {
             var length = array.length;
             if (array[0].biggerThan) {
                 for (var i = 0; i < length; i++) {
@@ -170,7 +170,7 @@
          *         mask=: Indicate whether there is a mask for drawer.
          *         animationType=: The functional relationship between time and position. optional:'none','linear','quadratic'
          */
-        function navigationDrawer (drawer, hamburger, options) {
+        function navigationDrawer(drawer, hamburger, options) {
             // Load parameters
             var button, options;
             switch (arguments.length) {
@@ -201,7 +201,7 @@
             /**
              * Curried function for position calculation (time as variable)
              * @param {number} progress A timespan
-             */ 
+             */
             var curriedTimeFunction = (function () {
                 switch (options.animationType) {
                     case 'linear':
@@ -265,7 +265,146 @@
                 keyPositionFrames.push(curriedPositionFunction(0));
             }
 
-            
+            // Initial swipe events
+            var onWindowTouchStart = function (e) {
+                startPoint = e.changedTouches[0];
+                startTime = new Date().getTime();
+            };
+
+            var onWindowTouchMove = function (e) {
+                currentPoint = e.changedTouches[0];
+
+                if (menuDisplayed) {
+                    currentPoint = e.changedTouches[0];
+                    if (currentPoint.clientX <= width) {
+                        distance = currentPoint.clientX - (startPoint.clientX <= width ? startPoint.clientX : width);
+                        drawer.style.left = (distance < 0 ? distance : 0) + 'px';
+                    }
+                    thereShouldBeAnAnimation = true;
+                    e.stopImmediatePropagation();
+                } else if (startPoint.clientX < 16) {
+                    distance = currentPoint.clientX - startPoint.clientX;
+                    drawer.style.left = (distance < 0 ? -width : distance > width ? 0 : distance - width) + 'px';
+                    thereShouldBeAnAnimation = true;
+                    e.stopImmediatePropagation();
+                }
+                // Mask
+                if (mask) {
+                    drawer.parentNode.style.background = 'rgba(0,0,0,' + (1 - Math.abs(Math.round(drawer.offsetLeft)) / Math.round(drawer.offsetWidth)) * 0.6 + ')';
+                }
+            };
+
+            var onWindowTouchEnd = function (e) {
+                endPoint = e.changedTouches[0];
+                endTime = new Date().getTime();
+
+                if (menuDisplayed && startPoint.clientX > width && endPoint.clientX > width && (endTime - startTime < 1000)) {
+                    showMenu(false);
+                }
+
+                if (thereShouldBeAnAnimation) {
+                    showMenu(Yuko.utility.getComputedSizeInPx(drawer, 'left') > ((menuDisplayed ? -0.382 : -0.618) * width));
+                }
+                thereShouldBeAnAnimation = false;
+            };
+
+            var onHamburgerTouchEnd = function (e) {
+                endPoint = e.changedTouches[0];
+                // Show menu and stopImmediatePropagation if hamburger button is clicked
+                if (endPoint.clientX <= hamburgerRight && endPoint.clientX >= hamburgerLeft && endPoint.clientY <= hamburgerBottom && endPoint.clientY >= hamburgerTop) {
+                    showMenu(true);
+                    e.stopImmediatePropagation();
+                }
+            };
+
+            var attachTouchEvents = function (boolean) {
+                if (boolean) {
+                    win.addEventListener('touchstart', onWindowTouchStart, true);
+                    win.addEventListener('touchmove', onWindowTouchMove, true);
+                    win.addEventListener('touchend', onWindowTouchEnd, true);
+                    if (hamburger) {
+                        hamburger.addEventListener('touchend', onHamburgerTouchEnd, false);
+                    }
+                } else {
+                    win.removeEventListener('touchstart', onWindowTouchStart);
+                    win.removeEventListener('touchmove', onWindowTouchMove);
+                    win.removeEventListener('touchend', onWindowTouchEnd);
+                    if (hamburger) {
+                        hamburger.removeEventListener('touchend', onHamburgerTouchEnd);
+                    }
+                }
+            };
+            attachTouchEvents(true);
+
+            /**
+             * Show or hide the drawer
+             * @param {Boolean} boolean 
+             */
+            var showMenu = function (boolean) {
+                var currentPosition = 0;
+                var startProgress = 0;
+                var start = null;
+
+                var showProcess = function (timestamp) {
+                    if (!start) {
+                        start = timestamp;
+                    }
+                    positionIndex = Math.floor(startProgress + timestamp - start);
+                    if (mask) {
+                        drawer.parentNode.style.background = 'rgba(0,0,0,' + (1 - Math.abs(keyTimeFrames[positionIndex] / drawer.offsetWidth)) * 0.6 + ')';
+                    }
+                    drawer.style.left = keyTimeFrames[positionIndex] + 'px';
+
+                    if (positionIndex < timeSpan) {
+                        win.requestAnimationFrame(showProcess);
+                    } else {
+                        drawer.parentNode.style.position = 'fixed';
+                        drawer.style.left = 0;
+                        menuDisplayed = true;
+                        attachTouchEvents(true);
+                    }
+                };
+
+                var hideProcess = function (timestamp) {
+                    if (!start) {
+                        start = timestamp;
+                    }
+                    positionIndex = Math.floor(startProgress - timestamp + start);
+                    if (mask) {
+                        drawer.parentNode.style.background = 'rgba(0,0,0,' + (1 - Math.abs(keyTimeFrames[positionIndex] / drawer.offsetWidth)) * 0.6 + ')';
+                    }
+                    drawer.style.left = keyTimeFrames[positionIndex] + 'px';
+
+                    if (positionIndex > 0) {
+                        win.requestAnimationFrame(hideProcess);
+                    } else {
+                        drawer.parentNode.style.position = '';
+                        drawer.style.left = -width + 'px';
+                        menuDisplayed = false;
+                        attachTouchEvents(true);
+                    }
+                };
+
+                currentPosition = Math.floor(Yuko.utility.getComputedSizeInPx(drawer, 'left')) + width;
+                startProgress = Math.floor(keyPositionFrames[currentPosition]);
+
+                if (boolean) {
+                    attachTouchEvents(false);
+                    win.requestAnimationFrame(showProcess);
+                } else {
+                    attachTouchEvents(false);
+                    win.requestAnimationFrame(hideProcess);
+                }
+            };
+
+            return {
+                show: function () {
+                    showMenu(true);
+                },
+                close: function () {
+                    showMenu(false);
+                }
+            };
         }
 
     })();
