@@ -62,7 +62,14 @@
     </div>
     <script src="script/Yuko.js"></script>
     <script>
-        
+        // Bind Drawer
+        var navDrawer = document.getElementById('yuko-nav-drawer');
+        var button = document.getElementById('yuko-nav-drawer-button');
+        Yuko.widget.navigationDrawer(navDrawer, button, {
+            animationType: "quadratic",
+            mask: false,
+            timeSpan: 384
+        });
     </script>
 </body>
 

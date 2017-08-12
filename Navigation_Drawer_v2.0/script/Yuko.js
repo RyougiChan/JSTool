@@ -265,6 +265,25 @@
                 keyPositionFrames.push(curriedPositionFunction(0));
             }
 
+            // Public variables for event handlers
+            var startPoint;
+            var startTime;
+            var currentPoint;
+            var endPoint;
+            var endTime;
+            var distance;
+            var menuDisplayed = false;
+            var thereShouldBeAnAnimation = false;
+            var positionIndex;
+            var drawerList;
+            var hamburgerLeft, hamburgerTop, hamburgerRight, hamburgerBottom;
+            if (hamburger) {
+                hamburgerLeft = hamburger.offsetLeft;
+                hamburgerTop = hamburger.offsetTop;
+                hamburgerRight = hamburgerLeft + hamburger.offsetWidth;
+                hamburgerBottom = hamburgerTop + hamburger.offsetHeight;
+            }
+
             // Initial swipe events
             var onWindowTouchStart = function (e) {
                 startPoint = e.changedTouches[0];
@@ -406,6 +425,10 @@
                 }
             };
         }
+        
+        return {
+            navigationDrawer: navigationDrawer,
+        };
 
     })();
 
