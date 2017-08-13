@@ -139,29 +139,13 @@
          */
         function bindDrawerNavItemToPage(drawer, drawerContainer, pageContainer) {
             var drawerList = document.querySelectorAll('#' + drawer.id + ' li');
-            var pageList = document.querySelectorAll('.yuko-content');
-            var footer = document.getElementsByTagName('footer').item(0);
             for (var i = 0; i < drawerList.length; i++) {
-                drawerList[i].addEventListener('touchstart', (function () {
-                    return function () {
-                        for (var j = 0; j < drawerList.length; j++) {
-                            drawerList[j].className = 'yuko-nav-item';
-                        }
-                    }
-                })());
                 drawerList[i].addEventListener('touchend', (function (i) {
                     return function () {
-                        // Change style of nav list item
-                        drawerList[i].className = 'yuko-nav-item item-selected';
                         // Switch main page to show
                         pageContainer.slideTo(i);
-                        // Adjust position of footer
-                        footer.style.top = (pageList[i].offsetHeight < win.innerHeight - 56 ? win.innerHeight - 56 : pageList[i].offsetHeight + 56) + 'px';
-                        document.getElementsByTagName('main').item(0).style.height = pageList[i].offsetHeight + "px";
-                        drawerContainer.close();
                     }
                 })(i));
-                drawerList[i].addEventListener('touchstart', Yuko.effect.rippleEffect, false);
             }
         }
 
@@ -317,7 +301,9 @@
             var menuDisplayed = false;
             var thereShouldBeAnAnimation = false;
             var positionIndex;
-            var drawerList;
+            var drawerList = document.querySelectorAll('#' + drawer.id + ' li');
+            var pageList = document.querySelectorAll('.yuko-content');
+            var footer = document.getElementsByTagName('footer').item(0);
             var hamburgerLeft, hamburgerTop, hamburgerRight, hamburgerBottom;
             if (hamburger) {
                 hamburgerLeft = hamburger.offsetLeft;
@@ -397,7 +383,28 @@
 
             };
             attachTouchEvents(true);
-
+            // Change style for drawer list and add effect to it
+            for (var i = 0; i < drawerList.length; i++) {
+                drawerList[i].addEventListener('touchstart', (function () {
+                    return function () {
+                        for (var j = 0; j < drawerList.length; j++) {
+                            drawerList[j].className = 'yuko-nav-item';
+                        }
+                    }
+                })());
+                drawerList[i].addEventListener('touchend', (function (i) {
+                    return function () {
+                        // Change style of nav list item
+                        drawerList[i].className = 'yuko-nav-item item-selected'
+                        // Adjust position of footer
+                        footer.style.top = (pageList[i].offsetHeight < win.innerHeight - 56 ? win.innerHeight - 56 : pageList[i].offsetHeight + 56) + 'px';
+                        // Adjust height of main
+                        document.getElementsByTagName('main').item(0).style.height = pageList[i].offsetHeight + "px";
+                        showMenu(false);
+                    }
+                })(i));
+                drawerList[i].addEventListener('touchstart', Yuko.effect.rippleEffect, false);
+            }
             /**
              * Show or hide the drawer
              * @param {Boolean} boolean 
