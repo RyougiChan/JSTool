@@ -46,6 +46,11 @@ body {
     text-rendering: optimizeLegibility
 }
 
+a {
+    text-decoration: none;
+    color: #212121
+}
+
 :focus {
     outline: 0
 }

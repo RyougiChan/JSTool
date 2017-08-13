@@ -132,7 +132,21 @@ footer {
     top: 100%;
     width: 100%;
     height: 56px;
+    font-size: 14px;
     background: #3f51b5;
+    color: #FFFFFF !important;
+    text-align: center
+}
+
+footer > div {
+    height: 28px;
+    line-height: 28px;
+    width: 100%;
+}
+
+footer a {
+    color: #FFFFFF;
+    font-style: italic
 }
 
 /* Define effect */
