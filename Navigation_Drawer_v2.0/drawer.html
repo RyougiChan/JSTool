@@ -21,18 +21,18 @@
         </header>
         <!-- Header E -->
         <!-- Main S -->
-        <main id="yuko-main-content">
-            <div class="yuko-content" style="height: 300px; background: pink">
+        <main id="yuko-main-content" data-role="yuko-page-container" data-page-index="0">
+            <div data-role="yuko-page" data-page-id="0" class="yuko-content" style="height: 300px; background: pink">
                 Hello! RyougiChan!
             </div>
-            <div class="yuko-content" style="height: 600px; background: #666fff">
+            <div data-role="yuko-page" data-page-id="1" class="yuko-content" style="height: 600px; background: #666fff">
                 Hello! RyougiChan! Again!
             </div>
-            <div class="yuko-content" style="height: 900px; background:#fff000">
-                Hello! RyougiChan! Third Time!
+            <div data-role="yuko-page" data-page-id="2" class="yuko-content" style="height: 900px; background:#fff000">
+                Hello! RyougiChan! 3!
             </div>
-            <div class="yuko-content" style="height: 1200px; background: lightgreen">
-                Hello! RyougiChan! Fourth Time!
+            <div data-role="yuko-page" data-page-id="3" class="yuko-content" style="height: 1200px; background: lightgreen">
+                Hello! RyougiChan! 4!
             </div>
         </main>
         <!-- Main E -->
@@ -63,13 +63,24 @@
     <script src="script/Yuko.js"></script>
     <script>
         // Bind Drawer
-        var navDrawer = document.getElementById('yuko-nav-drawer');
+        var drawer = document.getElementById('yuko-nav-drawer');
         var button = document.getElementById('yuko-nav-drawer-button');
-        Yuko.widget.navigationDrawer(navDrawer, button, {
+        var drawerContainer = Yuko.widget.navigationDrawer(drawer, button, {
             animationType: "quadratic",
-            mask: false,
+            mask: true,
             timeSpan: 384
         });
+        // Bind page
+        var content = document.getElementById('yuko-main-content');
+        var pageContainer = Yuko.widget.pageContainer(content, {
+            allowSwipe: false,
+            timeSpan: 384,
+            animationType: 'linear',
+            swipeScale: 0.5
+        }, function (a) { }, true);
+        // Bind nav item to pageContainer
+        Yuko.event.bindDrawerNavItemToPage(drawer, drawerContainer, pageContainer);
+    // Load default style
     </script>
 </body>
 

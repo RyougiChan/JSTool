@@ -9,6 +9,10 @@
         global.Yuko = global.Yuko = global.yuko = Object();
     }
 
+    Yuko.dom = (function () {
+
+    });
+
     Yuko.utility = (function () {
         /**
          * Calculation for cubic equation : y = a * x * x * x + b * x * x + c * x + d
@@ -127,6 +131,44 @@
 
     Yuko.event = (function () {
 
+        /**
+         * Bind page and drawer list item
+         * @param {Element} drawer The drawer container
+         * @param {Function} drawerContainer Yuko.widget.navigationDrawer(drawer, hamburger, options) function
+         * @param {Function} pageContainer Yuko.widget.pageContainer(container, option, onPageContainerReady, onAnimationComplete) function
+         */
+        function bindDrawerNavItemToPage(drawer, drawerContainer, pageContainer) {
+            var drawerList = document.querySelectorAll('#' + drawer.id + ' li');
+            var pageList = document.querySelectorAll('.yuko-content');
+            var footer = document.getElementsByTagName('footer').item(0);
+            for (var i = 0; i < drawerList.length; i++) {
+                drawerList[i].addEventListener('touchstart', (function () {
+                    return function () {
+                        for (var j = 0; j < drawerList.length; j++) {
+                            drawerList[j].className = 'yuko-nav-item';
+                        }
+                    }
+                })());
+                drawerList[i].addEventListener('touchend', (function (i) {
+                    return function () {
+                        // Change style of nav list item
+                        drawerList[i].className = 'yuko-nav-item item-selected';
+                        // Switch main page to show
+                        pageContainer.slideTo(i);
+                        // Adjust position of footer
+                        footer.style.top = (pageList[i].offsetHeight < win.innerHeight - 56 ? win.innerHeight - 56 : pageList[i].offsetHeight + 56) + 'px';
+                        document.getElementsByTagName('main').item(0).style.height = pageList[i].offsetHeight + "px";
+                        drawerContainer.close();
+                    }
+                })(i));
+                drawerList[i].addEventListener('touchstart', Yuko.effect.rippleEffect, false);
+            }
+        }
+
+        return {
+            bindDrawerNavItemToPage: bindDrawerNavItemToPage
+        }
+
     })();
 
     // Yuko's effect
@@ -165,7 +207,7 @@
          * Make the drawer a touch sensitive android like navigation drawer
          * @param {Element} drawer The Element to be manipulated
          * @param {Element} hamburger A hamburger button to trigger the drawer
-         * @param {{timespan : (string|undefined), mask : (Boolean|undefined), animationType : (string|undefined)}=} options
+         * @param {{timespan : (number|undefined), mask : (Boolean|undefined), animationType : (string|undefined)}=} options
          *         timespan=: Time span of animation in milliseconds. Default: 300.
          *         mask=: Indicate whether there is a mask for drawer.
          *         animationType=: The functional relationship between time and position. optional:'none','linear','quadratic'
@@ -352,6 +394,7 @@
                         hamburger.removeEventListener('touchend', onHamburgerTouchEnd);
                     }
                 }
+
             };
             attachTouchEvents(true);
 
@@ -425,9 +468,293 @@
                 }
             };
         }
-        
+
+        /**
+         * Make the provided block element to be a page container
+         * @param {Element} container The container for main content
+         * @param {{allowSwipe : (Boolean|undefined), timeSpan : (number|undefined), animationType : (string|undefined), swipeScale : (number|undefined)}=} option 
+         *          allowSwipe=: Is the container allowed swipe to switch the display content.
+         *          timeSpan=: Time span of animation in milliseconds. Default: 300.
+         *          animationType=: The functional relationship between time and position. optional:'none','linear','quadratic' .
+         *          swipeScale=: Switch limtation position
+         * @param {Function} onPageContainerReady A callback when the page container is in ready state
+         * @param {Boolean} onAnimationComplete A judgement of whether the animation is completed or not
+         */
+        function pageContainer(container, option, onPageContainerReady, onAnimationComplete) {
+            container.classList.add('yuko-page-container');
+            var width = win.document.body.offsetWidth;
+            container.style.width = width + 'px';
+            var allowSwipe = option.allowSwipe ? true : false;
+            var timeSpan = option.timeSpan ? option.timeSpan : 300;
+            var animationType = option.animationType ? option.animationType : 'linear';
+            var swipeScale = option.swipeScale ? option.swipeScale : 0.5;
+
+            var pageList = [];
+            for (var i = 0; i < container.children.length; i++) {
+                if (container.children[i].getAttribute('data-role') == 'yuko-page') {
+                    pageList.push(container.children[i]);
+                }
+            }
+
+            var currentPage = 0;
+            var currentLeft = 0;
+            var lastLeft = currentLeft;
+            var pageCount = pageList.length;
+            var isAnimating = false;
+
+            // Position of each page
+            var page;
+            for (var i = 0; i < pageCount; i++) {
+                page = pageList[i];
+                page.classList.add('yuko-page');
+                page.style.left = page.getAttribute('data-page-id') * width + 'px';
+            }
+
+            var curriedTimeFunction = (function () {
+                switch (animationType) {
+                    case 'linear':
+                        var a = 2 * width / (timeSpan * timeSpan);
+                        var b = 2 * width / timeSpan;
+                        return function (progress) {
+                            return progress < 0.5 * timeSpan ? a * progress * progress : b * progress - a * progress * progress;
+                        };
+                        break;
+                    case 'quadratic':
+                        var a = -2 * width / (timeSpan * timeSpan * timeSpan);
+                        var b = 3 * width / (timeSpan * timeSpan);
+                        return function (progress) {
+                            return Yuko.utility.calcCubicEquation(a, b, 0, 0, progress);
+                        };
+                        break;
+                    default:
+                        break;
+                }
+            })();
+
+            // Save position for each progress
+            var keyTimeFrames = [];
+            for (var i = 0; i <= timeSpan; i++) {
+                keyTimeFrames.push(Yuko.utility.roundTo(curriedTimeFunction(i), 0));
+            }
+
+            // Save progress for each position
+            var keyPositionFrames = [];
+            for (var i = 0, counter = 0; i <= width; i++) {
+                keyPositionFrames.push(Yuko.utility.firstGreaterThan(keyTimeFrames, i - 1));
+            }
+
+            var touchStartPointValid = false;
+            var startPoint;
+            var currentPoint;
+            var endPoint;
+            var distance;
+
+            // Touch event
+            var onPageContainerTouchStart = function (e) {
+                if (e.changedTouches[0].clientX > 16 && e.changedTouches[0].clientX < width - 16) {
+                    touchStartPointValid = true;
+                    startPoint = e.changedTouches[0];
+                    lastLeft = currentLeft;
+                } else {
+                    touchStartPointValid = false;
+                    startPoint = null;
+                }
+            };
+
+            var onPageContainerTouchMove = function (e) {
+                if (touchStartPointValid) {
+                    currentPoint = e.changedTouches[0];
+                    distance = currentPoint.clientX - startPoint.clientX;
+                    if ((currentPage != 0 && distance > 0) || (currentPage != pageCount - 1 && distance < 0)) {
+                        for (var i = 0; i < pageCount; i++) {
+                            pageList[i].style.left = lastLeft + width * i + 'px';
+                        }
+                    } else {
+                    }
+                }
+            };
+
+            var onPageContainerTouchEnd = function (e) {
+                if (touchStartPointValid) {
+                    endPoint = e.changedTouches[0];
+                    if (distance == 0) {
+                        return;
+                    }
+                    var scale = distance / width;
+                    var indexChange = 0;
+                    if ((scale < -swipeScale) || (scale > 0 && scale < swipeScale)) {
+                        var currentPosition = (distance > 0 ? 0 : width) + Math.floor(distance);
+                        var currentProgress = keyPositionFrames[currentPosition];
+                        var keyFrames = [];
+                        if (distance > 0) {
+                            indexChange = 0;
+                            for (var i = currentProgress; i >= 0; i--) {
+                                keyFrames.push(currentLeft + keyTimeFrames[i]);
+                            }
+                            for (var i = 0; i < 16; i++) {
+                                keyFrames.push(currentLeft);
+                            }
+                        } else {
+                            for (var i = currentProgress; i >= 0; i--) {
+                                keyFrames.push(currentLeft + keyTimeFrames[i] - width);
+                            }
+                            for (var i = 0; i < 16; i++) {
+                                keyFrames.push(currentLeft - width);
+                            }
+                            indexChange = 1;
+                        }
+                        slide(keyFrames, currentProgress, indexChange);
+                    } else {
+                        var currentPosition = (distance > 0 ? 0 : width) + Math.floor(distance);
+                        var currentProgress = keyPositionFrames[currentPosition];
+                        var keyFrames = [];
+                        if (distance > 0) {
+                            for (var i = currentProgress; i <= timeSpan; i++) {
+                                keyFrames.push(currentLeft + keyTimeFrames[i]);
+                            }
+                            for (var i = 0; i < 16; i++) {
+                                keyFrames.push(currentLeft + width);
+                            }
+                            indexChange = -1;
+                        } else {
+                            for (var i = currentProgress; i <= timeSpan; i++) {
+                                keyFrames.push(currentLeft + keyTimeFrames[i] - width);
+                            }
+                            for (var i = 0; i < 16; i++) {
+                                keyFrames.push(currentLeft);
+                            }
+                            indexChange = 0;
+                        }
+                        slide(keyFrames, timeSpan - currentProgress + 1, indexChange);
+                    }
+                }
+            };
+
+            var attachSwipeEvent = function (boolean) {
+                if (boolean) {
+                    container.addEventListener('touchstart', onPageContainerTouchStart);
+                    container.addEventListener('touchmove', onPageContainerTouchMove);
+                    container.addEventListener('touchend', onPageContainerTouchEnd);
+                } else {
+                    container.removeEventListener('touchstart', onPageContainerTouchStart);
+                    container.removeEventListener('touchmove', onPageContainerTouchMove);
+                    container.removeEventListener('touchend', onPageContainerTouchEnd);
+                }
+            }
+            if (allowSwipe) {
+                attachSwipeEvent(true)
+            }
+
+
+            var slide = function (keyFrames, progressCount, indexChange) {
+                if (isAnimating) {
+                    return;
+                }
+                var start = null;
+                var positionIndex = 0;
+
+                // Detach slide event here
+                if (allowSwipe) {
+                    attachSwipeEvent(false);
+                }
+
+                isAnimating = true;
+
+                var slideProcess = function (timestamp) {
+                    if (!start) {
+                        start = timestamp;
+                    }
+                    positionIndex = Math.floor(timestamp - start);
+                    for (var i = 0; i < pageCount; i++) {
+                        pageList[i].style.left = keyFrames[positionIndex] + width * i + 'px';
+                    }
+                    if (positionIndex < progressCount) {
+                        win.requestAnimationFrame(slideProcess);
+                    } else {
+                        for (var i = 0; i < pageCount; i++) {
+                            pageList[i].style.left = keyFrames[progressCount + 1] + width * i + 'px';
+                        }
+                        currentLeft = keyFrames[progressCount + 1];
+                        currentPage += indexChange;
+                        container.setAttribute('data-page-index', currentPage);
+                        isAnimating = false;
+                        if (allowSwipe) {
+                            attachSwipeEvent(true);
+                        }
+                        // if (onAnimationComplete) {
+                        //     onAnimationComplete(currentPage);
+                        // }
+                    }
+                };
+
+                win.requestAnimationFrame(slideProcess);
+            };
+
+            /**
+             * Slide to a specific page
+             * @param {string|number} page The page to slide to
+             *          "next": Slide to the next page (if it exists)
+             *          "previous": Slide to the previous page (if it exists)
+             *          number: Slide to the numberth page (start at 0)
+             */
+            var slideTo = function (page) {
+                var keyFrames = [];
+                var progressCount = 0;
+                if (page == "next") {
+                    if (currentPage == 0) {
+                        return;
+                    }
+                    keyFrames = [];
+                    for (var i = 0; i < keyTimeFrames.length; i++) {
+                        keyFrames.push(keyTimeFrames[i] + currentLeft);
+                    }
+                    progressCount = timeSpan;
+                    slide(keyFrames, progressCount, 1);
+                } else if (page == "previous") {
+                    if (currentPage == pageCount - 1) {
+                        return;
+                    }
+                    keyFrames = [];
+                    for (var i = 0; i < keyTimeFrames.length; i++) {
+                        keyFrames.push(currentLeft - keyTimeFrames[i])
+                    }
+                    progressCount = timeSpan;
+                    slide(keyFrames, progressCount, -1);
+                } else {
+                    var index;
+                    // Return if paramater is not a valid value
+                    if (isNaN(index = parseInt(page)) || index < 0 || index > pageCount - 1) {
+                        return;
+                    }
+
+                    var indexChange = index - currentPage;
+                    keyFrames = [];
+                    for (var i = 0; i < keyTimeFrames.length; i++) {
+                        keyFrames.push(currentLeft - keyTimeFrames[i] * indexChange);
+                    }
+                    for (var i = 0; i < 16; i++) {
+                        keyFrames.push(currentLeft - width * indexChange);
+                    }
+                    progressCount = timeSpan;
+                    slide(keyFrames, progressCount, indexChange);
+                }
+
+                return currentPage;
+            };
+
+            onPageContainerReady();
+
+            return {
+                currentPage: function () {
+                    return currentPage;
+                },
+                slideTo: slideTo
+            }
+        };
+
         return {
             navigationDrawer: navigationDrawer,
+            pageContainer, pageContainer
         };
 
     })();
