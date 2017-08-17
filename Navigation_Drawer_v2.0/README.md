@@ -28,22 +28,21 @@ To use Yuko Navigation Drawer in your project, using following folders/files:
 
 ```
 <!-- Navigation Drawer S -->
-        <div id="yuko-nav-drawer-container" class="yuko-nav-backgroung-mask">
-            <div id="yuko-nav-drawer">
-                <div id="yuko-nav-white"></div>
-                <div id="yuko-nav-list">
-                    <span id="yuko-nav-title">Title</span>
-                    <nav>
-                        <ul>
-                            <li class="yuko-nav-item">Link</li>
-                            <li class="yuko-nav-item">Link</li>
-                            <li class="yuko-nav-item">Link</li>
-                            <li class="yuko-nav-item">Link</li>
-                        </ul>
-                    </nav>
-                </div>
+    <div id="yuko-nav-drawer-container" class="yuko-nav-backgroung-mask">
+        <div id="yuko-nav-drawer">
+            <div id="yuko-nav-list">
+                <span id="yuko-nav-title">Title</span>
+                <nav>
+                    <ul>
+                        <li class="yuko-nav-item">Link</li>
+                        <li class="yuko-nav-item">Link</li>
+                        <li class="yuko-nav-item">Link</li>
+                        <li class="yuko-nav-item">Link</li>
+                    </ul>
+                </nav>
             </div>
         </div>
+    </div>
 <!-- Navigation Drawer E -->
 ```
 
