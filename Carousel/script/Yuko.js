@@ -9,10 +9,6 @@
         global.Yuko = global.Yuko = global.yuko = Object();
     }
 
-    Yuko.dom = (function () {
-
-    });
-
     Yuko.utility = (function () {
         /**
          * Calculation for cubic equation : y = a * x * x * x + b * x * x + c * x + d
@@ -86,7 +82,11 @@
          * @return {number} Return computed size in px of the element {@param ele}
          */
         function getComputedSizeInPx(ele, type) {
-            return parseInt((getComputedStyle(ele, null).getPropertyValue(type)), 10);
+            window.getComputedStyle = window.getComputedStyle||(window.getComputedStyle=function(e,t){return this.el=e,this.getPropertyValue=function(t){var n=/(\-([a-z]){1})/g;return t=="float"&&(t="styleFloat"),n.test(t)&&(t=t.replace(n,function(){return arguments[2].toUpperCase()})),e.currentStyle[t]?e.currentStyle[t]:null},this});
+            
+            if (ele instanceof Element)
+            return parseInt((window.getComputedStyle(ele, null).getPropertyValue(type)), 10);
+            return;
         };
 
         /**
@@ -115,18 +115,49 @@
 
     // Default style for Yuko's layout
     Yuko.style = (function () {
-        // Document element
-        var header = document.getElementsByTagName('header').item(0);
-        var footer = document.getElementsByTagName('footer').item(0);
-        var main = document.getElementsByTagName('main').item(0);
-        var firstYukoContent = document.querySelectorAll('.yuko-content').item(0);
-        // Element property
-        var headerHeight = Yuko.utility.getComputedSizeInPx(header, 'height');
-        var firstPageHeight = Yuko.utility.getComputedSizeInPx(firstYukoContent, 'height');
-        // Default footer style
-        footer.style.top = (firstPageHeight < win.innerHeight - headerHeight ? win.innerHeight - headerHeight : firstPageHeight + headerHeight) + 'px';
-        // Default main style
-        main.style.height = (win.innerHeight - 112) + "px";
+        // Initial Yuko Fragment Style
+        function initFragStyle () {
+            // Document element
+            var header = document.getElementsByTagName('header').item(0);
+            var footer = document.getElementsByTagName('footer').item(0);
+            var main = document.getElementsByTagName('main').item(0);
+            var firstYukoContent = document.querySelectorAll('.yuko-content').item(0);
+            // Element property
+            var headerHeight = Yuko.utility.getComputedSizeInPx(header, 'height');
+            var firstPageHeight = Yuko.utility.getComputedSizeInPx(firstYukoContent, 'height');
+
+            win.innerHeight = win.innerHeight || document.body.clientHeight;
+            // Default footer style
+            footer.style.top = (firstPageHeight < win.innerHeight - headerHeight ? win.innerHeight - headerHeight : firstPageHeight + headerHeight) + 'px';
+            // Default main style
+            main.style.height = (win.innerHeight - 112) + "px";
+        }
+
+        // Initial Carousel Style
+        function initCarouselStyle () {
+            // Carousel Container
+            var carouselContainer = document.getElementById('yuko-carousel-container');
+            // Carousel Parameter
+            var carouselContainerHeight, carouselTitleHeight, carouselHeight;
+            // If there should be a Caeousel
+            if (carouselContainer) {
+                var carouselTitle = document.getElementById('yuko-carousel-title');
+                var carousel = document.getElementById('yuko-carousel');
+                var carouselList = document.getElementsByClassName('yuko-carousel-item');
+
+                carouselContainerHeight = Yuko.utility.getComputedSizeInPx(carouselContainer, 'height');
+                carouselTitleHeight = Yuko.utility.getComputedSizeInPx(carouselTitle, 'height');
+                carouselHeight = Yuko.utility.getComputedSizeInPx(carousel, 'height');
+
+                if (carouselHeight !== carouselContainerHeight - carouselTitleHeight) 
+                    carousel.style.height = (carouselContainerHeight - carouselTitleHeight) +'px';
+            }
+        }
+
+        return {
+            initFragStyle: initFragStyle,
+            initCarouselStyle: initCarouselStyle
+        }
     })();
 
     Yuko.event = (function () {
@@ -186,6 +217,7 @@
         }
     })();
 
+    // Yuko's widget
     Yuko.widget = (function () {
         /**
          * Make the drawer a touch sensitive android like navigation drawer
@@ -764,6 +796,13 @@
             pageContainer: pageContainer
         };
 
+    })();
+    
+    Yuko.init = (function () {
+        // Fragment style
+        Yuko.style.initFragStyle();
+        // Carousel style
+        Yuko.style.initCarouselStyle();
     })();
 
 })(window);
