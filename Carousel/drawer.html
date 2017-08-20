@@ -29,12 +29,12 @@
                         <div id="yuko-carousel-list">
                             <span id="yuko-carousel-pre"></span>
                             <span id="yuko-carousel-next"></span>
-                            <ul>
-                                <li class="yuko-carousel-item"></li>
-                                <li class="yuko-carousel-item"></li>
-                                <li class="yuko-carousel-item"></li>
-                                <li class="yuko-carousel-item"></li>
-                                <li class="yuko-carousel-item"></li>
+                            <ul data-page-index="0">
+                                <li class="yuko-carousel-item" data-page-id="0"></li>
+                                <li class="yuko-carousel-item" data-page-id="1"></li>
+                                <li class="yuko-carousel-item" data-page-id="2"></li>
+                                <li class="yuko-carousel-item" data-page-id="3"></li>
+                                <li class="yuko-carousel-item" data-page-id="4"></li>
                             </ul>
                         </div>
                     </div>
@@ -51,7 +51,10 @@
     </div>
     <script src="script/Yuko.js"></script>
     <script>
-
+        var carouselList = document.getElementsByClassName('yuko-carousel-item');
+        var carouselPre = document.getElementById('yuko-carousel-pre');
+        var carouselNext = document.getElementById('yuko-carousel-next');
+        Yuko.widget.carousel(carouselList, carouselPre, carouselNext);
     </script>
 </body>
 

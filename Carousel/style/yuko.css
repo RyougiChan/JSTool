@@ -136,7 +136,8 @@ footer {
     font-size: 14px;
     background: #3f51b5;
     color: #FFFFFF !important;
-    text-align: center
+    text-align: center;
+    overflow: hidden;
 }
 
 footer > div {
@@ -170,6 +171,7 @@ footer a {
     color: #ffffff;
 }
 #yuko-carousel-list {
+    position: relative;
     width: 100%;
     height: 100%;
 }
@@ -183,7 +185,7 @@ footer a {
 
 #yuko-carousel-list > span {
     position: absolute;
-    z-index: 2;
+    z-index: 10;
     display: block;
     width: 102px;
     height: 102px;
@@ -205,6 +207,52 @@ footer a {
     position: absolute;
     width: 100%;
     height: 100%;
+    background-size: contain !important;
+}
+
+.carousel-item-focus {
+    z-index: 9;
+}
+
+.yuko-carousel-item:nth-child(1) {
+    background: url('../images/chara_eriri_vsl.png') no-repeat 50% 50%;
+    z-index: 9;
+}
+
+.yuko-carousel-item:nth-child(2) {
+    background: url('../images/chara_megumi_vsl.png') no-repeat 50% 50%;
+    z-index: 8;
+    width: 80%;
+    height: 80%;
+    top: 10%;
+    left: -12.5%;
+}
+
+.yuko-carousel-item:nth-child(3) {
+    background: url('../images/chara_utaha_vsl.png') no-repeat 50% 50%;
+    z-index: 7;
+    width: 60%;
+    height: 60%;
+    top: 20%;
+    left: 12.5%;
+}
+
+.yuko-carousel-item:nth-child(4) {
+    background: url('../images/chara_michiru_vsl.png') no-repeat 50% 50%;
+    z-index: 5;
+    width: 60%;
+    height: 60%;
+    top: 20%;
+    right: 12.5%;
+}
+
+.yuko-carousel-item:nth-child(5) {
+    background: url('../images/chara_izumi_vsl.png') no-repeat 50% 50%;
+    z-index: 6;
+    width: 80%;
+    height: 80%;
+    top: 10%;
+    right: -12.5%;
 }
 /* Define effect */
 @keyframes ripple {

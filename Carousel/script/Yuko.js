@@ -82,12 +82,49 @@
          * @return {number} Return computed size in px of the element {@param ele}
          */
         function getComputedSizeInPx(ele, type) {
-            window.getComputedStyle = window.getComputedStyle||(window.getComputedStyle=function(e,t){return this.el=e,this.getPropertyValue=function(t){var n=/(\-([a-z]){1})/g;return t=="float"&&(t="styleFloat"),n.test(t)&&(t=t.replace(n,function(){return arguments[2].toUpperCase()})),e.currentStyle[t]?e.currentStyle[t]:null},this});
-            
+            window.getComputedStyle = window.getComputedStyle || (window.getComputedStyle = function (e, t) { return this.el = e, this.getPropertyValue = function (t) { var n = /(\-([a-z]){1})/g; return t == "float" && (t = "styleFloat"), n.test(t) && (t = t.replace(n, function () { return arguments[2].toUpperCase() })), e.currentStyle[t] ? e.currentStyle[t] : null }, this });
+
             if (ele instanceof Element)
-            return parseInt((window.getComputedStyle(ele, null).getPropertyValue(type)), 10);
+                return parseInt((window.getComputedStyle(ele, null).getPropertyValue(type)), 10);
             return;
         };
+
+
+        /**
+         * Set bounding rectangle for a element
+         **      If rectArr is not a Array or rectArr's length is 0, do noting
+         **      If rectArr's length is 1 and item in rectArr is not undefined, set only width
+         **      If rectArr's length is 2 and item in rectArr is not undefined, set width and height
+         **      If rectArr's length is 3 and item in rectArr is not undefined, set width, height and left
+         **      Default: set width, height, left and top for target
+         * @param {Element} target The element to set bounding rectangle
+         * @param {[(undefined|string),(undefined|string),(undefined|string),(undefined|string)]} rectArr A <strong>number</strong> string array ([width?, height?, left?, top?]) represented the bound rectangle of target
+         */
+        function setBoundingRectangle(target, rectArr) {
+            if (!target) return;
+            if (!(rectArr instanceof Array) || rectArr.length === 0) return;
+            if (rectArr.length > 4) rectArr = rectArr.slice(0, 3);
+            switch (rectArr.length) {
+                case 1:
+                    if (rectArr[0]) target.style.width = rectArr[0].endsWith('%') ? rectArr[0] : rectArr[0] + 'px';
+                    break;
+                case 2:
+                    if (rectArr[0]) target.style.width = rectArr[0].endsWith('%') ? rectArr[0] : rectArr[0] + 'px';
+                    if (rectArr[1]) target.style.top = rectArr[1].endsWith('%') ? rectArr[1] : rectArr[1] + 'px';
+                    break;
+                case 3:
+                    if (rectArr[0]) target.style.width = rectArr[0].endsWith('%') ? rectArr[0] : rectArr[0] + 'px';
+                    if (rectArr[1]) target.style.height = rectArr[1].endsWith('%') ? rectArr[1] : rectArr[1] + 'px';
+                    if (rectArr[2]) target.style.top = rectArr[2].endsWith('%') ? rectArr[2] : rectArr[2] + 'px';
+                    break;
+                default:
+                    if (rectArr[0]) target.style.width = rectArr[0].endsWith('%') ? rectArr[0] : rectArr[0] + 'px';
+                    if (rectArr[1]) target.style.height = rectArr[1].endsWith('%') ? rectArr[1] : rectArr[1] + 'px';
+                    if (rectArr[2]) target.style.top = rectArr[2].endsWith('%') ? rectArr[2] : rectArr[2] + 'px';
+                    if (rectArr[3]) target.style.left = rectArr[3].endsWith('%') ? rectArr[3] : rectArr[3] + 'px';
+                    break;
+            }
+        }
 
         /**
          * Round a number to a specific scale
@@ -103,20 +140,39 @@
             return Math.round(factor * number) / factor;
         }
 
+        /**
+         * Add a event listener for a element
+         * @param {Element} target The element to attach listener
+         * @param {string} type A string representing the event type to listen for
+         * @param {*} listener The object which receives a notification. This must be an object implementing the EventListener interface, or a JavaScript function
+         */
+        function addEvent(target, type, listener) {
+            if (target == null || typeof (target) == 'undefined') return;
+            if (target.addEventListener) {
+                target.addEventListener(type, listener, false);
+            } else if (target.attachEvent) {
+                target.attachEvent("on" + type, listener);
+            } else {
+                target["on" + type] = listener;
+            }
+        }
+
         return {
             calcCubicEquation: calcCubicEquation,
             calcQuadraticEquation: calcQuadraticEquation,
             firstGreaterThan: firstGreaterThan,
             fontSizeInPx: fontSizeInPx,
             getComputedSizeInPx: getComputedSizeInPx,
-            roundTo: roundTo
+            setBoundingRectangle: setBoundingRectangle,
+            roundTo: roundTo,
+            addEvent: addEvent
         }
     })();
 
     // Default style for Yuko's layout
     Yuko.style = (function () {
         // Initial Yuko Fragment Style
-        function initFragStyle () {
+        function initFragStyle() {
             // Document element
             var header = document.getElementsByTagName('header').item(0);
             var footer = document.getElementsByTagName('footer').item(0);
@@ -126,7 +182,7 @@
             var headerHeight = Yuko.utility.getComputedSizeInPx(header, 'height');
             var firstPageHeight = Yuko.utility.getComputedSizeInPx(firstYukoContent, 'height');
 
-            win.innerHeight = win.innerHeight || document.body.clientHeight;
+            win.innerHeight = document.body.clientHeight;
             // Default footer style
             footer.style.top = (firstPageHeight < win.innerHeight - headerHeight ? win.innerHeight - headerHeight : firstPageHeight + headerHeight) + 'px';
             // Default main style
@@ -134,7 +190,7 @@
         }
 
         // Initial Carousel Style
-        function initCarouselStyle () {
+        function initCarouselStyle() {
             // Carousel Container
             var carouselContainer = document.getElementById('yuko-carousel-container');
             // Carousel Parameter
@@ -149,8 +205,8 @@
                 carouselTitleHeight = Yuko.utility.getComputedSizeInPx(carouselTitle, 'height');
                 carouselHeight = Yuko.utility.getComputedSizeInPx(carousel, 'height');
 
-                if (carouselHeight !== carouselContainerHeight - carouselTitleHeight) 
-                    carousel.style.height = (carouselContainerHeight - carouselTitleHeight) +'px';
+                if (carouselHeight !== carouselContainerHeight - carouselTitleHeight)
+                    carousel.style.height = (carouselContainerHeight - carouselTitleHeight) + 'px';
             }
         }
 
@@ -791,18 +847,77 @@
             }
         };
 
+        function carousel(carouselList, preButton, nextButton) {
+            var position = {
+                evenNumberItem: [
+                    ['100%', '100%', '0', '0'],
+                    ['80%', '80%', '10%', '-12.5%'],
+                    ['60%', '60%', '20%', '12.5%'],
+                    ['60%', '60%', '20%', '20%']
+                ],
+                oddNumberItem: [
+                    ['100%', '100%', '0', '0'],
+                    ['80%', '80%', '10%', '-12.5%'],
+                    ['60%', '60%', '20%', '12.5%'],
+                    ['60%', '60%', '20%', '27.5%'],
+                    ['80%', '80%', '10%', '32.5%']
+                ]
+            }
+
+            var changeCoordinate = function (count) {
+                var visualPageIndex = window.parseInt(document.querySelector('#yuko-carousel-list > ul').getAttribute('data-page-index'));
+
+                for (var i = visualPageIndex; i < count - 1; i++) {
+                    console.log(i + " -->" +position.oddNumberItem[i+1]);
+                    Yuko.utility.setBoundingRectangle(carouselList[i], position.oddNumberItem[i+1]);
+                }
+                Yuko.utility.setBoundingRectangle(carouselList[count - 1], position.oddNumberItem[0]);
+            }
+
+            var len = carouselList.length;
+
+            if (!carouselList || len === 0 || len === 1) return;
+            // There exists a odd number item in list
+            if (len % 2 !== 0) {
+                if (len === 3) {
+                    Yuko.utility.addEvent(preButton, 'click', function () {
+                        Yuko.utility.setBoundingRectangle(carouselList[0], position.oddNumberItem[1]);
+                        Yuko.utility.setBoundingRectangle(carouselList[1], position.oddNumberItem[4]);
+                        Yuko.utility.setBoundingRectangle(carouselList[2], position.oddNumberItem[0]);
+                    });
+                }
+                if (len === 5) {
+                    Yuko.utility.addEvent(preButton, 'click', function () {
+                        changeCoordinate(len);
+                    });
+                }
+                
+                return;
+            }
+            // There exists a even number item in list
+            return;
+        }
+
         return {
             navigationDrawer: navigationDrawer,
-            pageContainer: pageContainer
+            pageContainer: pageContainer,
+            carousel: carousel
         };
 
     })();
-    
+
     Yuko.init = (function () {
         // Fragment style
         Yuko.style.initFragStyle();
         // Carousel style
         Yuko.style.initCarouselStyle();
+        // When a resize event happen
+        Yuko.utility.addEvent(win, 'resize', function () {
+            // Fragment style
+            Yuko.style.initFragStyle();
+            // Carousel style
+            Yuko.style.initCarouselStyle();
+        });
     })();
 
 })(window);
