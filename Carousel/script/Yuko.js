@@ -864,38 +864,67 @@
                 ]
             }
 
-            var changeCoordinate = function (count) {
-                var visualPageIndex = window.parseInt(document.querySelector('#yuko-carousel-list > ul').getAttribute('data-page-index'));
-
-                for (var i = visualPageIndex; i < count - 1; i++) {
-                    console.log(i + " -->" +position.oddNumberItem[i+1]);
-                    Yuko.utility.setBoundingRectangle(carouselList[i], position.oddNumberItem[i+1]);
-                }
-                Yuko.utility.setBoundingRectangle(carouselList[count - 1], position.oddNumberItem[0]);
-            }
-
             var len = carouselList.length;
+            var nextItemList = [], positionValues = [];
+
+            var changeCoordinate = function (event) {
+                var visualPageIndex = window.parseInt(document.querySelector('#yuko-carousel-list > ul').getAttribute('data-page-index'));
+                if (event.target === nextButton) {
+                    visualPageIndex++;
+                    if (visualPageIndex === len - 1) {
+                        visualPageIndex = 0;
+                    }
+                }
+                if (event.target === preButton) {
+                    visualPageIndex--;
+                    if (visualPageIndex === -1) {
+                        visualPageIndex = len-1;
+                    }
+                }
+                nextItemList = [];
+                for (var i = visualPageIndex; i < len; i++) {
+                    console.log(visualPageIndex);
+                    nextItemList.push(carouselList[i]);
+                }
+                for (var i = 0; i < visualPageIndex; i++) {
+                    nextItemList.push(carouselList[i]);
+                }
+
+                console.log(nextItemList);
+
+                // There exists a odd number item in list
+                if (len % 2 !== 0) {
+                    if (len === 3) {
+                        positionValues = [
+                            position.oddNumberItem[0],
+                            position.oddNumberItem[1],
+                            position.oddNumberItem[5]
+                        ];
+                    }
+                    if (len === 5) {
+                        positionValues = position.oddNumberItem;
+                    }
+                    
+                    for (var i = 0; i < len; i++) {
+                        nextItemList[i].style.zIndex = (9-i) + "";
+                        Yuko.utility.setBoundingRectangle(nextItemList[i], positionValues[i]);
+                    }
+                }
+                // There exists a even number item in list
+                
+                document.querySelector('#yuko-carousel-list > ul').setAttribute('data-page-index', visualPageIndex + "");
+                return;
+
+            }
 
             if (!carouselList || len === 0 || len === 1) return;
-            // There exists a odd number item in list
-            if (len % 2 !== 0) {
-                if (len === 3) {
-                    Yuko.utility.addEvent(preButton, 'click', function () {
-                        Yuko.utility.setBoundingRectangle(carouselList[0], position.oddNumberItem[1]);
-                        Yuko.utility.setBoundingRectangle(carouselList[1], position.oddNumberItem[4]);
-                        Yuko.utility.setBoundingRectangle(carouselList[2], position.oddNumberItem[0]);
-                    });
-                }
-                if (len === 5) {
-                    Yuko.utility.addEvent(preButton, 'click', function () {
-                        changeCoordinate(len);
-                    });
-                }
-                
-                return;
-            }
-            // There exists a even number item in list
-            return;
+
+            Yuko.utility.addEvent(nextButton, 'click', function (event) {
+                changeCoordinate(event);
+            });
+            Yuko.utility.addEvent(preButton, 'click', function (event) {
+                changeCoordinate(event);
+            });
         }
 
         return {
