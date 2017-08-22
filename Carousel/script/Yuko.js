@@ -972,10 +972,14 @@
          * @param {Element} nextButton A button to switch to Carousel's next display order
          * @returns 
          */
-        function carousel(carouselList, preButton, nextButton) {
+        function carousel(carouselList, preButton, nextButton, duration) {
 
             var len = carouselList.length;
             var nextItemList = [], positionValues = [];
+            // Even number item position span
+            var positionProgressEven = [[], [], [], []];
+            // Odd number item position span
+            var positionProgressOdd = [[], [], [], [], []];
             var position = {
                 evenNumberItem: [
                     ['100%', '100%', '0', '0'],
@@ -990,84 +994,6 @@
                     ['60%', '60%', '20%', '27.5%'],
                     ['80%', '80%', '10%', '32.5%']
                 ]
-            }
-
-            if (!carouselList || len < 2) return;
-
-            // Attach click event to button
-            Yuko.utility.addEvent(nextButton, 'click', function (event) {
-                changeCoordinate(event);
-            });
-            Yuko.utility.addEvent(preButton, 'click', function (event) {
-                changeCoordinate(event);
-            });
-
-            /**
-             * Change Coordination of carousel list item
-             * @param {Event} event The DOM Event which was triggered
-             */
-            var changeCoordinate = function (event) {
-
-                // Even number item position span
-                var positionProgressEven = [[], [], [], []];
-                // Odd number item position span
-                var positionProgressOdd = [[], [], [], [], []];
-
-                var visualPageIndex = window.parseInt(document.querySelector('#yuko-carousel-list > ul').getAttribute('data-page-index'));
-                // Reset visualPageIndex where it is overflow(more than carouselList.length or less than 0)
-                if (event.target === nextButton) {
-                    visualPageIndex++;
-                    if (visualPageIndex === len) {
-                        visualPageIndex = 0;
-                    }
-                }
-                if (event.target === preButton) {
-                    visualPageIndex--;
-                    if (visualPageIndex === -1) {
-                        visualPageIndex = len - 1;
-                    }
-                }
-
-                // The next display order list
-                nextItemList = [];
-                for (var i = visualPageIndex; i < len; i++) {
-                    nextItemList.push(carouselList[i]);
-                }
-                for (var i = 0; i < visualPageIndex; i++) {
-                    nextItemList.push(carouselList[i]);
-                }
-
-                // There exists a odd number item in list
-                if (len % 2 !== 0) {
-                    if (len === 3) {
-                        positionValues = [
-                            position.oddNumberItem[0],
-                            position.oddNumberItem[1],
-                            position.oddNumberItem[5]
-                        ];
-                    }
-                    if (len === 5) {
-                        positionValues = position.oddNumberItem;
-                        nextItemList[3].style.zIndex = "5";
-                        nextItemList[4].style.zIndex = "6";
-                    }
-
-                    for (var i = 0; i < len; i++) {
-                        if (i < 3) {
-                            nextItemList[i].style.zIndex = (9 - i) + "";
-                        }
-                        if (Yuko.utility.isBroeserSupportProp('transition'))
-                            Yuko.utility.setBoundingRectangle(nextItemList[i], positionValues[i]);
-                        else {
-                            // CSS transition is not support
-                            console.log('CSS transition is not support');
-                            
-                        }
-                    }
-                }
-                // There exists a even number item in list
-
-                document.querySelector('#yuko-carousel-list > ul').setAttribute('data-page-index', visualPageIndex + "");
             }
 
             var cssTransitionPolyfill = function (positionValues, option, duration) {
@@ -1112,20 +1038,123 @@
                         }
                         var data = [];
                         for (var m = 0; m < 4; m++) {
-                            data.push(pos[j][m].toLocaleString() === '-0' ? '0' : pos[j][m].toLocaleString());
+                            data.push(pos[j][m].toLocaleString() === '-0' ? '0' : pos[j][m].toLocaleString() + '%');
                         }
                         count === 5 ? positionProgressOdd[j].push(data) : positionProgressEven[j].push(data);
                     }
                 }
 
                 for (var i = 0; i < refreshTime; i++) {
-                    // fillPositionData(positionValues.length);
-                    fillPositionData(4);
+                    fillPositionData(positionValues.length);
                 }
-                console.log(positionProgressOdd);
-                console.log(positionProgressEven);
+                // console.log([].concat(positionProgressOdd.slice(-1), positionProgressOdd.slice(0, positionProgressOdd.length - 1)));
+                // console.log(positionProgressEven);
+                return positionValues.length === 5 ? [].concat(positionProgressOdd.slice(-1), positionProgressOdd.slice(0, positionProgressOdd.length - 1)) : [].concat(positionProgressEven.slice(-1), positionProgressEven.slice(0, positionProgressEven.length - 1));
             }
-            cssTransitionPolyfill(position.oddNumberItem, {}, .1);
+
+            if (!carouselList || len < 2) return;
+
+            // Attach click event to button
+            Yuko.utility.addEvent(nextButton, 'click', function (event) {
+                changeCoordinate(event, duration);
+            });
+            Yuko.utility.addEvent(preButton, 'click', function (event) {
+                changeCoordinate(event, duration);
+            });
+
+            var sortedPositionValues = cssTransitionPolyfill(position.oddNumberItem, {}, duration);
+            console.log('--------------------------------------');
+            console.log(sortedPositionValues);
+            console.log('--------------------------------------');
+
+            /**
+             * Change Coordination of carousel list item
+             * @param {Event} event The DOM Event which was triggered
+             */
+            var changeCoordinate = function (event, duration) {
+
+                var visualPageIndex = window.parseInt(document.querySelector('#yuko-carousel-list > ul').getAttribute('data-page-index'));
+                // Reset visualPageIndex where it is overflow(more than carouselList.length or less than 0)
+                if (event.target === nextButton) {
+                    visualPageIndex++;
+                    if (visualPageIndex === len) {
+                        visualPageIndex = 0;
+                    }
+                }
+                if (event.target === preButton) {
+                    visualPageIndex--;
+                    if (visualPageIndex === -1) {
+                        visualPageIndex = len - 1;
+                    }
+                }
+                // The next display order list
+                nextItemList = [];
+                for (var i = visualPageIndex; i < len; i++) {
+                    nextItemList.push(carouselList[i]);
+                }
+                for (var i = 0; i < visualPageIndex; i++) {
+                    nextItemList.push(carouselList[i]);
+                }
+                // There exists a odd number item in list
+                if (len % 2 !== 0) {
+                    if (len === 3) {
+                        positionValues = [
+                            position.oddNumberItem[0],
+                            position.oddNumberItem[1],
+                            position.oddNumberItem[5]
+                        ];
+                    }
+                    if (len === 5) {
+                        positionValues = position.oddNumberItem;
+                        nextItemList[3].style.zIndex = "5";
+                        nextItemList[4].style.zIndex = "6";
+                    }
+
+                    var refreshTime = duration * 60;
+                    var animate = null;
+                    console.log(sortedPositionValues);
+                    for (var i = 0; i < len; i++) {
+                        var flag = 0;
+                        if (i < 3) {
+                            nextItemList[i].style.zIndex = (9 - i) + "";
+                        }
+                        if (!Yuko.utility.isBroeserSupportProp('transition'))
+                            Yuko.utility.setBoundingRectangle(nextItemList[i], positionValues[i]);
+                        else {
+                            // CSS transition is not support
+                            var test = (function (i) {
+                                return function () {
+                                    if (flag < refreshTime - 1) {
+                                        flag++;
+                                        console.log(i);
+                                        window.requestAnimationFrame(test);
+                                    }
+                                }
+                            })(i);
+                            animate = (function (i) {
+                                // console.log(i);
+                                return function () {
+                                    if (flag < refreshTime - 1) {
+                                        console.log('flag = ' + flag + '   i = ' + i);
+                                        flag++;
+                                        console.log(sortedPositionValues[i][flag]);
+                                        // console.log(sortedPositionValues[flag][i]);
+                                        Yuko.utility.setBoundingRectangle(nextItemList[i], sortedPositionValues[i][flag]);
+                                        window.requestAnimationFrame(animate);
+                                    }
+                                }
+                            })(i);
+                            // window.requestAnimationFrame(animate);
+                            window.requestAnimationFrame(test);
+                        }
+                    }
+                }
+                // There exists a even number item in list
+
+                document.querySelector('#yuko-carousel-list > ul').setAttribute('data-page-index', visualPageIndex + "");
+            }
+
+            // cssTransitionPolyfill(position.oddNumberItem, {}, .1);
         }
 
         return {
