@@ -9,6 +9,70 @@
         global.Yuko = global.Yuko = global.yuko = Object();
     }
 
+    Yuko.polyfill = (function () {
+        // String.prototype.endsWith polyfill
+        /*! http://mths.be/endswith v0.2.0 by @mathias */
+        if (!String.prototype.endsWith) {
+            (function () {
+                'use strict'; // needed to support `apply`/`call` with `undefined`/`null`
+                var defineProperty = (function () {
+                    // IE 8 only supports `Object.defineProperty` on DOM elements
+                    try {
+                        var object = {};
+                        var $defineProperty = Object.defineProperty;
+                        var result = $defineProperty(object, object, object) && $defineProperty;
+                    } catch (error) { }
+                    return result;
+                }());
+                var toString = {}.toString;
+                var endsWith = function (search) {
+                    if (this == null) {
+                        throw TypeError();
+                    }
+                    var string = String(this);
+                    if (search && toString.call(search) == '[object RegExp]') {
+                        throw TypeError();
+                    }
+                    var stringLength = string.length;
+                    var searchString = String(search);
+                    var searchLength = searchString.length;
+                    var pos = stringLength;
+                    if (arguments.length > 1) {
+                        var position = arguments[1];
+                        if (position !== undefined) {
+                            // `ToInteger`
+                            pos = position ? Number(position) : 0;
+                            if (pos != pos) { // better `isNaN`
+                                pos = 0;
+                            }
+                        }
+                    }
+                    var end = Math.min(Math.max(pos, 0), stringLength);
+                    var start = end - searchLength;
+                    if (start < 0) {
+                        return false;
+                    }
+                    var index = -1;
+                    while (++index < searchLength) {
+                        if (string.charCodeAt(start + index) != searchString.charCodeAt(index)) {
+                            return false;
+                        }
+                    }
+                    return true;
+                };
+                if (defineProperty) {
+                    defineProperty(String.prototype, 'endsWith', {
+                        'value': endsWith,
+                        'configurable': true,
+                        'writable': true
+                    });
+                } else {
+                    String.prototype.endsWith = endsWith;
+                }
+            }());
+        }
+    })();
+
     Yuko.utility = (function () {
         /**
          * Calculation for cubic equation : y = a * x * x * x + b * x * x + c * x + d
@@ -89,6 +153,45 @@
             return;
         };
 
+        /**
+         * Create a copy od obj
+         * @param {{}} obj The object to make a copy
+         * @returns return a copy of obj if it's really Object
+         *          return obj itself if obj is null or it's not a Object
+         */
+        function cloneObject(obj) {
+            var copy;
+
+            // Handle the 3 simple types, and null or undefined
+            if (null == obj || "object" != typeof obj) return obj;
+
+            // Handle Date
+            if (obj instanceof Date) {
+                copy = new Date();
+                copy.setTime(obj.getTime());
+                return copy;
+            }
+
+            // Handle Array
+            if (obj instanceof Array) {
+                copy = [];
+                for (var i = 0, len = obj.length; i < len; i++) {
+                    copy[i] = cloneObject(obj[i]);
+                }
+                return copy;
+            }
+
+            // Handle Object
+            if (obj instanceof Object) {
+                copy = {};
+                for (var attr in obj) {
+                    if (obj.hasOwnProperty(attr)) copy[attr] = cloneObject(obj[attr]);
+                }
+                return copy;
+            }
+
+            throw new Error("Unable to copy obj! Its type isn't supported.");
+        }
 
         /**
          * Set bounding rectangle for a element
@@ -124,6 +227,19 @@
                     if (rectArr[3]) target.style.left = rectArr[3].endsWith('%') ? rectArr[3] : rectArr[3] + 'px';
                     break;
             }
+        }
+
+        /**
+         * A detection for CSS3 style property in current browser
+         * @param {string} cssProp CSS3 style property in string
+         * @returns return true if the browser support the css style property, return false otherowise
+         */
+        function isBroeserSupportProp(cssProp) {
+            var root = document.documentElement;
+            if (cssProp in root.style) {
+                return true;
+            }
+            return false;
         }
 
         /**
@@ -165,7 +281,9 @@
             getComputedSizeInPx: getComputedSizeInPx,
             setBoundingRectangle: setBoundingRectangle,
             roundTo: roundTo,
-            addEvent: addEvent
+            addEvent: addEvent,
+            cloneObject: cloneObject,
+            isBroeserSupportProp: isBroeserSupportProp
         }
     })();
 
@@ -182,7 +300,7 @@
             var headerHeight = Yuko.utility.getComputedSizeInPx(header, 'height');
             var firstPageHeight = Yuko.utility.getComputedSizeInPx(firstYukoContent, 'height');
 
-            win.innerHeight = document.body.clientHeight;
+            // win.innerHeight = document.body.clientHeight;
             // Default footer style
             footer.style.top = (firstPageHeight < win.innerHeight - headerHeight ? win.innerHeight - headerHeight : firstPageHeight + headerHeight) + 'px';
             // Default main style
@@ -847,12 +965,22 @@
             }
         };
 
+        /**
+         * Make a list's items to be Carousel items
+         * @param {Element} carouselList Carousel items' collection
+         * @param {Element} preButton A button to switch to Carousel's previous display order
+         * @param {Element} nextButton A button to switch to Carousel's next display order
+         * @returns 
+         */
         function carousel(carouselList, preButton, nextButton) {
+
+            var len = carouselList.length;
+            var nextItemList = [], positionValues = [];
             var position = {
                 evenNumberItem: [
                     ['100%', '100%', '0', '0'],
                     ['80%', '80%', '10%', '-12.5%'],
-                    ['60%', '60%', '20%', '12.5%'],
+                    ['80%', '80%', '20%', '12.5%'],
                     ['60%', '60%', '20%', '20%']
                 ],
                 oddNumberItem: [
@@ -864,33 +992,50 @@
                 ]
             }
 
-            var len = carouselList.length;
-            var nextItemList = [], positionValues = [];
+            if (!carouselList || len < 2) return;
 
+            // Attach click event to button
+            Yuko.utility.addEvent(nextButton, 'click', function (event) {
+                changeCoordinate(event);
+            });
+            Yuko.utility.addEvent(preButton, 'click', function (event) {
+                changeCoordinate(event);
+            });
+
+            /**
+             * Change Coordination of carousel list item
+             * @param {Event} event The DOM Event which was triggered
+             */
             var changeCoordinate = function (event) {
+
+                // Even number item position span
+                var positionProgressEven = [[], [], [], []];
+                // Odd number item position span
+                var positionProgressOdd = [[], [], [], [], []];
+
                 var visualPageIndex = window.parseInt(document.querySelector('#yuko-carousel-list > ul').getAttribute('data-page-index'));
+                // Reset visualPageIndex where it is overflow(more than carouselList.length or less than 0)
                 if (event.target === nextButton) {
                     visualPageIndex++;
-                    if (visualPageIndex === len - 1) {
+                    if (visualPageIndex === len) {
                         visualPageIndex = 0;
                     }
                 }
                 if (event.target === preButton) {
                     visualPageIndex--;
                     if (visualPageIndex === -1) {
-                        visualPageIndex = len-1;
+                        visualPageIndex = len - 1;
                     }
                 }
+
+                // The next display order list
                 nextItemList = [];
                 for (var i = visualPageIndex; i < len; i++) {
-                    console.log(visualPageIndex);
                     nextItemList.push(carouselList[i]);
                 }
                 for (var i = 0; i < visualPageIndex; i++) {
                     nextItemList.push(carouselList[i]);
                 }
-
-                console.log(nextItemList);
 
                 // There exists a odd number item in list
                 if (len % 2 !== 0) {
@@ -903,28 +1048,84 @@
                     }
                     if (len === 5) {
                         positionValues = position.oddNumberItem;
+                        nextItemList[3].style.zIndex = "5";
+                        nextItemList[4].style.zIndex = "6";
                     }
-                    
+
                     for (var i = 0; i < len; i++) {
-                        nextItemList[i].style.zIndex = (9-i) + "";
-                        Yuko.utility.setBoundingRectangle(nextItemList[i], positionValues[i]);
+                        if (i < 3) {
+                            nextItemList[i].style.zIndex = (9 - i) + "";
+                        }
+                        if (Yuko.utility.isBroeserSupportProp('transition'))
+                            Yuko.utility.setBoundingRectangle(nextItemList[i], positionValues[i]);
+                        else {
+                            // CSS transition is not support
+                            console.log('CSS transition is not support');
+                            
+                        }
                     }
                 }
                 // There exists a even number item in list
-                
-                document.querySelector('#yuko-carousel-list > ul').setAttribute('data-page-index', visualPageIndex + "");
-                return;
 
+                document.querySelector('#yuko-carousel-list > ul').setAttribute('data-page-index', visualPageIndex + "");
             }
 
-            if (!carouselList || len === 0 || len === 1) return;
+            var cssTransitionPolyfill = function (positionValues, option, duration) {
+                // Position data
+                var position = {
+                    evenNumberItem: [
+                        [100, 100, 0, 0],
+                        [80, 80, 10, -12.5],
+                        [80, 80, 20, 12.5],
+                        [60, 60, 20, 20]
+                    ],
+                    oddNumberItem: [
+                        [100, 100, 0, 0],
+                        [80, 80, 20, -12.5],
+                        [60, 60, 20, 12.5],
+                        [60, 60, 20, 27.5],
+                        [80, 80, 10, 32.5]
+                    ]
+                }
+                // Make a copy for position data
+                var positionCopy = Yuko.utility.cloneObject(position);
 
-            Yuko.utility.addEvent(nextButton, 'click', function (event) {
-                changeCoordinate(event);
-            });
-            Yuko.utility.addEvent(preButton, 'click', function (event) {
-                changeCoordinate(event);
-            });
+                var refreshTime = duration * 60;
+                var next = 0;
+                /**
+                 * Load data for every progress
+                 * @param {number} count position object's length
+                 */
+                var fillPositionData = function (count) {
+                    for (var j = 0; j < count; j++) {
+                        j < count - 1 ? next = j + 1 : next = 0;
+                        var pos = null, posCopy = null;
+                        if (count === 5) {
+                            pos = position.oddNumberItem;
+                            posCopy = positionCopy.oddNumberItem;
+                        } else if (count === 4) {
+                            pos = position.evenNumberItem;
+                            posCopy = positionCopy.evenNumberItem;
+                        }
+                        for (var k = 0; k < 4; k++) {
+                            (pos[j][k] += (posCopy[next][k] - posCopy[j][k]) / refreshTime);
+                        }
+                        var data = [];
+                        for (var m = 0; m < 4; m++) {
+                            data.push(pos[j][m].toLocaleString() === '-0' ? '0' : pos[j][m].toLocaleString());
+                        }
+                        count === 5 ? positionProgressOdd[j].push(data) : positionProgressEven[j].push(data);
+                    }
+                }
+
+                for (var i = 0; i < refreshTime; i++) {
+                    // fillPositionData(positionValues.length);
+                    fillPositionData(4);
+                }
+                console.log(positionProgressOdd);
+                console.log(positionProgressEven);
+            }
+            cssTransitionPolyfill(position.oddNumberItem, {}, .1);
         }
 
         return {
