@@ -312,12 +312,6 @@
             var firstPageHeight = Yuko.utility.getComputedSizeInPx(firstYukoContent, 'height');
 
             // Default footer style
-            console.log(header);
-            console.log('headerHeight = ' + headerHeight);
-            console.log('firstPageHeight = ' + firstPageHeight);
-            console.log('document.body.clientHeight = ' + document.body.clientHeight);
-            console.log((firstPageHeight < (document.body.clientHeight - headerHeight) ? document.body.clientHeight - headerHeight : firstPageHeight + headerHeight) + 'px');
-
             footer.style.top = (firstPageHeight < document.body.clientHeight - headerHeight ? document.body.clientHeight - headerHeight : firstPageHeight + headerHeight).toString() + 'px';
             // Default main style
             main.style.height = (document.body.clientHeight - 112) + "px";
@@ -993,15 +987,19 @@
             var len = carouselList.length;
             var nextItemList = [], positionValues = [];
             // Even number item position span
-            var positionProgressEven = [[], [], [], []];
+            var positionProgressEven = [];
             // Odd number item position span
-            var positionProgressOdd = [[], [], [], [], []];
+            var positionProgressOdd = [];
+            for (var i = 0; i < carouselList.length; i++) {
+                positionProgressOdd.push([]);
+                positionProgressEven.push([]);
+            }
             var position = {
                 evenNumberItem: [
                     ['100%', '100%', '0', '0'],
                     ['80%', '80%', '10%', '-12.5%'],
-                    ['80%', '80%', '20%', '12.5%'],
-                    ['60%', '60%', '20%', '20%']
+                    ['60%', '60%', '20%', '20%'],
+                    ['80%', '80%', '10%', '27.5%']
                 ],
                 oddNumberItem: [
                     ['100%', '100%', '0', '0'],
@@ -1028,8 +1026,8 @@
                     evenNumberItem: [
                         [100, 100, 0, 0],
                         [80, 80, 10, -12.5],
-                        [80, 80, 20, 12.5],
-                        [60, 60, 20, 20]
+                        [60, 60, 20, 20],
+                        [80, 80, 10, 27.5]
                     ],
                     oddNumberItem: [
                         [100, 100, 0, 0],
@@ -1043,6 +1041,7 @@
                 var positionCopy = Yuko.utility.cloneObject(position);
 
                 var refreshTime = duration * 60;
+                var pos = null, posCopy = null, posCopyTemp;
                 var next = 0;
                 /**
                  * Load data for every progress
@@ -1051,14 +1050,60 @@
                 var fillPositionData = function (count) {
                     for (var j = 0; j < count; j++) {
                         j < count - 1 ? next = j + 1 : next = 0;
-                        var pos = null, posCopy = null;
-                        if (count === 5) {
-                            pos = position.oddNumberItem;
-                            posCopy = positionCopy.oddNumberItem;
-                        } else if (count === 4) {
-                            pos = position.evenNumberItem;
-                            posCopy = positionCopy.evenNumberItem;
+
+                        if (count % 2 !== 0) {
+                            if (count === 3) {
+                                pos = [
+                                    position.oddNumberItem[0],
+                                    position.oddNumberItem[1],
+                                    position.oddNumberItem[5]
+                                ];
+                                posCopy = [
+                                    positionCopy.oddNumberItem[0],
+                                    positionCopy.oddNumberItem[1],
+                                    positionCopy.oddNumberItem[5]
+                                ];
+                            }
+                            if (count === 5) {
+                                pos = position.oddNumberItem;
+                                posCopy = positionCopy.oddNumberItem;
+                            }
+                            if (count > 5) {
+                                var overflowItem = [];
+                                for (var i = 0; i < count - 5; i++) {
+                                    overflowItem.push([40, 40, 30, 30]);
+                                }
+                                pos = [].concat(position.oddNumberItem.slice(0,3), overflowItem, position.oddNumberItem.slice(-2));
+                                posCopy = [].concat(positionCopy.oddNumberItem.slice(0,3), overflowItem, positionCopy.oddNumberItem.slice(-2));
+                            }
+                        } else {
+                            if (count === 2) {
+                                pos = [
+                                    position.evenNumberItem[0],
+                                    position.evenNumberItem[3]
+                                ];
+                                posCopy = [
+                                    positionCopy.evenNumberItem[0],
+                                    positionCopy.evenNumberItem[3]
+                                ];
+                            }
+                            if (count === 4) {
+                                pos = position.evenNumberItem;
+                                posCopy = positionCopy.evenNumberItem;
+                            }
+                            if (count > 4) {
+                                var overflowItem = [];
+                                for (var i = 0; i < count - 4; i++) {
+                                    overflowItem.push([60, 60, 20, 20]);
+                                }
+                                pos = [].concat(position.evenNumberItem.slice(0,3), overflowItem, position.evenNumberItem.slice(-1));
+                                posCopy = [].concat(positionCopy.evenNumberItem.slice(0,3), overflowItem, positionCopy.evenNumberItem.slice(-1));
+                            }
                         }
+                        
+                        // posCopyTemp = Yuko.utility.cloneObject(pos);
+                        // posCopy = positionCopy.oddNumberItem;
+                        
                         for (var k = 0; k < 4; k++) {
                             (pos[j][k] += (posCopy[next][k] - posCopy[j][k]) / refreshTime);
                         }
@@ -1066,16 +1111,19 @@
                         for (var m = 0; m < 4; m++) {
                             data.push(pos[j][m].toLocaleString() === '-0' ? '0' : pos[j][m].toLocaleString() + '%');
                         }
-                        count === 5 ? positionProgressOdd[j].push(data) : positionProgressEven[j].push(data);
+                        count % 2 !== 0 ? positionProgressOdd[j].push(data) : positionProgressEven[j].push(data);
                     }
+                    console.log('-------');
+                    console.log(pos);
+                    console.log(posCopy);
                 }
 
                 for (var i = 0; i < refreshTime; i++) {
-                    fillPositionData(positionValues.length);
+                    fillPositionData(6);
                 }
                 // console.log([].concat(positionProgressOdd.slice(-1), positionProgressOdd.slice(0, positionProgressOdd.length - 1)));
                 // console.log(positionProgressEven);
-                return positionValues.length === 5 ? [].concat(positionProgressOdd.slice(-1), positionProgressOdd.slice(0, positionProgressOdd.length - 1)) : [].concat(positionProgressEven.slice(-1), positionProgressEven.slice(0, positionProgressEven.length - 1));
+                return positionValues.length % 2 !== 0 ? [].concat(positionProgressOdd.slice(-1), positionProgressOdd.slice(0, positionProgressOdd.length - 1)) : [].concat(positionProgressEven.slice(-1), positionProgressEven.slice(0, positionProgressEven.length - 1));
             }
 
             if (!carouselList || len < 2) return;
@@ -1089,7 +1137,11 @@
             });
 
             var sortedPositionValues = cssTransitionPolyfill(position.oddNumberItem, {}, duration);
-
+            console.log('-----------------------------------');
+            for (var i = 0; i < sortedPositionValues.length; i++) {
+                console.log(sortedPositionValues[i]);
+            }
+            console.log('-----------------------------------');
             /**
              * Change Coordination of carousel list item
              * @param {Event} event The DOM Event which was triggered
@@ -1119,9 +1171,8 @@
                     nextItemList.push(carouselList[i]);
                 }
 
-                console.log(nextItemList);
+                // console.log(nextItemList);
 
-                // There exists a odd number item in list
                 if (len % 2 !== 0) {
                     if (len === 3) {
                         positionValues = [
@@ -1132,17 +1183,34 @@
                     }
                     if (len === 5) {
                         positionValues = position.oddNumberItem;
-                        nextItemList[3].style.zIndex = "15";
-                        nextItemList[4].style.zIndex = "16";
                     }
                     if (len > 5) {
                         var overflowItem = [];
-                        for (var i = 0; i < len; i++) {
+                        for (var i = 0; i < len - 5; i++) {
                             overflowItem.push(['40%', '40%', '30%', '30%']);
                         }
-                        positionValues = [].concat(position.oddNumberItem.slice(5), overflowItem, position.oddNumberItem.slide(-1));
+                        positionValues = [].concat(position.oddNumberItem.slice(0,3), overflowItem, position.oddNumberItem.slice(-2));
+                    }
+                } else {
+                    if (len === 2) {
+                        positionValues = [
+                            position.evenNumberItem[0],
+                            position.evenNumberItem[3]
+                        ];
+                    }
+                    if (len === 4) {
+                        positionValues = position.evenNumberItem;
+                    }
+                    if (len > 4) {
+                        var overflowItem = [];
+                        for (var i = 0; i < len - 4; i++) {
+                            overflowItem.push(['60%', '60%', '20%', '20%']);
+                        }
+                        positionValues = [].concat(position.evenNumberItem.slice(0,3), overflowItem, position.evenNumberItem.slice(-1));
                     }
                 }
+                nextItemList[len - 2].style.zIndex = (20 - len) + "";
+                nextItemList[len - 1].style.zIndex = (21 - len) + "";
 
                 var refreshTime = duration * 60;
 
@@ -1164,11 +1232,13 @@
                 };
                 */
 
+                console.log('len = ' + len);
                 for (var i = 0; i < len; i++) {
-                    if (i < 3) {
+                    if (i < len - 2) {
                         nextItemList[i].style.zIndex = (19 - i) + "";
                     }
                     if (Yuko.utility.isBroeserSupportProp('transition')) {
+                        // console.log(positionValues[i]);
                         Yuko.utility.setBoundingRectangle(nextItemList[i], positionValues[i]);
                     }
                     else {
@@ -1178,18 +1248,16 @@
                             var animate = function () {
                                 if (flag < refreshTime - 1) {
                                     flag++;
-                                    console.log(sortedPositionValues[i][flag]);
+                                    console.log(sortedPositionValues);
                                     Yuko.utility.setBoundingRectangle(nextItemList[i], sortedPositionValues[i][flag]);
                                     window.requestAnimFrame(animate);
                                 }
                             }
                             window.requestAnimFrame(animate);
                         })(i);
-
                         // animate(i, refreshTime);
                     }
                 }
-                // There exists a even number item in list
 
                 document.querySelector('#yuko-carousel-list > ul').setAttribute('data-page-index', visualPageIndex + "");
             }

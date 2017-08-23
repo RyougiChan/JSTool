@@ -272,6 +272,42 @@ footer a {
     left: 30%;
 }
 
+.yuko-carousel-item:nth-child(7) {
+    background: url('../images/chara_izumi_vsl.png') no-repeat 50% 50%;
+    z-index: 16;
+    width: 40%;
+    height: 40%;
+    top: 30%;
+    left: 30%;
+}
+
+.yuko-carousel-item:nth-child(8) {
+    background: url('../images/chara_izumi_vsl.png') no-repeat 50% 50%;
+    z-index: 16;
+    width: 40%;
+    height: 40%;
+    top: 30%;
+    left: 30%;
+}
+
+.yuko-carousel-item:nth-child(9) {
+    background: url('../images/chara_izumi_vsl.png') no-repeat 50% 50%;
+    z-index: 16;
+    width: 40%;
+    height: 40%;
+    top: 30%;
+    left: 30%;
+}
+
+.yuko-carousel-item:nth-child(10) {
+    background: url('../images/chara_izumi_vsl.png') no-repeat 50% 50%;
+    z-index: 16;
+    width: 40%;
+    height: 40%;
+    top: 30%;
+    left: 30%;
+}
+
 /* Carousel css  E */
 /* Effect S */
 @keyframes ripple {
