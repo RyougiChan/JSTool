@@ -146,7 +146,18 @@
          * @return {number} Return computed size in px of the element {@param ele}
          */
         function getComputedSizeInPx(ele, type) {
-            window.getComputedStyle = window.getComputedStyle || (window.getComputedStyle = function (e, t) { return this.el = e, this.getPropertyValue = function (t) { var n = /(\-([a-z]){1})/g; return t == "float" && (t = "styleFloat"), n.test(t) && (t = t.replace(n, function () { return arguments[2].toUpperCase() })), e.currentStyle[t] ? e.currentStyle[t] : null }, this });
+            window.getComputedStyle = window.getComputedStyle || (
+                window.getComputedStyle = function (e, t) {
+                    return this.el = e,
+                        this.getPropertyValue = function (t) {
+                            var n = /(\-([a-z]){1})/g;
+                            return t == "float" && (t = "styleFloat"),
+                                n.test(t) && (t = t.replace(n, function () {
+                                    return arguments[2].toUpperCase()
+                                })),
+                                e.currentStyle[t] ? e.currentStyle[t] : null
+                        }, this
+                });
 
             if (ele instanceof Element)
                 return parseInt((window.getComputedStyle(ele, null).getPropertyValue(type)), 10);
@@ -300,11 +311,16 @@
             var headerHeight = Yuko.utility.getComputedSizeInPx(header, 'height');
             var firstPageHeight = Yuko.utility.getComputedSizeInPx(firstYukoContent, 'height');
 
-            // win.innerHeight = document.body.clientHeight;
             // Default footer style
-            footer.style.top = (firstPageHeight < win.innerHeight - headerHeight ? win.innerHeight - headerHeight : firstPageHeight + headerHeight) + 'px';
+            console.log(header);
+            console.log('headerHeight = ' + headerHeight);
+            console.log('firstPageHeight = ' + firstPageHeight);
+            console.log('document.body.clientHeight = ' + document.body.clientHeight);
+            console.log((firstPageHeight < (document.body.clientHeight - headerHeight) ? document.body.clientHeight - headerHeight : firstPageHeight + headerHeight) + 'px');
+
+            footer.style.top = (firstPageHeight < document.body.clientHeight - headerHeight ? document.body.clientHeight - headerHeight : firstPageHeight + headerHeight).toString() + 'px';
             // Default main style
-            main.style.height = (win.innerHeight - 112) + "px";
+            main.style.height = (document.body.clientHeight - 112) + "px";
         }
 
         // Initial Carousel Style
@@ -317,7 +333,7 @@
             if (carouselContainer) {
                 var carouselTitle = document.getElementById('yuko-carousel-title');
                 var carousel = document.getElementById('yuko-carousel');
-                var carouselList = document.getElementsByClassName('yuko-carousel-item');
+                var carouselList = document.querySelectorAll('.yuko-carousel-item');
 
                 carouselContainerHeight = Yuko.utility.getComputedSizeInPx(carouselContainer, 'height');
                 carouselTitleHeight = Yuko.utility.getComputedSizeInPx(carouselTitle, 'height');
@@ -603,7 +619,7 @@
                         // Change style of nav list item
                         drawerList[i].className = 'yuko-nav-item item-selected'
                         // Adjust position of footer
-                        footer.style.top = (pageList[i].offsetHeight < win.innerHeight - 56 ? win.innerHeight - 56 : pageList[i].offsetHeight + 56) + 'px';
+                        footer.style.top = (pageList[i].offsetHeight < document.body.clientHeight - 56 ? document.body.clientHeight - 56 : pageList[i].offsetHeight + 56) + 'px';
                         // Adjust height of main
                         document.getElementsByTagName('main').item(0).style.height = pageList[i].offsetHeight + "px";
                         showMenu(false);
@@ -995,6 +1011,16 @@
                     ['80%', '80%', '10%', '32.5%']
                 ]
             }
+            window.requestAnimFrame = (function () {
+                return window.requestAnimationFrame ||
+                    window.webkitRequestAnimationFrame ||
+                    window.mozRequestAnimationFrame ||
+                    window.oRequestAnimationFrame ||
+                    window.msRequestAnimationFrame ||
+                    function (callback) {
+                        window.setTimeout(callback, 1000 / 60);
+                    };
+            })();
 
             var cssTransitionPolyfill = function (positionValues, option, duration) {
                 // Position data
@@ -1007,7 +1033,7 @@
                     ],
                     oddNumberItem: [
                         [100, 100, 0, 0],
-                        [80, 80, 20, -12.5],
+                        [80, 80, 10, -12.5],
                         [60, 60, 20, 12.5],
                         [60, 60, 20, 27.5],
                         [80, 80, 10, 32.5]
@@ -1063,9 +1089,6 @@
             });
 
             var sortedPositionValues = cssTransitionPolyfill(position.oddNumberItem, {}, duration);
-            console.log('--------------------------------------');
-            console.log(sortedPositionValues);
-            console.log('--------------------------------------');
 
             /**
              * Change Coordination of carousel list item
@@ -1095,6 +1118,9 @@
                 for (var i = 0; i < visualPageIndex; i++) {
                     nextItemList.push(carouselList[i]);
                 }
+
+                console.log(nextItemList);
+
                 // There exists a odd number item in list
                 if (len % 2 !== 0) {
                     if (len === 3) {
@@ -1106,47 +1132,61 @@
                     }
                     if (len === 5) {
                         positionValues = position.oddNumberItem;
-                        nextItemList[3].style.zIndex = "5";
-                        nextItemList[4].style.zIndex = "6";
+                        nextItemList[3].style.zIndex = "15";
+                        nextItemList[4].style.zIndex = "16";
                     }
+                    if (len > 5) {
+                        var overflowItem = [];
+                        for (var i = 0; i < len; i++) {
+                            overflowItem.push(['40%', '40%', '30%', '30%']);
+                        }
+                        positionValues = [].concat(position.oddNumberItem.slice(5), overflowItem, position.oddNumberItem.slide(-1));
+                    }
+                }
 
-                    var refreshTime = duration * 60;
-                    var animate = null;
-                    console.log(sortedPositionValues);
-                    for (var i = 0; i < len; i++) {
-                        var flag = 0;
-                        if (i < 3) {
-                            nextItemList[i].style.zIndex = (9 - i) + "";
-                        }
-                        if (!Yuko.utility.isBroeserSupportProp('transition'))
-                            Yuko.utility.setBoundingRectangle(nextItemList[i], positionValues[i]);
-                        else {
-                            // CSS transition is not support
-                            var test = (function (i) {
-                                return function () {
-                                    if (flag < refreshTime - 1) {
-                                        flag++;
-                                        console.log(i);
-                                        window.requestAnimationFrame(test);
-                                    }
+                var refreshTime = duration * 60;
+
+                /*
+                function animate(i, f) {
+                    function load(flag) {
+                        window.requestAnimFrame(function () {
+                            return (function () {
+                                console.log('flag = ' + flag + '   i = ' + i);
+                                console.log(sortedPositionValues[i][flag]);
+                                Yuko.utility.setBoundingRectangle(nextItemList[i], sortedPositionValues[i][flag]);
+                            })();
+                        });
+                    };
+
+                    for (var flag = 0; flag < f; flag++) {
+                        load(flag);
+                    }
+                };
+                */
+
+                for (var i = 0; i < len; i++) {
+                    if (i < 3) {
+                        nextItemList[i].style.zIndex = (19 - i) + "";
+                    }
+                    if (Yuko.utility.isBroeserSupportProp('transition')) {
+                        Yuko.utility.setBoundingRectangle(nextItemList[i], positionValues[i]);
+                    }
+                    else {
+                        //CSS transition is not support
+                        (function (i) {
+                            var flag = 0;
+                            var animate = function () {
+                                if (flag < refreshTime - 1) {
+                                    flag++;
+                                    console.log(sortedPositionValues[i][flag]);
+                                    Yuko.utility.setBoundingRectangle(nextItemList[i], sortedPositionValues[i][flag]);
+                                    window.requestAnimFrame(animate);
                                 }
-                            })(i);
-                            animate = (function (i) {
-                                // console.log(i);
-                                return function () {
-                                    if (flag < refreshTime - 1) {
-                                        console.log('flag = ' + flag + '   i = ' + i);
-                                        flag++;
-                                        console.log(sortedPositionValues[i][flag]);
-                                        // console.log(sortedPositionValues[flag][i]);
-                                        Yuko.utility.setBoundingRectangle(nextItemList[i], sortedPositionValues[i][flag]);
-                                        window.requestAnimationFrame(animate);
-                                    }
-                                }
-                            })(i);
-                            // window.requestAnimationFrame(animate);
-                            window.requestAnimationFrame(test);
-                        }
+                            }
+                            window.requestAnimFrame(animate);
+                        })(i);
+
+                        // animate(i, refreshTime);
                     }
                 }
                 // There exists a even number item in list

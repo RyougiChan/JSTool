@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title></title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="css/style.css" rel="stylesheet">
+</head>
+<style>
+  ul > li {height: 100px; width: 100px; background: #666fff}
+  ul > li > a {}
+  ul div {}
+</style>
+<body>
+
+  <header id="header" class="header">
+
+  </header>
+  <div id="div" class="div"></div>
+
+  <ul>
+    <li>
+      <img src="http://www.tp-link.com.cn/content/images2017/promos/ipc40.jpg" />
+      <a href="#">
+        <div>
+          <p>/d/Work/!无尽的八月/Project/JSTools</p>
+          <p>/d/Work/!无尽的八月/Project/JSTools</p>
+        </div>
+      </a>
+    </li>
+  </ul>
+
+
+
+
+
+  <script>
+    (function () {
+      for (var i = 0; i < 5; i++) {
+        // console.log('enterA  ' + i);
+        // var testA = function () {
+        //   if (flag < 10) {
+        //     flag++;
+        //     console.log('A  ' + i);
+        //     window.requestAnimationFrame(testA);
+        //   }
+        // }
+        (function (index) {
+          // console.log('enterB  ' + index)
+          var testB = (function (index) {
+            var flag = 0;
+            // console.log('enterC  ' + index)
+            return function () {
+              if (flag < 10) {
+                flag++;
+                console.log('B  i=' + index + '   flag=' + flag);
+                window.requestAnimationFrame(testB);
+              }
+            }
+          })(index);
+          // window.requestAnimationFrame(testA);
+          window.requestAnimationFrame(testB);
+        })(i)
+      }
+      var flagB = 0;
+      var testC = (function () {
+        return function () {
+          if (flagB < 10) {
+            flagB++;
+            console.log('C  ');
+            // window.requestAnimationFrame(testC);
+          }
+        }
+      })();
+      var testD = function () {
+        if (flagB < 10) {
+          flagB++;
+          console.log('D  ');
+          // window.requestAnimationFrame(testD);
+        }
+      }
+      // window.requestAnimationFrame(testC);
+      // window.requestAnimationFrame(testD);
+
+    });
+  </script>
+  <script>
+    // for (var i = 0; i < 3; i++) {
+    //   (function (index) {
+    //     var flag = 0;
+    //     var callback = function () {
+    //       if (flag < 5) {
+    //         flag++;
+    //         console.log('K  i=' + index + ' flag=' + flag);
+    //         window.requestAnimationFrame(callback);
+    //       }
+    //     }
+    //     window.requestAnimationFrame(callback);
+    //   })(i);
+    // }
+</script>
+<script>
+  for (var i = 0; i < 3; i++) {
+      (function (index) {
+        var flag = 0;
+        var callback = function () {
+          if (flag < 5) {
+            flag++;
+            console.log('K  i=' + index + ' flag=' + flag);
+            window.setTimeout(callback, 1000 / 60);
+          }
+        }
+        window.setTimeout(callback, 1000 / 60);
+      })(i);
+    }
+</script>
+</body>
+
+</html>
