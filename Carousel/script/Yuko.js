@@ -1017,7 +1017,7 @@
                     };
             })();
 
-            var cssTransitionPolyfill = function (carouselList, option, duration) {
+            var cssTransitionPolyfill = function (carouselList, option, duration, event) {
                 // Position data
                 var position = {
                     evenNumberItem: [
@@ -1115,17 +1115,14 @@
 
                         for (var k = 0; k < 4; k++) {
                             // ERROR In IE9, there is a unexpected action with pos
-                            pos[j][k] += ((posCopy[next][k] - posCopy[j][k]) / refreshTime);
+                            posCopy[j][k] += ((pos[next][k] - pos[j][k]) / refreshTime);
                         }
                         var data = [];
                         for (var m = 0; m < 4; m++) {
-                            data.push(pos[j][m].toLocaleString() === '-0' ? '0' : pos[j][m].toLocaleString() + '%');
+                            data.push(posCopy[j][m].toLocaleString() === '-0' ? '0' : posCopy[j][m].toLocaleString() + '%');
                         }
                         positionProgress[j].push(data);
                     }
-                    console.log('-------');
-                    console.log(pos);
-                    console.log(posCopy);
                 }
 
                 for (var i = 0; i < refreshTime; i++) {
@@ -1133,25 +1130,29 @@
                 }
                 // console.log([].concat(positionProgressOdd.slice(-1), positionProgressOdd.slice(0, positionProgressOdd.length - 1)));
                 // console.log(positionProgressEven);
-                return [].concat(positionProgress.slice(-1), positionProgress.slice(0, positionProgress.length - 1));
+                var prePositionSpan = [].concat(positionProgress.slice(-1), positionProgress.slice(0, positionProgress.length - 1));
+                var tempPositionSpan = [].concat(positionProgress);
+                for (var i = 0; i < tempPositionSpan.length; i++) {
+                    tempPositionSpan.reverse();
+                    tempPositionSpan[i].reverse();
+                }
+                var nextPositionSpan = [].concat(tempPositionSpan.slice(0,tempPositionSpan.length - 1), tempPositionSpan.slice(-1));
+                return event.target === preButton ? prePositionSpan : nextPositionSpan;
             }
 
             if (!carouselList || len < 2) return;
 
             // Attach click event to button
+            var sortedPositionValues = null;
             Yuko.utility.addEvent(nextButton, 'click', function (event) {
+                sortedPositionValues = cssTransitionPolyfill(carouselList, {}, duration, event);
                 changeCoordinate(event, duration);
             });
             Yuko.utility.addEvent(preButton, 'click', function (event) {
+                sortedPositionValues = cssTransitionPolyfill(carouselList, {}, duration, event);
                 changeCoordinate(event, duration);
             });
 
-            var sortedPositionValues = cssTransitionPolyfill(carouselList, {}, duration);
-            console.log('-----------------------------------');
-            for (var i = 0; i < sortedPositionValues.length; i++) {
-                console.log(sortedPositionValues[i]);
-            }
-            console.log('-----------------------------------');
             /**
              * Change Coordination of carousel list item
              * @param {Event} event The DOM Event which was triggered
