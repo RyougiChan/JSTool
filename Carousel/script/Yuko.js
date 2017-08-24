@@ -986,13 +986,10 @@
 
             var len = carouselList.length;
             var nextItemList = [], positionValues = [];
-            // Even number item position span
-            var positionProgressEven = [];
-            // Odd number item position span
-            var positionProgressOdd = [];
+            // Item position span
+            var positionProgress = [];
             for (var i = 0; i < carouselList.length; i++) {
-                positionProgressOdd.push([]);
-                positionProgressEven.push([]);
+                positionProgress.push([]);
             }
             var position = {
                 evenNumberItem: [
@@ -1020,7 +1017,7 @@
                     };
             })();
 
-            var cssTransitionPolyfill = function (positionValues, option, duration) {
+            var cssTransitionPolyfill = function (carouselList, option, duration) {
                 // Position data
                 var position = {
                     evenNumberItem: [
@@ -1058,60 +1055,73 @@
                                     position.oddNumberItem[1],
                                     position.oddNumberItem[5]
                                 ];
-                                posCopy = [
-                                    positionCopy.oddNumberItem[0],
-                                    positionCopy.oddNumberItem[1],
-                                    positionCopy.oddNumberItem[5]
-                                ];
+                                if (posCopy === null) {
+                                    posCopy = [
+                                        positionCopy.oddNumberItem[0],
+                                        positionCopy.oddNumberItem[1],
+                                        positionCopy.oddNumberItem[5]
+                                    ];
+                                }
                             }
                             if (count === 5) {
                                 pos = position.oddNumberItem;
-                                posCopy = positionCopy.oddNumberItem;
+                                if (posCopy === null) {
+                                    posCopy = positionCopy.oddNumberItem;
+                                }
                             }
                             if (count > 5) {
                                 var overflowItem = [];
                                 for (var i = 0; i < count - 5; i++) {
                                     overflowItem.push([40, 40, 30, 30]);
                                 }
-                                pos = [].concat(position.oddNumberItem.slice(0,3), overflowItem, position.oddNumberItem.slice(-2));
-                                posCopy = [].concat(positionCopy.oddNumberItem.slice(0,3), overflowItem, positionCopy.oddNumberItem.slice(-2));
+                                pos = [].concat(position.oddNumberItem.slice(0, 3), overflowItem, position.oddNumberItem.slice(-2));
+                                if (posCopy === null) {
+                                    posCopy = [].concat(positionCopy.oddNumberItem.slice(0, 3), overflowItem, positionCopy.oddNumberItem.slice(-2));
+                                }
                             }
                         } else {
                             if (count === 2) {
                                 pos = [
                                     position.evenNumberItem[0],
                                     position.evenNumberItem[3]
-                                ];
-                                posCopy = [
-                                    positionCopy.evenNumberItem[0],
-                                    positionCopy.evenNumberItem[3]
-                                ];
+                                ]; 
+                                if (posCopy === null) {
+                                    posCopy = [
+                                        positionCopy.evenNumberItem[0],
+                                        positionCopy.evenNumberItem[3]
+                                    ];
+                                }
                             }
                             if (count === 4) {
-                                pos = position.evenNumberItem;
-                                posCopy = positionCopy.evenNumberItem;
+                                pos = position.evenNumberItem; 
+                                if (posCopy === null) {
+                                    posCopy = positionCopy.evenNumberItem;
+                                }
                             }
                             if (count > 4) {
                                 var overflowItem = [];
                                 for (var i = 0; i < count - 4; i++) {
                                     overflowItem.push([60, 60, 20, 20]);
                                 }
-                                pos = [].concat(position.evenNumberItem.slice(0,3), overflowItem, position.evenNumberItem.slice(-1));
-                                posCopy = [].concat(positionCopy.evenNumberItem.slice(0,3), overflowItem, positionCopy.evenNumberItem.slice(-1));
+                                pos = [].concat(position.evenNumberItem.slice(0, 3), overflowItem, position.evenNumberItem.slice(-1)); 
+                                if (posCopy === null) {
+                                    posCopy = [].concat(positionCopy.evenNumberItem.slice(0, 3), overflowItem, positionCopy.evenNumberItem.slice(-1));
+                                }
                             }
                         }
-                        
+
                         // posCopyTemp = Yuko.utility.cloneObject(pos);
                         // posCopy = positionCopy.oddNumberItem;
-                        
+
                         for (var k = 0; k < 4; k++) {
-                            (pos[j][k] += (posCopy[next][k] - posCopy[j][k]) / refreshTime);
+                            // ERROR In IE9, there is a unexpected action with pos
+                            pos[j][k] += ((posCopy[next][k] - posCopy[j][k]) / refreshTime);
                         }
                         var data = [];
                         for (var m = 0; m < 4; m++) {
                             data.push(pos[j][m].toLocaleString() === '-0' ? '0' : pos[j][m].toLocaleString() + '%');
                         }
-                        count % 2 !== 0 ? positionProgressOdd[j].push(data) : positionProgressEven[j].push(data);
+                        positionProgress[j].push(data);
                     }
                     console.log('-------');
                     console.log(pos);
@@ -1119,11 +1129,11 @@
                 }
 
                 for (var i = 0; i < refreshTime; i++) {
-                    fillPositionData(6);
+                    fillPositionData(carouselList.length);
                 }
                 // console.log([].concat(positionProgressOdd.slice(-1), positionProgressOdd.slice(0, positionProgressOdd.length - 1)));
                 // console.log(positionProgressEven);
-                return positionValues.length % 2 !== 0 ? [].concat(positionProgressOdd.slice(-1), positionProgressOdd.slice(0, positionProgressOdd.length - 1)) : [].concat(positionProgressEven.slice(-1), positionProgressEven.slice(0, positionProgressEven.length - 1));
+                return [].concat(positionProgress.slice(-1), positionProgress.slice(0, positionProgress.length - 1));
             }
 
             if (!carouselList || len < 2) return;
@@ -1136,7 +1146,7 @@
                 changeCoordinate(event, duration);
             });
 
-            var sortedPositionValues = cssTransitionPolyfill(position.oddNumberItem, {}, duration);
+            var sortedPositionValues = cssTransitionPolyfill(carouselList, {}, duration);
             console.log('-----------------------------------');
             for (var i = 0; i < sortedPositionValues.length; i++) {
                 console.log(sortedPositionValues[i]);
@@ -1189,7 +1199,7 @@
                         for (var i = 0; i < len - 5; i++) {
                             overflowItem.push(['40%', '40%', '30%', '30%']);
                         }
-                        positionValues = [].concat(position.oddNumberItem.slice(0,3), overflowItem, position.oddNumberItem.slice(-2));
+                        positionValues = [].concat(position.oddNumberItem.slice(0, 3), overflowItem, position.oddNumberItem.slice(-2));
                     }
                 } else {
                     if (len === 2) {
@@ -1206,7 +1216,7 @@
                         for (var i = 0; i < len - 4; i++) {
                             overflowItem.push(['60%', '60%', '20%', '20%']);
                         }
-                        positionValues = [].concat(position.evenNumberItem.slice(0,3), overflowItem, position.evenNumberItem.slice(-1));
+                        positionValues = [].concat(position.evenNumberItem.slice(0, 3), overflowItem, position.evenNumberItem.slice(-1));
                     }
                 }
                 nextItemList[len - 2].style.zIndex = (20 - len) + "";
