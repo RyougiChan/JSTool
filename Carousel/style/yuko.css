@@ -1,29 +1,35 @@
 /* Main Container css S */
-#yuko-main-container
-{
-    position: relative;
 
+#yuko-main-container {
+    position: relative;
     width: 100%;
     height: 100%;
 }
+
+
 /* Main Container css E */
+
+
 /* Header css S */
-#yuko-header
-{
+
+#yuko-header {
     display: flex;
     float: left;
-
     width: 100%;
     height: 56px;
-
     background: #3f51b5;
-    box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12);
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12);
     position: fixed;
     top: 0;
     z-index: 0;
 }
+
+
 /* Header css E */
+
+
 /* Drawer css S */
+
 #yuko-nav-drawer-button {
     width: 56px;
     color: white;
@@ -31,16 +37,14 @@
     padding: 16px 0;
 }
 
-#yuko-nav-drawer-container
-{
+#yuko-nav-drawer-container {
     width: 100%;
     height: 100%;
     z-index: 2;
     background: rgba(0, 0, 0, 0);
 }
 
-#yuko-nav-drawer
-{
+#yuko-nav-drawer {
     position: fixed;
     width: 80%;
     height: 100%;
@@ -49,70 +53,68 @@
     z-index: 2
 }
 
-#yuko-nav-list
-{
+#yuko-nav-list {
     width: calc(100% - 10px);
     height: 100%;
-
     text-indent: 16px;
-
     background: #f1f1f1;
 }
 
-#yuko-nav-white
-{
+#yuko-nav-white {
     float: right;
-
     width: 10px;
     height: 100%;
-
     background: none;
 }
-#yuko-nav-title
-{
+
+#yuko-nav-title {
     font-size: 20px;
     line-height: 50px;
-
     display: block;
-
     width: 100%;
     height: 56px;
 }
-.yuko-nav-item
-{
+
+.yuko-nav-item {
     position: relative;
     line-height: 56px;
-
     display: block;
-
     width: 100%;
     height: 56px;
-
     text-decoration: none;
     overflow: hidden;
     color: #777;
 }
-.yuko-nav-item:hover
-{
+
+.yuko-nav-item:hover {
     background-color: #e0e0e0;
 }
+
 .yuko-nav-item.item-selected {
     background-color: #e0e0e0;
 }
+
+
 /* Drawer css E */
+
+
 /* Main css S */
+
+
 /* Main Content css S */
+
 .yuko-content {
     /* min-height: 100%;  */
-    width: 100%; 
+    width: 100%;
     height: 100%;
-    font-size: 36px; 
-    font-weight: 800; 
-    text-align:center
+    font-size: 36px;
+    font-weight: 800;
+    text-align: center
 }
+
 .yuko-page-container {
-    overflow: hidden; 
-    position: absolute !important; 
+    overflow: hidden;
+    position: absolute !important;
     z-index: -1;
 }
 
@@ -126,9 +128,16 @@ main {
     float: left;
     margin: 56px auto 0 auto;
 }
+
+
 /* Main Content css E */
+
+
 /* Main css E */
+
+
 /* Footer css S */
+
 footer {
     position: absolute;
     top: 100%;
@@ -151,8 +160,13 @@ footer a {
     color: #FFFFFF;
     font-style: italic
 }
+
+
 /* Footer css E */
+
+
 /* Carousel css  S */
+
 #yuko-carousel-container {
     width: 100%;
     height: 100%;
@@ -171,6 +185,7 @@ footer a {
     line-height: 56px;
     color: #ffffff;
 }
+
 #yuko-carousel-list {
     position: relative;
     width: 100%;
@@ -196,10 +211,12 @@ footer a {
     background-size: 100%;
     cursor: pointer;
 }
+
 #yuko-carousel-pre {
     left: 24px;
     background: url('../images/pre.png') no-repeat 50% 50%;
 }
+
 #yuko-carousel-next {
     right: 24px;
     background: url('../images/next.png') no-repeat 50% 50%;
@@ -210,8 +227,7 @@ footer a {
     width: 100%;
     height: 100%;
     background-size: contain !important;
-    transition: .3s cubic-bezier(.17,.67,.83,.67);
-    /* transition: <property> <duration> <timing-function> <delay>; */
+    transition: .3s cubic-bezier(.17, .67, .83, .67);
 }
 
 .carousel-item-focus {
@@ -220,7 +236,7 @@ footer a {
 
 .yuko-carousel-item:nth-child(1) {
     z-index: 19;
-    background: url('../images/chara_eriri_vsl.png') no-repeat 50% 50%;
+    background: pink url('../images/chara_eriri_vsl.png') no-repeat 50% 50%;
     width: 100%;
     height: 100%;
     top: 0;
@@ -228,7 +244,7 @@ footer a {
 }
 
 .yuko-carousel-item:nth-child(2) {
-    background: url('../images/chara_megumi_vsl.png') no-repeat 50% 50%;
+    background:lightblue url('../images/chara_megumi_vsl.png') no-repeat 50% 50%;
     z-index: 18;
     width: 80%;
     height: 80%;
@@ -237,7 +253,7 @@ footer a {
 }
 
 .yuko-carousel-item:nth-child(3) {
-    background: url('../images/chara_utaha_vsl.png') no-repeat 50% 50%;
+    background:lightcoral url('../images/chara_utaha_vsl.png') no-repeat 50% 50%;
     z-index: 17;
     width: 60%;
     height: 60%;
@@ -246,7 +262,7 @@ footer a {
 }
 
 .yuko-carousel-item:nth-child(4) {
-    background: url('../images/chara_michiru_vsl.png') no-repeat 50% 50%;
+    background:lightgrey url('../images/chara_michiru_vsl.png') no-repeat 50% 50%;
     z-index: 15;
     width: 60%;
     height: 60%;
@@ -255,7 +271,7 @@ footer a {
 }
 
 .yuko-carousel-item:nth-child(5) {
-    background: url('../images/chara_izumi_vsl.png') no-repeat 50% 50%;
+    background:lightgreen url('../images/chara_izumi_vsl.png') no-repeat 50% 50%;
     z-index: 16;
     width: 80%;
     height: 80%;
@@ -264,7 +280,7 @@ footer a {
 }
 
 .yuko-carousel-item:nth-child(6) {
-    background: url('../images/chara_izumi_vsl.png') no-repeat 50% 50%;
+    background:lightseagreen url('../images/chara_izumi_vsl.png') no-repeat 50% 50%;
     z-index: 16;
     width: 40%;
     height: 40%;
@@ -273,7 +289,7 @@ footer a {
 }
 
 .yuko-carousel-item:nth-child(7) {
-    background: url('../images/chara_izumi_vsl.png') no-repeat 50% 50%;
+    background:lightyellow url('../images/chara_izumi_vsl.png') no-repeat 50% 50%;
     z-index: 16;
     width: 40%;
     height: 40%;
@@ -282,7 +298,7 @@ footer a {
 }
 
 .yuko-carousel-item:nth-child(8) {
-    background: url('../images/chara_izumi_vsl.png') no-repeat 50% 50%;
+    background:lightsalmon url('../images/chara_izumi_vsl.png') no-repeat 50% 50%;
     z-index: 16;
     width: 40%;
     height: 40%;
@@ -291,7 +307,7 @@ footer a {
 }
 
 .yuko-carousel-item:nth-child(9) {
-    background: url('../images/chara_izumi_vsl.png') no-repeat 50% 50%;
+    background:lightskyblue url('../images/chara_izumi_vsl.png') no-repeat 50% 50%;
     z-index: 16;
     width: 40%;
     height: 40%;
@@ -300,7 +316,7 @@ footer a {
 }
 
 .yuko-carousel-item:nth-child(10) {
-    background: url('../images/chara_izumi_vsl.png') no-repeat 50% 50%;
+    background:lightslategray url('../images/chara_izumi_vsl.png') no-repeat 50% 50%;
     z-index: 16;
     width: 40%;
     height: 40%;
@@ -308,22 +324,30 @@ footer a {
     left: 30%;
 }
 
+
 /* Carousel css  E */
+
+
 /* Effect S */
+
 @keyframes ripple {
-  to {
-    transform: scale(2);
-    opacity: 0;
-  }
+    to {
+        transform: scale(2);
+        opacity: 0;
+    }
 }
+
 .ripple {
-  position: absolute;
-  background: rgba(0,0,0,.15);
-  border-radius: 100%;
-  transform: scale(0);
-  pointer-events: none;
+    position: absolute;
+    background: rgba(0, 0, 0, .15);
+    border-radius: 100%;
+    transform: scale(0);
+    pointer-events: none;
 }
+
 .ripple.show {
-  animation: ripple .75s ease-out;
+    animation: ripple .75s ease-out;
 }
+
+
 /* Effect E */

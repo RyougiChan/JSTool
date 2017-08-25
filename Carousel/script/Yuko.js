@@ -975,16 +975,24 @@
             }
         };
 
-        /**
+        /**Parameters to initial Carousel
          * Make a list's items to be Carousel items
          * @param {Element} carouselList Carousel items' collection
          * @param {Element} preButton A button to switch to Carousel's previous display order
          * @param {Element} nextButton A button to switch to Carousel's next display order
-         * @returns 
+         * @param {{positions : ([number]|undefined), duration : number}=} options 
+         *          positions=: The position list of carousel items.
+         *                      If the number of carousel items are a even number, there should be four Array items in positions,
+         *                          for example --- [['100%', '100%', '0', '0'], ['80%', '80%', '10%', '-12.5%'], ['60%', '60%', '20%', '20%'], ['80%', '80%', '10%', '32.5%']] --- 
+         *                      If the number of carousel items are a even number, there should be five Array items in positions,
+         *                          for example --- [['100%', '100%', '0', '0'], ['80%', '80%', '10%', '-12.5%'], ['60%', '60%', '20%', '12.5%'],
+ ['60%', '60%', '20%', '32.5%'], ['80%', '80%', '10%', '32.5%']] --- 
+         *          duration=: Animation excution time in second.
+         * @returns Return null if carouselList is undefined or carouselList's length is less than 2
          */
-        function carousel(carouselList, preButton, nextButton, duration) {
+        function carousel(carouselList, preButton, nextButton, options) {
 
-            var len = carouselList.length;
+            var len = carouselList.length, duration = .3;
             var nextItemList = [], positionValues = [];
             // Item position span
             var positionProgress = [];
@@ -992,21 +1000,54 @@
             for (var i = 0; i < carouselList.length; i++) {
                 positionProgress.push([]);
             }
+            // Position data in number
             var position = {
                 evenNumberItem: [
                     ['100%', '100%', '0', '0'],
                     ['80%', '80%', '10%', '-12.5%'],
                     ['60%', '60%', '20%', '20%'],
-                    ['80%', '80%', '10%', '27.5%']
+                    ['80%', '80%', '10%', '32.5%']
                 ],
                 oddNumberItem: [
                     ['100%', '100%', '0', '0'],
                     ['80%', '80%', '10%', '-12.5%'],
                     ['60%', '60%', '20%', '12.5%'],
-                    ['60%', '60%', '20%', '27.5%'],
+                    ['60%', '60%', '20%', '32.5%'],
                     ['80%', '80%', '10%', '32.5%']
                 ]
             }
+            /**
+             * Validation of options
+             * @param {*} options
+             * @returns Return true only if options is a instance of Object
+             *          and options.positions is formatted in [..[]]
+             *          and options.durantion is a number
+             */
+            var optionsValidation = function (options) {
+                if (!(options instanceof Object) || !(options.positions instanceof Array) || !(typeof (options.duration) === 'number')) return false;
+                if (options.positions && options.positions instanceof Array) {
+                    for (var i = 0; i < options.positions.length; i++)
+                        if (!(options.positions[i] instanceof Array)) return false;
+                }
+                if (carousel.length % 2 === 0) {
+                    if (options.positions.length !== 4) return false;
+                }
+                else {
+                    if (options.positions.length !== 5) return false;
+                }
+                return true;
+            }
+            if (optionsValidation(options)) {
+                if (options.positions.length % 2 === 0)
+                    position.evenNumberItem = options.positions;
+                else
+                    position.oddNumberItem = options.positions;
+                duration = options.duration;
+                console.log('Valid parameter');
+            } else {
+                console.log('Invalid parameter {options}');
+            }
+
             window.requestAnimFrame = (function () {
                 return window.requestAnimationFrame ||
                     window.webkitRequestAnimationFrame ||
@@ -1019,27 +1060,37 @@
             })();
 
             var cssTransitionPolyfill = function (carouselList, option, duration, event) {
-                // Position data
-                var position = {
-                    evenNumberItem: [
-                        [100, 100, 0, 0],
-                        [80, 80, 10, -12.5],
-                        [60, 60, 20, 20],
-                        [80, 80, 10, 27.5]
-                    ],
-                    oddNumberItem: [
-                        [100, 100, 0, 0],
-                        [80, 80, 10, -12.5],
-                        [60, 60, 20, 12.5],
-                        [60, 60, 20, 27.5],
-                        [80, 80, 10, 32.5]
-                    ]
+                // Position data in number
+                if (!(typeof(position.evenNumberItem[0][0]) === 'number')) {
+                    for (var attr in position) {
+                        for (var i = 0; i < position[attr].length; i++) {
+                            for (var j = 0; j < position[attr][i].length; j++) {
+                                (parseInt(position[attr][i][j]) == 0 || position[attr][i][j] == '0%') ? position[attr][i][j] = 0 : position[attr][i][j] = parseFloat(position[attr][i][j].substring(0, position[attr][i][j].length - 1));
+                            }
+                        }
+                    }
                 }
+                console.log(position);
+                // var position = {
+                //     evenNumberItem: [
+                //         [100, 100, 0, 0],
+                //         [80, 80, 10, -12.5],
+                //         [60, 60, 20, 20],
+                //         [80, 80, 10, 32.5]
+                //     ],
+                //     oddNumberItem: [
+                //         [100, 100, 0, 0],
+                //         [80, 80, 10, -12.5],
+                //         [60, 60, 20, 12.5],
+                //         [60, 60, 20, 32.5],
+                //         [80, 80, 10, 32.5]
+                //     ]
+                // }
                 // Make a copy for position data
                 var positionCopy = Yuko.utility.cloneObject(position);
 
                 var refreshTime = duration * 60;
-                var pos = null, posCopy = null, posCopyTemp;
+                var pos = null, posCopy = null, posCopyTemp = null, dataZero = null;
                 var next = 0;
                 /**
                  * Load data for every progress
@@ -1122,6 +1173,7 @@
                         for (var m = 0; m < 4; m++) {
                             data.push(posCopy[j][m].toLocaleString() === '-0' ? '0' : posCopy[j][m].toLocaleString() + '%');
                         }
+                        dataZero = [].concat(pos);
                         positionProgress[j].push(data);
                     }
                 }
@@ -1129,17 +1181,29 @@
                 for (var i = 0; i < refreshTime; i++) {
                     fillPositionData(carouselList.length);
                 }
+                for (var p = 0; p < dataZero.length; p++) {
+                    for (var q = 0; q < 4; q++) {
+                        dataZero[p][q] += '%';
+                    }
+                }
                 // console.log([].concat(positionProgressOdd.slice(-1), positionProgressOdd.slice(0, positionProgressOdd.length - 1)));
                 // console.log(positionProgressEven);
-                if (prePositionSpan === null) prePositionSpan = [].concat(positionProgress.slice(-1), positionProgress.slice(0, positionProgress.length - 1));
+                if (prePositionSpan === null) {
+                    prePositionSpan = [].concat(positionProgress.slice(-1), positionProgress.slice(0, positionProgress.length - 1));
+                    prePositionSpan.push(-1);
+                }
                 if (positionProgressCopy === null) positionProgressCopy = [].concat(positionProgress);
                 if (tempPositionSpan === null) {
                     tempPositionSpan = [];
                     for (var i = 0; i < positionProgress.length; i++) {
+                        positionProgressCopy[i].unshift(dataZero[i]);
                         tempPositionSpan.push([].concat(positionProgressCopy[i]).reverse());
                     }
                 }
-                if (nextPositionSpan === null) nextPositionSpan = tempPositionSpan;
+                if (nextPositionSpan === null) {
+                    nextPositionSpan = tempPositionSpan;
+                    nextPositionSpan.push(1);
+                }
                 return event.target === preButton ? prePositionSpan : nextPositionSpan;
             }
 
@@ -1148,11 +1212,13 @@
             // Attach click event to button
             var sortedPositionValues = null;
             Yuko.utility.addEvent(nextButton, 'click', function (event) {
-                sortedPositionValues = cssTransitionPolyfill(carouselList, {}, duration, event);
+                if (sortedPositionValues === null || sortedPositionValues[sortedPositionValues.length - 1] !== 1)
+                    sortedPositionValues = cssTransitionPolyfill(carouselList, {}, duration, event);
                 changeCoordinate(event, duration);
             });
             Yuko.utility.addEvent(preButton, 'click', function (event) {
-                sortedPositionValues = cssTransitionPolyfill(carouselList, {}, duration, event);
+                if (sortedPositionValues === null || sortedPositionValues[sortedPositionValues.length - 1] !== -1)
+                    sortedPositionValues = cssTransitionPolyfill(carouselList, {}, duration, event);
                 changeCoordinate(event, duration);
             });
 
@@ -1260,7 +1326,7 @@
                         (function (i) {
                             var flag = 0;
                             var animate = function () {
-                                if (flag < refreshTime - 1) {
+                                if (flag < refreshTime) {
                                     flag++;
                                     console.log(sortedPositionValues);
                                     Yuko.utility.setBoundingRectangle(nextItemList[i], sortedPositionValues[i][flag]);
