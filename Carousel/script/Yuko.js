@@ -988,6 +988,7 @@
             var nextItemList = [], positionValues = [];
             // Item position span
             var positionProgress = [];
+            var prePositionSpan = null, nextPositionSpan = null, positionProgressCopy = null, tempPositionSpan = null;
             for (var i = 0; i < carouselList.length; i++) {
                 positionProgress.push([]);
             }
@@ -1084,7 +1085,7 @@
                                 pos = [
                                     position.evenNumberItem[0],
                                     position.evenNumberItem[3]
-                                ]; 
+                                ];
                                 if (posCopy === null) {
                                     posCopy = [
                                         positionCopy.evenNumberItem[0],
@@ -1093,7 +1094,7 @@
                                 }
                             }
                             if (count === 4) {
-                                pos = position.evenNumberItem; 
+                                pos = position.evenNumberItem;
                                 if (posCopy === null) {
                                     posCopy = positionCopy.evenNumberItem;
                                 }
@@ -1103,7 +1104,7 @@
                                 for (var i = 0; i < count - 4; i++) {
                                     overflowItem.push([60, 60, 20, 20]);
                                 }
-                                pos = [].concat(position.evenNumberItem.slice(0, 3), overflowItem, position.evenNumberItem.slice(-1)); 
+                                pos = [].concat(position.evenNumberItem.slice(0, 3), overflowItem, position.evenNumberItem.slice(-1));
                                 if (posCopy === null) {
                                     posCopy = [].concat(positionCopy.evenNumberItem.slice(0, 3), overflowItem, positionCopy.evenNumberItem.slice(-1));
                                 }
@@ -1130,13 +1131,15 @@
                 }
                 // console.log([].concat(positionProgressOdd.slice(-1), positionProgressOdd.slice(0, positionProgressOdd.length - 1)));
                 // console.log(positionProgressEven);
-                var prePositionSpan = [].concat(positionProgress.slice(-1), positionProgress.slice(0, positionProgress.length - 1));
-                var tempPositionSpan = [].concat(positionProgress);
-                for (var i = 0; i < tempPositionSpan.length; i++) {
-                    tempPositionSpan.reverse();
-                    tempPositionSpan[i].reverse();
+                if (prePositionSpan === null) prePositionSpan = [].concat(positionProgress.slice(-1), positionProgress.slice(0, positionProgress.length - 1));
+                if (positionProgressCopy === null) positionProgressCopy = [].concat(positionProgress);
+                if (tempPositionSpan === null) {
+                    tempPositionSpan = [];
+                    for (var i = 0; i < positionProgress.length; i++) {
+                        tempPositionSpan.push([].concat(positionProgressCopy[i]).reverse());
+                    }
                 }
-                var nextPositionSpan = [].concat(tempPositionSpan.slice(0,tempPositionSpan.length - 1), tempPositionSpan.slice(-1));
+                if (nextPositionSpan === null) nextPositionSpan = tempPositionSpan;
                 return event.target === preButton ? prePositionSpan : nextPositionSpan;
             }
 
