@@ -1058,34 +1058,20 @@
                         window.setTimeout(callback, 1000 / 60);
                     };
             })();
-
-            var cssTransitionPolyfill = function (carouselList, option, duration, event) {
-                // Position data in number
-                if (!(typeof(position.evenNumberItem[0][0]) === 'number')) {
-                    for (var attr in position) {
-                        for (var i = 0; i < position[attr].length; i++) {
-                            for (var j = 0; j < position[attr][i].length; j++) {
-                                (parseInt(position[attr][i][j]) == 0 || position[attr][i][j] == '0%') ? position[attr][i][j] = 0 : position[attr][i][j] = parseFloat(position[attr][i][j].substring(0, position[attr][i][j].length - 1));
-                            }
+            // Position data in number
+            // If the browser has not support CSS3 transition property
+            if (!Yuko.utility.isBroeserSupportProp('transition')) {
+                for (var attr in position) {
+                    for (var i = 0; i < position[attr].length; i++) {
+                        for (var j = 0; j < position[attr][i].length; j++) {
+                            (parseInt(position[attr][i][j]) == 0 || position[attr][i][j] == '0%') ? position[attr][i][j] = 0 : position[attr][i][j] = parseFloat(position[attr][i][j].substring(0, position[attr][i][j].length - 1));
                         }
                     }
                 }
+            }
+
+            var cssTransitionPolyfill = function (carouselList, option, duration, event) {
                 console.log(position);
-                // var position = {
-                //     evenNumberItem: [
-                //         [100, 100, 0, 0],
-                //         [80, 80, 10, -12.5],
-                //         [60, 60, 20, 20],
-                //         [80, 80, 10, 32.5]
-                //     ],
-                //     oddNumberItem: [
-                //         [100, 100, 0, 0],
-                //         [80, 80, 10, -12.5],
-                //         [60, 60, 20, 12.5],
-                //         [60, 60, 20, 32.5],
-                //         [80, 80, 10, 32.5]
-                //     ]
-                // }
                 // Make a copy for position data
                 var positionCopy = Yuko.utility.cloneObject(position);
 
@@ -1183,7 +1169,8 @@
                 }
                 for (var p = 0; p < dataZero.length; p++) {
                     for (var q = 0; q < 4; q++) {
-                        dataZero[p][q] += '%';
+                        if (!(dataZero[p][q]+'').endsWith('%'))
+                            dataZero[p][q] += '%';
                     }
                 }
                 // console.log([].concat(positionProgressOdd.slice(-1), positionProgressOdd.slice(0, positionProgressOdd.length - 1)));
@@ -1328,7 +1315,8 @@
                             var animate = function () {
                                 if (flag < refreshTime) {
                                     flag++;
-                                    console.log(sortedPositionValues);
+                                    console.log(flag);
+                                    console.log(sortedPositionValues[i][flag]);
                                     Yuko.utility.setBoundingRectangle(nextItemList[i], sortedPositionValues[i][flag]);
                                     window.requestAnimFrame(animate);
                                 }
