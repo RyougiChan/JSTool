@@ -23,7 +23,7 @@ To use Yuko Carousel in your project, using following folders/files:
 ### Usage
 *index.html is a demo web page*
 
-#### 1 Create a drawer container with mask
+#### 1 Create a carouselcontainer with carousel list(data-page-index attribute required)
 
 ```
 <!-- Yuko Carousel S -->
