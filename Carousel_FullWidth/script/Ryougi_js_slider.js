@@ -85,34 +85,5 @@ for (var i = Ryougi_slider_item.length - 1; i >= 0; i--) {
 				}
 			})(), 0);
 		}
-		// switch (curIndex) {
-		//     case 0:
-		//         ChangeSliderAuto();
-		//         break;
-		//     case -1:
-		//         ChangeSliderAuto();
-		//         break;
-		//     case -2:
-		//         ChangeSliderAuto();
-		//         break;
-		//     case -3:
-		//         ChangeSliderAuto();
-		//         break;
-		//     case -4:
-		//         ChangeSliderAuto();
-		//         break;
-		//     case -5:
-		//         ChangeSliderAuto();
-		//         break;
-		//     case -6:
-		//         setTimeout((function() {
-		//         	return function() {
-		//         	    Ryougi_slider.style.marginLeft = "0%"; 
-		//         	    iconNodelist[6].className = "";
-		//         	    iconNodelist[0].className += "on";
-		//         	}})(), 0);
-		//     	break;
-		// }
-
 	}, 4000);
 })();
