@@ -1,7 +1,7 @@
 //Yuko.js
 
 (function (win) {
-    "use strict";
+    'use strict';
 
     var global = win;
 
@@ -151,7 +151,7 @@
                     return this.el = e,
                         this.getPropertyValue = function (t) {
                             var n = /(\-([a-z]){1})/g;
-                            return t == "float" && (t = "styleFloat"),
+                            return t == 'float' && (t = 'styleFloat'),
                                 n.test(t) && (t = t.replace(n, function () {
                                     return arguments[2].toUpperCase()
                                 })),
@@ -174,7 +174,7 @@
             var copy;
 
             // Handle the 3 simple types, and null or undefined
-            if (null == obj || "object" != typeof obj) return obj;
+            if (null == obj || 'object' != typeof obj) return obj;
 
             // Handle Date
             if (obj instanceof Date) {
@@ -201,7 +201,7 @@
                 return copy;
             }
 
-            throw new Error("Unable to copy obj! Its type isn't supported.");
+            throw new Error('Unable to copy obj! Its type is not supported.');
         }
 
         /**
@@ -253,15 +253,15 @@
             return false;
         }
 
-        function requestAnimFrame () {
+        function requestAnimFrame() {
             return window.requestAnimationFrame ||
-            window.webkitRequestAnimationFrame ||
-            window.mozRequestAnimationFrame ||
-            window.oRequestAnimationFrame ||
-            window.msRequestAnimationFrame ||
-            function (callback) {
-                window.setTimeout(callback, 1000 / 60);
-            }
+                window.webkitRequestAnimationFrame ||
+                window.mozRequestAnimationFrame ||
+                window.oRequestAnimationFrame ||
+                window.msRequestAnimationFrame ||
+                function (callback) {
+                    window.setTimeout(callback, 1000 / 60);
+                }
         }
 
         /**
@@ -289,9 +289,9 @@
             if (target.addEventListener) {
                 target.addEventListener(type, listener, false);
             } else if (target.attachEvent) {
-                target.attachEvent("on" + type, listener);
+                target.attachEvent('on' + type, listener);
             } else {
-                target["on" + type] = listener;
+                target['on' + type] = listener;
             }
         }
 
@@ -324,9 +324,9 @@
             var firstPageHeight = Yuko.utility.getComputedSizeInPx(firstYukoContent, 'height');
 
             // Default footer style
-            footer.style.top = (firstPageHeight < document.body.clientHeight - headerHeight ? document.body.clientHeight - headerHeight : firstPageHeight + headerHeight).toString() + 'px';
+            if (footer) footer.style.top = (firstPageHeight < document.body.clientHeight - headerHeight ? document.body.clientHeight - headerHeight : firstPageHeight + headerHeight).toString() + 'px';
             // Default main style
-            main.style.height = (document.body.clientHeight - 112) + "px";
+            if (main) main.style.height = (document.body.clientHeight - 112) + 'px';
         }
 
         // Initial Carousel Style
@@ -350,9 +350,30 @@
             }
         }
 
+        // Initial CarouselV2 Style
+        function initCarouselV2Style() {
+            // Carousel Container
+            var carouselContainer = document.querySelector('.yuko-carousel-v2-container'),
+                carousel = document.querySelector('.yuko-carousel-v2'),
+                carouselItems = document.querySelectorAll('.yuko-carousel-v2 > li'),
+                iconList = document.querySelectorAll('.yuko-carousel-v2-bar > li'),
+
+                winWidth = document.body.clientWidth;
+            // Carousel Parameter
+            var carouselContainerHeight, carouselTitleHeight, carouselHeight;
+            // If there should be a Caeousel
+            if (carouselContainer) {
+                // Box height control code
+                for (var i = carouselItems.length - 1; i >= 0; i--) {
+                    carouselItems[i].style.height = (winWidth * 0.4375).toString() + 'px';
+                };
+            }
+        }
+
         return {
             initFragStyle: initFragStyle,
-            initCarouselStyle: initCarouselStyle
+            initCarouselStyle: initCarouselStyle,
+            initCarouselV2Style: initCarouselV2Style
         }
     })();
 
@@ -415,6 +436,7 @@
 
     // Yuko's widget
     Yuko.widget = (function () {
+
         /**
          * Make the drawer a touch sensitive android like navigation drawer
          * @param {Element} drawer The Element to be manipulated
@@ -627,7 +649,7 @@
                         // Adjust position of footer
                         footer.style.top = (pageList[i].offsetHeight < document.body.clientHeight - 56 ? document.body.clientHeight - 56 : pageList[i].offsetHeight + 56) + 'px';
                         // Adjust height of main
-                        document.getElementsByTagName('main').item(0).style.height = pageList[i].offsetHeight + "px";
+                        document.getElementsByTagName('main').item(0).style.height = pageList[i].offsetHeight + 'px';
                         showMenu(false);
                     }
                 })(i));
@@ -928,14 +950,14 @@
             /**
              * Slide to a specific page
              * @param {string|number} page The page to slide to
-             *          "next": Slide to the next page (if it exists)
-             *          "previous": Slide to the previous page (if it exists)
+             *          'next': Slide to the next page (if it exists)
+             *          'previous': Slide to the previous page (if it exists)
              *          number: Slide to the numberth page (start at 0)
              */
             var slideTo = function (page) {
                 var keyFrames = [];
                 var progressCount = 0;
-                if (page == "next") {
+                if (page == 'next') {
                     if (currentPage == 0) {
                         return;
                     }
@@ -945,7 +967,7 @@
                     }
                     progressCount = timeSpan;
                     slide(keyFrames, progressCount, 1);
-                } else if (page == "previous") {
+                } else if (page == 'previous') {
                     if (currentPage == pageCount - 1) {
                         return;
                     }
@@ -1186,7 +1208,7 @@
                 }
                 for (var p = 0; p < dataZero.length; p++) {
                     for (var q = 0; q < 4; q++) {
-                        if (!(dataZero[p][q]+'').endsWith('%'))
+                        if (!(dataZero[p][q] + '').endsWith('%'))
                             dataZero[p][q] += '%';
                     }
                 }
@@ -1293,8 +1315,8 @@
                         positionValues = [].concat(position.evenNumberItem.slice(0, 3), overflowItem, position.evenNumberItem.slice(-1));
                     }
                 }
-                nextItemList[len - 2].style.zIndex = (20 - len) + "";
-                nextItemList[len - 1].style.zIndex = (21 - len) + "";
+                nextItemList[len - 2].style.zIndex = (20 - len) + '';
+                nextItemList[len - 1].style.zIndex = (21 - len) + '';
 
                 var refreshTime = duration * 60;
 
@@ -1319,7 +1341,7 @@
                 console.log('len = ' + len);
                 for (var i = 0; i < len; i++) {
                     if (i < len - 2) {
-                        nextItemList[i].style.zIndex = (19 - i) + "";
+                        nextItemList[i].style.zIndex = (19 - i) + '';
                     }
                     if (Yuko.utility.isBroeserSupportProp('transition')) {
                         // console.log(positionValues[i]);
@@ -1344,20 +1366,72 @@
                     }
                 }
 
-                document.querySelector('#yuko-carousel-list > ul').setAttribute('data-page-index', visualPageIndex + "");
+                document.querySelector('#yuko-carousel-list > ul').setAttribute('data-page-index', visualPageIndex + '');
             }
 
             // cssTransitionPolyfill(position.oddNumberItem, {}, .1);
         }
 
         function carouselV2(carousel, option) {
-            var 
+            var carouselContainer = document.querySelector('.yuko-carousel-v2-container'),
+                carousel = document.querySelector('.yuko-carousel-v2'),
+                carouselItems = document.querySelectorAll('.yuko-carousel-v2 > li'),
+                iconList = document.querySelectorAll('.yuko-carousel-v2-bar > li'),
+                winWidth = document.body.clientWidth;
+
+            yuko.utility.addEvent(window, 'resize', function (event) {
+                for (var i = carouselItems.length - 1; i >= 0; i--) {
+                    carouselItems[i].style.height = (document.body.clientWidth * 0.4375).toString() + 'px';
+                }
+            });
+            carousel.style.marginLeft = '0%';
+
+            //Change carousel item by icon in bottom
+            var changeLocation = function (index, marginLeft) {
+                yuko.utility.addEvent(iconList[index], 'mouseover', function () {
+                    carousel.style.marginLeft = marginLeft;
+                    for (var i = iconList.length - 1; i >= 0; i--) {
+                        iconList[i].classList.remove('on');
+                    };
+                    iconList[index].classList.add('on');
+                });
+            }
+
+            if (iconList) { 
+                for (var j = 0; j < iconList.length; j++) changeLocation(j, (-j).toString() + '00%'); 
+            }
+
+            //Change carousel item auto with 10s deday
+            setInterval(function () {
+
+                var curMargin = parseFloat(carousel.style.marginLeft);
+
+                var curIndex = curMargin / 100;
+                var ChangeSliderAuto = (function () {
+                    return function () {
+                        carousel.style.marginLeft = (curIndex * 100 - 100).toString() + '%';
+                        iconList[-curIndex].classList.remove('on');
+                        iconList[1 - curIndex].classList.add('on');
+                    }
+                })()
+                if (curIndex != 1-iconList.length) ChangeSliderAuto();
+                else {
+                    setTimeout((function () {
+                        return function () {
+                            carousel.style.marginLeft = '0%';
+                            iconList[iconList.length-1].classList.remove('on');
+                            iconList[0].classList.add('on');
+                        }
+                    })(), 0);
+                }
+            }, 2000);
         }
 
         return {
             navigationDrawer: navigationDrawer,
             pageContainer: pageContainer,
-            carousel: carousel
+            carousel: carousel,
+            carouselV2: carouselV2
         };
 
     })();
@@ -1367,12 +1441,16 @@
         Yuko.style.initFragStyle();
         // Carousel style
         Yuko.style.initCarouselStyle();
+        // CarouselV2 style
+        Yuko.style.initCarouselV2Style();
         // When a resize event happen
         Yuko.utility.addEvent(win, 'resize', function () {
             // Fragment style
             Yuko.style.initFragStyle();
             // Carousel style
             Yuko.style.initCarouselStyle();
+            // CarouselV2 style
+            Yuko.style.initCarouselV2Style();
         });
     })();
 

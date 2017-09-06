@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Yuko Carousel</title>
+	<link rel="stylesheet" type="text/css" href="../common/style/yuko-reset.css">
+	<link rel="stylesheet" type="text/css" href="../common/style/yuko.css">
+</head>
+<body>
+	<!-- Carousel Start -->
+	<div class="yuko-carousel-v2-container">
+		<!-- Previous Icon -->
+	    <div class="yuko-carousel-v2-pre" style="z-index:10;"></div>
+	    <!-- Carousel List Start -->
+	    <ul class="yuko-carousel-v2">
+	        <li class="yuko-carousel-v2-item_a"></li>
+	        <li class="yuko-carousel-v2-item_b"></li>
+	        <li class="yuko-carousel-v2-item_c"></li>
+	        <li class="yuko-carousel-v2-item_d"></li>
+	        <li class="yuko-carousel-v2-item_e"></li>
+	        <li class="yuko-carousel-v2-item_f"></li>
+	        <li class="yuko-carousel-v2-item_g"></li>
+	    </ul>
+		<!-- Carousel List End -->
+		<!-- Next Icon -->
+	    <div class="yuko-carousel-v2-next" style="z-index:10;"></div>
+
+	    <!-- Carousel Switch icons Start -->
+	    <ul class="yuko-carousel-v2-bar">
+	    	<li class="on"><a></a></li>
+	    	<li><a></a></li>
+	    	<li><a></a></li>
+	    	<li><a></a></li>
+	    	<li><a></a></li>
+	    	<li><a></a></li>
+	    	<li><a></a></li>
+	    </ul>
+	    <!-- Carousel Switch icons End-->
+	</div>	
+	<!-- Carousel End -->
+	<script src="../common/script/Yuko.js"></script>
+	<script>
+		var carousel = document.querySelector('.yuko-carousel-v2');
+		yuko.widget.carouselV2(carousel);
+	</script>
+</body>
+</html>
