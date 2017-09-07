@@ -352,22 +352,7 @@
 
         // Initial CarouselV2 Style
         function initCarouselV2Style() {
-            // Carousel Container
-            var carouselContainer = document.querySelector('.yuko-carousel-v2-container'),
-                carousel = document.querySelector('.yuko-carousel-v2'),
-                carouselItems = document.querySelectorAll('.yuko-carousel-v2 > li'),
-                iconList = document.querySelectorAll('.yuko-carousel-v2-bar > li'),
 
-                winWidth = document.body.clientWidth;
-            // Carousel Parameter
-            var carouselContainerHeight, carouselTitleHeight, carouselHeight;
-            // If there should be a Caeousel
-            if (carouselContainer) {
-                // Box height control code
-                for (var i = carouselItems.length - 1; i >= 0; i--) {
-                    carouselItems[i].style.height = (winWidth * 0.4375).toString() + 'px';
-                };
-            }
         }
 
         return {
@@ -1009,12 +994,12 @@
             }
         };
 
-        /**Parameters to initial Carousel
+        /**
          * Make a list's items to be Carousel items
-         * @param {Element} carouselList Carousel items' collection
+         * @param {NodeList|HTMLCollection} carouselList Carousel items' collection
          * @param {Element} preButton A button to switch to Carousel's previous display order
          * @param {Element} nextButton A button to switch to Carousel's next display order
-         * @param {{positions : ([number]|undefined), duration : number}=} options 
+         * @param {{positions : ([number]|undefined), duration : number}=} options Parameters to initial Carousel
          *          positions=: The position list of carousel items.
          *                      If the number of carousel items are a even number, there should be four Array items in positions,
          *                          for example --- [['100%', '100%', '0', '0'], 
@@ -1028,9 +1013,11 @@
          *                                          ['60%', '60%', '20%', '32.5%'], 
          *                                          ['80%', '80%', '10%', '32.5%']] --- 
          *          duration=: Animation excution time in second.
-         * @returns Return null if carouselList is undefined or carouselList's length is less than 2
+         * @return Return null if carouselList is undefined or carouselList's length is less than 2
          */
         function carousel(carouselList, preButton, nextButton, options) {
+
+            if (!carouselList || carouselList.length < 2) return;
 
             var len = carouselList.length, duration = options.duration || .3;
             var nextItemList = [], positionValues = [];
@@ -1372,59 +1359,106 @@
             // cssTransitionPolyfill(position.oddNumberItem, {}, .1);
         }
 
-        function carouselV2(carousel, option) {
-            var carouselContainer = document.querySelector('.yuko-carousel-v2-container'),
+        /**
+         * Make a list's items to be Carousel items
+         * @param {NodeList|HTMLCollection} carouselList Carousel items' collection
+         * @param {string} type Type of carousel
+         * @param {{size : ([number,number]), hasButton : (Boolean), hasBottomBar : (Boolean), duration : (number)}=} options Parameters to initial Carousel
+         *          hasButton=: If there should be previous/next button.
+         *          hasBottomBar=: If there should be a bottom navigation bar.
+         *          duration=: Duration to switch carousel item.
+         * @return Return null if carouselList is undefined or carouselList's length is less than 2
+         */
+        function carouselV2(carouselList, type, options) {
+            if (!carouselList || carouselList.length < 2) return;
+            // Public parameter
+            var len = carouselList.length,
+                docWidth = document.documentElement.clientWidth,
+                docHeight = document.documentElement.clientHeight,
+                carouselContainer = document.querySelector('.yuko-carousel-v2-container'),
                 carousel = document.querySelector('.yuko-carousel-v2'),
-                carouselItems = document.querySelectorAll('.yuko-carousel-v2 > li'),
-                iconList = document.querySelectorAll('.yuko-carousel-v2-bar > li'),
-                winWidth = document.body.clientWidth;
-
-            yuko.utility.addEvent(window, 'resize', function (event) {
-                for (var i = carouselItems.length - 1; i >= 0; i--) {
-                    carouselItems[i].style.height = (document.body.clientWidth * 0.4375).toString() + 'px';
+                width = carouselContainer.offsetWidth, height = carouselContainer.offsetHeight,
+                duration, iconList, preButton, nextButton;
+            if (options) {
+                if (options.duration) duration = options.duration;
+                if (options.hasBottomBar) {
+                    iconList = document.querySelectorAll('.yuko-carousel-v2-bar > li');
+                    iconList[0].parentNode.style.display = 'block';
+                };
+                if (options.hasButton) {
+                    preButton = document.querySelector('.yuko-carousel-v2-pre');
+                    nextButton = document.querySelector('.yuko-carousel-v2-next');
                 }
-            });
-            carousel.style.marginLeft = '0%';
-
-            //Change carousel item by icon in bottom
-            var changeLocation = function (index, marginLeft) {
-                yuko.utility.addEvent(iconList[index], 'mouseover', function () {
-                    carousel.style.marginLeft = marginLeft;
-                    for (var i = iconList.length - 1; i >= 0; i--) {
-                        iconList[i].classList.remove('on');
-                    };
-                    iconList[index].classList.add('on');
-                });
+                if (options.size) {
+                    width = options.size[0];
+                    height = options.size[1];
+                }
             }
-
-            if (iconList) { 
-                for (var j = 0; j < iconList.length; j++) changeLocation(j, (-j).toString() + '00%'); 
-            }
-
-            //Change carousel item auto with 10s deday
-            setInterval(function () {
-
-                var curMargin = parseFloat(carousel.style.marginLeft);
-
-                var curIndex = curMargin / 100;
-                var ChangeSliderAuto = (function () {
-                    return function () {
-                        carousel.style.marginLeft = (curIndex * 100 - 100).toString() + '%';
-                        iconList[-curIndex].classList.remove('on');
-                        iconList[1 - curIndex].classList.add('on');
+            // Carousel type - 'default'
+            var defaultType = function () {
+                // Initial list style
+                carousel.style.marginLeft = '0%';
+                for (var i = carouselList.length - 1; i >= 0; i--) {
+                    carouselList[i].style.height = (docWidth * height / width).toString() + 'px';
+                };
+                // Add resize event
+                yuko.utility.addEvent(window, 'resize', function (event) {
+                    for (var i = carouselList.length - 1; i >= 0; i--) {
+                        carouselList[i].style.height = (document.documentElement.clientWidth * height / width).toString() + 'px';
                     }
-                })()
-                if (curIndex != 1-iconList.length) ChangeSliderAuto();
-                else {
-                    setTimeout((function () {
-                        return function () {
-                            carousel.style.marginLeft = '0%';
-                            iconList[iconList.length-1].classList.remove('on');
+                });
+
+                //Change carousel item by icon in bottom
+                var changeLocation = function (index, marginLeft) {
+                    yuko.utility.addEvent(iconList[index], 'mouseover', function () {
+                        carousel.style.marginLeft = marginLeft;
+                        for (var i = carouselList.length - 1; i >= 0; i--) {
+                            iconList[i].classList.remove('on');
+                        };
+                        iconList[index].classList.add('on');
+                    });
+                }
+
+                if (iconList) {
+                    for (var j = 0; j < carouselList.length; j++) changeLocation(j, (-j * 100).toString() + '%');
+                }
+
+                //Change carousel item auto with 10s deday
+                setInterval(function () {
+
+                    var curMargin = parseFloat(carousel.style.marginLeft);
+
+                    var curIndex = Math.abs(curMargin / 100);
+                    console.log('curIndex = ' + curIndex + 'curMargin = ' + curMargin);
+                    var ChangeSliderAuto = function () {
+                        carousel.style.marginLeft = (-(curIndex + 1) * 100).toString() + '%';
+                        if (iconList) {
+                            iconList[curIndex].classList.remove('on');
+                            iconList[curIndex + 1].classList.add('on');
+                        }
+                    }
+                    if (curIndex != carouselList.length - 1) {
+                        ChangeSliderAuto();
+                    }
+                    else {
+                        carousel.style.marginLeft = '0%';
+                        if (iconList) {
+                            iconList[iconList.length - 1].classList.remove('on');
                             iconList[0].classList.add('on');
                         }
-                    })(), 0);
-                }
-            }, 2000);
+                    }
+                }, 2000);
+            }
+
+            var carouselType = {
+                'default': defaultType
+            }
+
+            switch (type) {
+                default:
+                    carouselType.default();
+                    break;
+            }
         }
 
         return {

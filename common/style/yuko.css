@@ -328,7 +328,7 @@ footer a {
 
 /* Carousel_v2 css  S */
 
-.yuko-carousel-v2-container {width: 100%; overflow: hidden; position: relative;}
+.yuko-carousel-v2-container {width: 100%;overflow: hidden; position: relative;}
 .yuko-carousel-v2 {width: 700%; margin-left: 0%; transition:margin-left .5s; -moz-transition:margin-left .5s; -webkit-transition:margin-left .5s; -o-transition:margin-left .5s;}
 .yuko-carousel-v2-pre, .yuko-carousel-v2-next {width: 15%; height: 100%; top: 0; display: block; position: absolute; cursor: pointer; content: '';}
 .yuko-carousel-v2-pre {left: 0;}
@@ -343,7 +343,7 @@ footer a {
 .yuko-carousel-v2-item_e {background: url(../../Carousel_v2.0/images/yande.re.jpg) no-repeat; background-size: 100%;}
 .yuko-carousel-v2-item_f {background: url(../../Carousel_v2.0/images/san.jpg) no-repeat; background-size: 100%;}
 .yuko-carousel-v2-item_g {background: url(../../Carousel_v2.0/images/youkuri.jpg) no-repeat; background-size: 100%;}
-.yuko-carousel-v2-bar {position: absolute; bottom: 0; width: 100%; text-align: center; background: rgba(0,0,0,0.5);}
+.yuko-carousel-v2-bar {display: none; position: absolute; bottom: 0; width: 100%; text-align: center; background: rgba(0,0,0,0.5);}
 .yuko-carousel-v2-bar > li {display: inline-block; vertical-align: top; cursor: pointer; height: 6px; padding: 9px 0; margin: 0 2px;}
 .yuko-carousel-v2-bar > li > a {display: block; width: 10px; height: 6px; background-color: #fff; border-radius: 5px; transition: 0.2s;}
 .yuko-carousel-v2-bar > li.on a, .yuko-carousel-v2-bar > li.on:hover a {width: 30px; background-color: #2196F3;}

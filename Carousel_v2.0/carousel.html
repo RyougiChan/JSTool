@@ -42,8 +42,11 @@
 	<!-- Carousel End -->
 	<script src="../common/script/Yuko.js"></script>
 	<script>
-		var carousel = document.querySelector('.yuko-carousel-v2');
-		yuko.widget.carouselV2(carousel);
+		var carouselList = document.querySelectorAll('.yuko-carousel-v2 > li');
+		yuko.widget.carouselV2(carouselList, 'default', {
+			size: [1920, 840],
+			hasBottomBar: true
+		});
 	</script>
 </body>
 </html>
