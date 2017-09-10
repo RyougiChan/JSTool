@@ -330,7 +330,7 @@ footer a {
 
 .yuko-carousel-v2-container {width: 100%;overflow: hidden; position: relative;}
 .yuko-carousel-v2 {width: 700%; margin-left: 0%; transition:margin-left .5s; -moz-transition:margin-left .5s; -webkit-transition:margin-left .5s; -o-transition:margin-left .5s;}
-.yuko-carousel-v2-pre, .yuko-carousel-v2-next {width: 15%; height: 100%; top: 0; display: block; position: absolute; cursor: pointer; content: '';}
+.yuko-carousel-v2-pre, .yuko-carousel-v2-next {position: absolute; width: 15%; height: 100%; top: 0; display: block; cursor: pointer; content: ''; display: none;}
 .yuko-carousel-v2-pre {left: 0;}
 .yuko-carousel-v2-next {right: 0;}
 .yuko-carousel-v2 > li {width: calc(100% / 7); float: left;}
