@@ -244,7 +244,7 @@ footer a {
 }
 
 .yuko-carousel-item:nth-child(2) {
-    background:lightblue url('../images/chara_megumi_vsl.png') no-repeat 50% 50%;
+    background: lightblue url('../images/chara_megumi_vsl.png') no-repeat 50% 50%;
     z-index: 18;
     width: 80%;
     height: 80%;
@@ -253,7 +253,7 @@ footer a {
 }
 
 .yuko-carousel-item:nth-child(3) {
-    background:lightcoral url('../images/chara_utaha_vsl.png') no-repeat 50% 50%;
+    background: lightcoral url('../images/chara_utaha_vsl.png') no-repeat 50% 50%;
     z-index: 17;
     width: 60%;
     height: 60%;
@@ -262,7 +262,7 @@ footer a {
 }
 
 .yuko-carousel-item:nth-child(4) {
-    background:lightgrey url('../images/chara_michiru_vsl.png') no-repeat 50% 50%;
+    background: lightgrey url('../images/chara_michiru_vsl.png') no-repeat 50% 50%;
     z-index: 15;
     width: 60%;
     height: 60%;
@@ -271,7 +271,7 @@ footer a {
 }
 
 .yuko-carousel-item:nth-child(5) {
-    background:lightgreen url('../images/chara_izumi_vsl.png') no-repeat 50% 50%;
+    background: lightgreen url('../images/chara_izumi_vsl.png') no-repeat 50% 50%;
     z-index: 16;
     width: 80%;
     height: 80%;
@@ -280,7 +280,7 @@ footer a {
 }
 
 .yuko-carousel-item:nth-child(6) {
-    background:lightseagreen url('../images/chara_izumi_vsl.png') no-repeat 50% 50%;
+    background: lightseagreen url('../images/chara_izumi_vsl.png') no-repeat 50% 50%;
     z-index: 16;
     width: 40%;
     height: 40%;
@@ -289,7 +289,7 @@ footer a {
 }
 
 .yuko-carousel-item:nth-child(7) {
-    background:lightyellow url('../images/chara_izumi_vsl.png') no-repeat 50% 50%;
+    background: lightyellow url('../images/chara_izumi_vsl.png') no-repeat 50% 50%;
     z-index: 16;
     width: 40%;
     height: 40%;
@@ -298,7 +298,7 @@ footer a {
 }
 
 .yuko-carousel-item:nth-child(8) {
-    background:lightsalmon url('../images/chara_izumi_vsl.png') no-repeat 50% 50%;
+    background: lightsalmon url('../images/chara_izumi_vsl.png') no-repeat 50% 50%;
     z-index: 16;
     width: 40%;
     height: 40%;
@@ -307,7 +307,7 @@ footer a {
 }
 
 .yuko-carousel-item:nth-child(9) {
-    background:lightskyblue url('../images/chara_izumi_vsl.png') no-repeat 50% 50%;
+    background: lightskyblue url('../images/chara_izumi_vsl.png') no-repeat 50% 50%;
     z-index: 16;
     width: 40%;
     height: 40%;
@@ -316,7 +316,7 @@ footer a {
 }
 
 .yuko-carousel-item:nth-child(10) {
-    background:lightslategray url('../images/chara_izumi_vsl.png') no-repeat 50% 50%;
+    background: lightslategray url('../images/chara_izumi_vsl.png') no-repeat 50% 50%;
     z-index: 16;
     width: 40%;
     height: 40%;
@@ -324,31 +324,131 @@ footer a {
     left: 30%;
 }
 
+
 /* Carousel css  E */
+
 
 /* Carousel_v2 css  S */
 
-.yuko-carousel-v2-container {width: 100%;overflow: hidden; position: relative;}
-.yuko-carousel-v2 {width: 700%; margin-left: 0%; transition:margin-left .5s; -moz-transition:margin-left .5s; -webkit-transition:margin-left .5s; -o-transition:margin-left .5s;}
-.yuko-carousel-v2-pre, .yuko-carousel-v2-next {position: absolute; width: 15%; height: 100%; top: 0; display: block; cursor: pointer; content: ''; display: none;}
-.yuko-carousel-v2-pre {left: 0;}
-.yuko-carousel-v2-next {right: 0;}
-.yuko-carousel-v2 > li {width: calc(100% / 7); float: left;}
-.yuko-carousel-v2-pre:hover {background: url(../../Carousel_v2.0/images/ic_navigate_before_white_48dp.png) no-repeat center; background-size: 80%;}
-.yuko-carousel-v2-next:hover {background: url(../../Carousel_v2.0/images/ic_navigate_next_white_48dp.png) no-repeat center; background-size: 80%;} 
-.yuko-carousel-v2-item_a {background: url(../../Carousel_v2.0/images/Kara.no.Kyoukai.jpg) no-repeat; background-size: 100%;}
-.yuko-carousel-v2-item_b {background: url(../../Carousel_v2.0/images/yukong.jpg) no-repeat; background-size: 100%;}
-.yuko-carousel-v2-item_c {background: url(../../Carousel_v2.0/images/fate.jpg) no-repeat; background-size: 100%;}
-.yuko-carousel-v2-item_d {background: url(../../Carousel_v2.0/images/AngelBeats.jpg) no-repeat; background-size: 100%;}
-.yuko-carousel-v2-item_e {background: url(../../Carousel_v2.0/images/yande.re.jpg) no-repeat; background-size: 100%;}
-.yuko-carousel-v2-item_f {background: url(../../Carousel_v2.0/images/san.jpg) no-repeat; background-size: 100%;}
-.yuko-carousel-v2-item_g {background: url(../../Carousel_v2.0/images/youkuri.jpg) no-repeat; background-size: 100%;}
-.yuko-carousel-v2-bar {display: none; position: absolute; bottom: 0; width: 100%; text-align: center; background: rgba(0,0,0,0.5);}
-.yuko-carousel-v2-bar > li {display: inline-block; vertical-align: top; cursor: pointer; height: 6px; padding: 9px 0; margin: 0 2px;}
-.yuko-carousel-v2-bar > li > a {display: block; width: 10px; height: 6px; background-color: #fff; border-radius: 5px; transition: 0.2s;}
-.yuko-carousel-v2-bar > li.on a, .yuko-carousel-v2-bar > li.on:hover a {width: 30px; background-color: #2196F3;}
+.yuko-carousel-v2-container {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.yuko-carousel-v2 {
+    width: 700%;
+    margin-left: 0%;
+    transition: margin-left .5s;
+    -moz-transition: margin-left .5s;
+    -webkit-transition: margin-left .5s;
+    -o-transition: margin-left .5s;
+}
+
+.yuko-carousel-v2-pre, .yuko-carousel-v2-next {
+    position: absolute;
+    width: 15%;
+    height: 100%;
+    top: 0;
+    display: block;
+    cursor: pointer;
+    content: '';
+    display: none;
+}
+
+.yuko-carousel-v2-pre {
+    left: 0;
+}
+
+.yuko-carousel-v2-next {
+    right: 0;
+}
+
+.yuko-carousel-v2 > li {
+    width: calc(100% / 7);
+    float: left;
+}
+
+.yuko-carousel-v2-pre:hover {
+    background: url(../../Carousel_v2.0/images/ic_navigate_before_white_48dp.png) no-repeat center;
+    background-size: 80%;
+}
+
+.yuko-carousel-v2-next:hover {
+    background: url(../../Carousel_v2.0/images/ic_navigate_next_white_48dp.png) no-repeat center;
+    background-size: 80%;
+}
+
+.yuko-carousel-v2-item_a {
+    background: url(../../Carousel_v2.0/images/Kara.no.Kyoukai.jpg) no-repeat;
+    background-size: 100%;
+}
+
+.yuko-carousel-v2-item_b {
+    background: url(../../Carousel_v2.0/images/yukong.jpg) no-repeat;
+    background-size: 100%;
+}
+
+.yuko-carousel-v2-item_c {
+    background: url(../../Carousel_v2.0/images/fate.jpg) no-repeat;
+    background-size: 100%;
+}
+
+.yuko-carousel-v2-item_d {
+    background: url(../../Carousel_v2.0/images/AngelBeats.jpg) no-repeat;
+    background-size: 100%;
+}
+
+.yuko-carousel-v2-item_e {
+    background: url(../../Carousel_v2.0/images/yande.re.jpg) no-repeat;
+    background-size: 100%;
+}
+
+.yuko-carousel-v2-item_f {
+    background: url(../../Carousel_v2.0/images/san.jpg) no-repeat;
+    background-size: 100%;
+}
+
+.yuko-carousel-v2-item_g {
+    background: url(../../Carousel_v2.0/images/youkuri.jpg) no-repeat;
+    background-size: 100%;
+}
+
+.yuko-carousel-v2-bar {
+    display: none;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.yuko-carousel-v2-bar > li {
+    display: inline-block;
+    vertical-align: top;
+    cursor: pointer;
+    height: 6px;
+    padding: 9px 0;
+    margin: 0 2px;
+}
+
+.yuko-carousel-v2-bar > li > a {
+    display: block;
+    width: 10px;
+    height: 6px;
+    background-color: #fff;
+    border-radius: 5px;
+    transition: 0.2s;
+}
+
+.yuko-carousel-v2-bar > li.on a, .yuko-carousel-v2-bar > li.on:hover a {
+    width: 30px;
+    background-color: #2196F3;
+}
+
 
 /* Carousel_v2 css  E */
+
 
 /* Effect S */
 
