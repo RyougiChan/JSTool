@@ -11,14 +11,15 @@
   <body>
     <div id="box"></div>
     <!-- <script src="temp.js"></script> -->
-    <script src="Yuko.animate.js"></script>
+    <script src="../common/script/Yuko.js"></script>
+    <!-- <script src="Yuko.animate.js"></script> -->
     <script>
       var box = document.getElementById('box');
       Yuko.utility.addEvent(box, 'mouseover', function () {
         Yuko.utility.animate(box, {
           duration: 1000,
-          easing: 'ease',
-          properties: {opacity: '0'}
+          easing: 'cubic-bezier(0,1,1,0)',
+          properties: {margin: '50%'}
         });
       }, false);
     </script>
