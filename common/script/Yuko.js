@@ -458,7 +458,7 @@
          * @param {string} cssProp CSS3 style property in string
          * @returns return true if the browser support the css style property, return false otherowise
          */
-        function isBroeserSupportProp(cssProp) {
+        function isBrowserSupportProp(cssProp) {
             var root = document.documentElement;
             if (cssProp in root.style) {
                 return true;
@@ -536,15 +536,23 @@
 
             var mainEntry = (function () {
                 // Initial parameters
-                var style, count = 0, index = 0, origin = [], target = [], anim, keyframes = [], animType,
+                var style, count = 0, progressNum = 0, zeroGapIndex = [], index = 0, origin = [], target = [], anim, keyframes = [], animType,
                     supportProps = {
-                        backgroundPosition: 'backgroundPosition', borderWidth: 'borderWidth', borderBottomWidth: 'borderBottomWidth', borderLeftWidth: 'borderLeftWidth', borderRightWidth: 'borderRightWidth', borderTopWidth: 'borderTopWidth', borderSpacing: 'borderSpacing', margin: 'margin', marginBottom: 'marginBottom', marginLeft: 'marginLeft', marginRight: 'marginRight', marginTop: 'marginTop', outlineWidth: 'outlineWidth', padding: 'padding', paddingBottom: 'paddingBottom', paddingLeft: 'paddingLeft', paddingRight: 'paddingRight', paddingTop: 'paddingTop', height: 'height', width: 'width', maxHeight: 'maxHeight', maxWidth: 'maxWidth', minHeight: 'minHeight', maxWidth: 'maxWidth', font: 'font', fontSize: 'fontSize', bottom: 'bottom', left: 'left', right: 'right', top: 'top', letterSpacing: 'letterSpacing', wordSpacing: 'wordSpacing', lineHeight: 'lineHeight', textIndent: 'textIndent', opacity: 'opacity'
+                        backgroundPosition: 'backgroundPosition', borderWidth: 'borderWidth', borderBottomWidth: 'borderBottomWidth', borderLeftWidth: 'borderLeftWidth', borderRightWidth: 'borderRightWidth', borderTopWidth: 'borderTopWidth', borderSpacing: 'borderSpacing', margin: 'margin', marginBottom: 'marginBottom', marginLeft: 'marginLeft', marginRight: 'marginRight', marginTop: 'marginTop', outlineWidth: 'outlineWidth', padding: 'padding', paddingBottom: 'paddingBottom', paddingLeft: 'paddingLeft', paddingRight: 'paddingRight', paddingTop: 'paddingTop', height: 'height', width: 'width', maxHeight: 'maxHeight', maxWidth: 'maxWidth', minHeight: 'minHeight', maxWidth: 'maxWidth', font: 'font', fontSize: 'fontSize', bottom: 'bottom', left: 'left', right: 'right', top: 'top', letterSpacing: 'letterSpacing', wordSpacing: 'wordSpacing', lineHeight: 'lineHeight', textIndent: 'textIndent', opacity: 'opacity', clip: 'clip'
+                    },
+                    anim = {
+                        'ease': 'cubic-bezier(.25,.1,.25,1)',
+                        'linear': 'cubic-bezier(0,0,1,1)',
+                        'ease-in': 'cubic-bezier(.42,0,1,1)',
+                        'ease-out': 'cubic-bezier(0,0,.58,1)',
+                        'ease-in-out': 'cubic-bezier(.42,0,.58,1)',
+                        'cubic-bezier': easing
                     };
 
                 for (var p in props) {
-                    if (!(p in supportProps)) break;
+                    if (!(p in supportProps)) continue;
                     style = getStyle(ele, p);
-                    origin.push(parseFloat(style));
+                    if (p !== 'clip') origin.push(parseFloat(style));
                     if (props[p].indexOf('%') > -1) {
                         if (/.*height|.*top/i.test(p)) {
                             target.push(parseFloat(props[p]) / 100 * document.documentElement.clientHeight);
@@ -582,19 +590,28 @@
                             count += 3;
                         }
                     } else {
-                        target.push(parseFloat(props[p]));
+                        if (p !== 'clip') target.push(parseFloat(props[p]));
                     }
-                    anim = {
-                        'ease': 'cubic-bezier(.25,.1,.25,1)',
-                        'linear': 'cubic-bezier(0,0,1,1)',
-                        'ease-in': 'cubic-bezier(.42,0,1,1)',
-                        'ease-out': 'cubic-bezier(0,0,.58,1)',
-                        'ease-in-out': 'cubic-bezier(.42,0,.58,1)',
-                        'cubic-bezier': easing
+                    if (p === 'clip') {
+                        console.log('A');
+                        if (getStyle(ele, 'position') !== 'absolute' || !(/rect\((\d+px[,|\s]{1}\s*){3}\d+px\)/g.test(props[p]))) return;
+                        console.log('B');
+                        var propVals = props[p].replace(/,/g, ' ').replace(/\s+/g, ' ').replace('rect(', '').replace(')', '').split(' ');
+                        var oClip = getStyle(ele, 'clip') === 'auto' ? [getStyle(ele,'top'), getStyle(ele,'width'), getStyle(ele,'height'), getStyle(ele,'left')] : getStyle(ele, 'clip').replace(/,/g, '').replace(/\s+/g, ' ').replace('rect(', '').replace(')', '').split(' ');
+                        origin.push(parseFloat(oClip[0]));
+                        origin.push(parseFloat(oClip[1]));
+                        origin.push(parseFloat(oClip[2]));
+                        origin.push(parseFloat(oClip[3]));
+                        target.push(parseFloat(propVals[0]));
+                        target.push(parseFloat(propVals[1]));
+                        target.push(parseFloat(propVals[2]));
+                        target.push(parseFloat(propVals[3]));
                     }
                     // cubicBezierFunction('cubic-bezier(.17,.67,.78,.31)');
                     count++;
                 }
+
+                if ('clip' in props) count = count + 3;
 
                 animType = anim[easing] ? anim[easing] : /cubic-bezier\([\d|,|\.]+\)/g.test(easing) ? anim['cubic-bezier'] : 'linear';
                 for (var i = 0; i < count; i++) {
@@ -609,7 +626,26 @@
                     tempKeyFrames.push(target[i]);
                     keyframes.push(tempKeyFrames);
                 }
-                // console.log(keyframes);
+
+                // Fix 0 gap
+                for (var i = 0; i < keyframes.length; i++) {
+                    if (keyframes[i].length !== 1) {
+                        progressNum = keyframes[i].length;
+                    } else {
+                        zeroGapIndex.push(i);
+                    }
+                }
+                if (progressNum !== 0) {
+                    for (var i = 0; i < progressNum - 1; i++) {
+                        for (var j = 0; j < zeroGapIndex.length; j++) {
+                            keyframes[zeroGapIndex[j]].push(keyframes[zeroGapIndex[j]][0]);
+                        }
+                    }
+                }
+
+                console.log(origin);
+                console.log(target);
+                console.log(keyframes);
                 // console.log(keyframes[0]);
                 var requestAnimFrame =
                     window.requestAnimationFrame ||
@@ -624,7 +660,10 @@
                 var go = function () {
                     var pi = 0;
                     for (var prop in props) {
-                        prop === 'opacity' ? ele.style[prop] = keyframes[pi][index] : ele.style[prop] = keyframes[pi][index] + 'px';
+                        console.log('rect(' + keyframes[pi][index] + 'px, ' + keyframes[pi+1][index] + 'px, ' + keyframes[pi+2][index] + 'px, ' + keyframes[pi+3][index] + 'px' + ')');
+                        prop === 'opacity' ? ele.style[prop] = keyframes[pi][index] :
+                            prop === 'clip' ? ele.style[prop] = 'rect(' + keyframes[pi][index] + 'px, ' + keyframes[pi+1][index] + 'px, ' + keyframes[pi+2][index] + 'px, ' + keyframes[pi+3][index] + 'px' + ')' : ele.style[prop] = keyframes[pi][index] + 'px';
+                        // prop === 'clip' ? pi+=4 : pi++;
                         pi++;
                     }
                     console.log(pi);
@@ -647,7 +686,7 @@
             roundTo: roundTo,
             addEvent: addEvent,
             cloneObject: cloneObject,
-            isBroeserSupportProp: isBroeserSupportProp,
+            isBrowserSupportProp: isBrowserSupportProp,
             requestAnimFrame: requestAnimFrame,
             cubicBezierFunction: cubicBezierFunction,
             gaussianElimination: gaussianElimination,
@@ -1432,7 +1471,7 @@
             })();
             // Position data in number
             // If the browser has not support CSS3 transition property
-            if (!Yuko.utility.isBroeserSupportProp('transition')) {
+            if (!Yuko.utility.isBrowserSupportProp('transition')) {
                 for (var attr in position) {
                     for (var i = 0; i < position[attr].length; i++) {
                         for (var j = 0; j < position[attr][i].length; j++) {
@@ -1671,12 +1710,12 @@
                 };
                 */
 
-                console.log('len = ' + len);
+                // console.log('len = ' + len);
                 for (var i = 0; i < len; i++) {
                     if (i < len - 2) {
                         nextItemList[i].style.zIndex = (19 - i) + '';
                     }
-                    if (Yuko.utility.isBroeserSupportProp('transition')) {
+                    if (Yuko.utility.isBrowserSupportProp('transition')) {
                         // console.log(positionValues[i]);
                         Yuko.utility.setBoundingRectangle(nextItemList[i], positionValues[i]);
                     }

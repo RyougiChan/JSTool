@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
   <style>
-    #box {width: 100px; height: 100px; background: pink; margin: 0 auto}
+    #box {position: absolute; width: 400px; height: 400px; background: pink;}
   </style>
   <body>
     <div id="box"></div>
@@ -19,7 +19,7 @@
         Yuko.utility.animate(box, {
           duration: 1000,
           easing: 'cubic-bezier(0,1,1,0)',
-          properties: {margin: '50%'}
+          properties: {clip: 'rect(0px,200px,200px,0px)'}
         });
       }, false);
     </script>
