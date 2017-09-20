@@ -593,11 +593,11 @@
                         if (p !== 'clip') target.push(parseFloat(props[p]));
                     }
                     if (p === 'clip') {
-                        console.log('A');
+                        // console.log('A');
                         if (getStyle(ele, 'position') !== 'absolute' || !(/rect\((\d+px[,|\s]{1}\s*){3}\d+px\)/g.test(props[p]))) return;
-                        console.log('B');
+                        // console.log('B');
                         var propVals = props[p].replace(/,/g, ' ').replace(/\s+/g, ' ').replace('rect(', '').replace(')', '').split(' ');
-                        var oClip = getStyle(ele, 'clip') === 'auto' ? [getStyle(ele,'top'), getStyle(ele,'width'), getStyle(ele,'height'), getStyle(ele,'left')] : getStyle(ele, 'clip').replace(/,/g, '').replace(/\s+/g, ' ').replace('rect(', '').replace(')', '').split(' ');
+                        var oClip = getStyle(ele, 'clip') === 'auto' ? [getStyle(ele, 'top'), getStyle(ele, 'width'), getStyle(ele, 'height'), getStyle(ele, 'left')] : getStyle(ele, 'clip').replace(/,/g, '').replace(/\s+/g, ' ').replace('rect(', '').replace(')', '').split(' ');
                         origin.push(parseFloat(oClip[0]));
                         origin.push(parseFloat(oClip[1]));
                         origin.push(parseFloat(oClip[2]));
@@ -643,9 +643,9 @@
                     }
                 }
 
-                console.log(origin);
-                console.log(target);
-                console.log(keyframes);
+                // console.log(origin);
+                // console.log(target);
+                // console.log(keyframes);
                 // console.log(keyframes[0]);
                 var requestAnimFrame =
                     window.requestAnimationFrame ||
@@ -660,13 +660,12 @@
                 var go = function () {
                     var pi = 0;
                     for (var prop in props) {
-                        console.log('rect(' + keyframes[pi][index] + 'px, ' + keyframes[pi+1][index] + 'px, ' + keyframes[pi+2][index] + 'px, ' + keyframes[pi+3][index] + 'px' + ')');
+                        //console.log('rect(' + keyframes[pi][index] + 'px, ' + keyframes[pi + 1][index] + 'px, ' + keyframes[pi + 2][index] + 'px, ' + keyframes[pi + 3][index] + 'px' + ')');
                         prop === 'opacity' ? ele.style[prop] = keyframes[pi][index] :
-                            prop === 'clip' ? ele.style[prop] = 'rect(' + keyframes[pi][index] + 'px, ' + keyframes[pi+1][index] + 'px, ' + keyframes[pi+2][index] + 'px, ' + keyframes[pi+3][index] + 'px' + ')' : ele.style[prop] = keyframes[pi][index] + 'px';
+                            prop === 'clip' ? ele.style[prop] = 'rect(' + keyframes[pi][index] + 'px, ' + keyframes[pi + 1][index] + 'px, ' + keyframes[pi + 2][index] + 'px, ' + keyframes[pi + 3][index] + 'px' + ')' : ele.style[prop] = keyframes[pi][index] + 'px';
                         // prop === 'clip' ? pi+=4 : pi++;
                         pi++;
                     }
-                    console.log(pi);
                     index++;
                     if (index !== keyframes[pi - 1].length) requestAnimFrame(go);
                     else complete();
@@ -1482,7 +1481,7 @@
             }
 
             var cssTransitionPolyfill = function (carouselList, option, duration, event) {
-                console.log(position);
+                // console.log(position);
                 // Make a copy for position data
                 var positionCopy = Yuko.utility.cloneObject(position);
 
@@ -1726,8 +1725,8 @@
                             var animate = function () {
                                 if (flag < refreshTime) {
                                     flag++;
-                                    console.log(flag);
-                                    console.log(sortedPositionValues[i][flag]);
+                                    // console.log(flag);
+                                    // console.log(sortedPositionValues[i][flag]);
                                     Yuko.utility.setBoundingRectangle(nextItemList[i], sortedPositionValues[i][flag]);
                                     window.requestAnimFrame(animate);
                                 }
