@@ -550,6 +550,7 @@
                     };
 
                 for (var p in props) {
+                    props[p] += '';
                     if (!(p in supportProps)) continue;
                     style = getStyle(ele, p);
                     if (p !== 'clip') origin.push(parseFloat(style));

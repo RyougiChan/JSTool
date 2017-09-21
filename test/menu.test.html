@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title></title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    * {
+      margin: 0;
+      padding: 0
+    }
+
+    .trigger-button {
+      width: 60px;
+      height: 60px;
+      line-height: 60px;
+      text-align: center;
+      color: lightcoral;
+      border: 1px dashed lightcoral;
+    }
+
+    .menu-container {
+      width: 300px;
+      overflow: hidden;
+      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12);
+    }
+
+    .menu-container>ul {
+      list-style: none;
+      width: 300px;
+    }
+
+    .menu-container>ul>li {
+      width: 300px;
+      height: 60px;
+      line-height: 60px;
+      text-align: center;
+      color: lightcoral;
+      list-style: none;
+      border-bottom: darkgray dashed 1px
+    }
+  </style>
+</head>
+
+<body>
+  <div class="trigger-button">MENU</div>
+  <div class="menu-container">
+    <ul>
+      <li>Yuki</li>
+      <li>Yuko</li>
+      <li>Yuri</li>
+      <li>Yui</li>
+    </ul>
+  </div>
+  <script src="../common/script/Yuko.js"></script>
+  <script>
+    var trig = document.querySelector('.trigger-button'),
+      menuContainer = document.querySelector('.menu-container'),
+      menuList = document.querySelectorAll('.menu-container > ul > li'),
+      menuHeight = menuContainer.offsetHeight,
+      menuWidth = menuContainer.offsetWidth;
+
+    function callback(e) {
+      if (menuContainer.offsetHeight === 0) {
+        Yuko.utility.animate(menuContainer, {
+          properties: { height: menuHeight + 'px', width: menuWidth + 'px' },
+          duration: 300,
+          easing: 'ease'
+        });
+      }
+      if (menuContainer.offsetHeight === menuHeight) {
+        Yuko.utility.animate(menuContainer, {
+          properties: { height: '0px', width: 0 },
+          duration: 300,
+          easing: 'ease'
+        });
+      }
+    }
+    Yuko.utility.addEvent(trig, 'click', callback);
+  </script>
+</body>
+
+</html>
