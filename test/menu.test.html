@@ -11,6 +11,13 @@
       padding: 0
     }
 
+    .main {
+      position: relative;
+      float: left;
+      width: 300px;
+      margin: 10px;
+    }
+
     .trigger-button {
       width: 60px;
       height: 60px;
@@ -23,7 +30,9 @@
     .menu-container {
       width: 300px;
       overflow: hidden;
+      position: absolute;
       box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12);
+      background: lightskyblue;
     }
 
     .menu-container>ul {
@@ -40,44 +49,136 @@
       list-style: none;
       border-bottom: darkgray dashed 1px
     }
+
+    .menu-container>ul>li:last-child {
+      border: none;
+    }
   </style>
 </head>
 
 <body>
-  <div class="trigger-button">MENU</div>
-  <div class="menu-container">
-    <ul>
-      <li>Yuki</li>
-      <li>Yuko</li>
-      <li>Yuri</li>
-      <li>Yui</li>
-    </ul>
+  <div class="main">
+    <div class="trigger-button" data-index="1">MENU</div>
+    <div class="menu-container">
+      <ul>
+        <li>Yuki</li>
+        <li>Yuko</li>
+        <li>Yuri</li>
+        <li>Yui</li>
+      </ul>
+    </div>
+  </div>
+  <div class="main">
+    <div class="trigger-button" data-index="2">MENU</div>
+    <div class="menu-container">
+      <ul>
+        <li>Yuki</li>
+        <li>Yuko</li>
+        <li>Yuri</li>
+        <li>Yui</li>
+      </ul>
+    </div>
+  </div>
+  <div class="main">
+    <div class="trigger-button" data-index="3">MENU</div>
+    <div class="menu-container">
+      <ul>
+        <li>Yuki</li>
+        <li>Yuko</li>
+        <li>Yuri</li>
+        <li>Yui</li>
+      </ul>
+    </div>
+  </div>
+  <div class="main">
+    <div class="trigger-button" data-index="4">MENU</div>
+    <div class="menu-container">
+      <ul>
+        <li>Yuki</li>
+        <li>Yuko</li>
+        <li>Yuri</li>
+        <li>Yui</li>
+      </ul>
+    </div>
   </div>
   <script src="../common/script/Yuko.js"></script>
   <script>
-    var trig = document.querySelector('.trigger-button'),
-      menuContainer = document.querySelector('.menu-container'),
-      menuList = document.querySelectorAll('.menu-container > ul > li'),
-      menuHeight = menuContainer.offsetHeight,
-      menuWidth = menuContainer.offsetWidth;
+    var trig = document.querySelectorAll('.trigger-button');
 
     function callback(e) {
-      if (menuContainer.offsetHeight === 0) {
+      var menuContainer = e.target.nextElementSibling,
+        isshow = menuContainer.getAttribute('data-show') === 'false' ? false : true,
+        index = parseInt(e.target.getAttribute('data-index')),
+        menuHeight = menuContainer.offsetHeight,
+        menuWidth = menuContainer.offsetWidth,
+        clip = [
+          [
+            // left-top
+            'rect(' + 0 + 'px,' + 0 + 'px,' + 0 + 'px,' + 0 + 'px)',
+            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,' + 0 + 'px)'
+          ],
+          [
+            // right-top
+            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + 0 + 'px,' + (menuWidth + 10) + 'px)',
+            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,' + 0 + 'px)'
+          ],
+          [
+            // left-bottom
+            'rect(' + (menuHeight + 10) + 'px,' + 0 + 'px,' + (menuHeight + 10) + 'px,' + 0 + 'px)',
+            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,' + 0 + 'px)'
+          ],
+          [
+            // right-bottom
+            'rect(' + (menuHeight + 10) + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,' + (menuWidth + 10) + 'px)',
+            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,' + 0 + 'px)'
+          ],
+          [
+            // left
+            'rect(' + 0 + 'px,' + 0 + 'px,' + (menuHeight + 10) + 'px,' + 0 + 'px)',
+            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,' + 0 + 'px)'
+          ],
+          [
+            // top
+            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + 0 + 'px,' + 0 + 'px)',
+            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,' + 0 + 'px)'
+          ],
+          [
+            // right
+            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,' + (menuWidth + 10) + 'px)',
+            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,' + 0 + 'px)'
+          ],
+          [
+            // bottom
+            'rect(' + (menuHeight + 10) + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,' + 0 + 'px)',
+            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,' + 0 + 'px)'
+          ],
+          [
+            // middle
+            'rect(' + (menuHeight + 10) + 'px,' + 0 + 'px,' + 0 + 'px,' + (menuWidth + 10) + 'px)',
+            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,' + 0 + 'px)'
+          ]
+        ];
+      if (isshow) {
         Yuko.utility.animate(menuContainer, {
-          properties: { height: menuHeight + 'px', width: menuWidth + 'px' },
+          properties: { clip: clip[index +3][0], opacity: 0 },
           duration: 300,
           easing: 'ease'
         });
-      }
-      if (menuContainer.offsetHeight === menuHeight) {
+        menuContainer.setAttribute('data-show', 'false');
+        // menuContainer.style.display = 'none';
+      } else {
+        menuContainer.style.display = 'block';
         Yuko.utility.animate(menuContainer, {
-          properties: { height: '0px', width: 0 },
+          properties: { clip: clip[index + 3][1], opacity: 1 },
           duration: 300,
           easing: 'ease'
         });
+        menuContainer.setAttribute('data-show', 'true');
       }
     }
-    Yuko.utility.addEvent(trig, 'click', callback);
+    for (var i = 0; i < trig.length; i++) {
+      Yuko.utility.addEvent(trig[i], 'click', callback);
+    }
   </script>
 </body>
 

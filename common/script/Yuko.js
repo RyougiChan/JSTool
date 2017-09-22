@@ -1,4 +1,25 @@
-//Yuko.js
+/*
+ * Copyright (c) 2015 RyougiChan. All rights reserved.
+ *  
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"), 
+ * to deal in the Software without restriction, including without limitation 
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ * and/or sell copies of the Software, and to permit persons to whom the 
+ * Software is furnished to do so, subject to the following conditions:
+ *  
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *  
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+ * DEALINGS IN THE SOFTWARE.
+ * 
+ */
 
 (function (win) {
     'use strict';
@@ -598,7 +619,8 @@
                         if (getStyle(ele, 'position') !== 'absolute' || !(/rect\((\d+px[,|\s]{1}\s*){3}\d+px\)/g.test(props[p]))) return;
                         // console.log('B');
                         var propVals = props[p].replace(/,/g, ' ').replace(/\s+/g, ' ').replace('rect(', '').replace(')', '').split(' ');
-                        var oClip = getStyle(ele, 'clip') === 'auto' ? [getStyle(ele, 'top'), getStyle(ele, 'width'), getStyle(ele, 'height'), getStyle(ele, 'left')] : getStyle(ele, 'clip').replace(/,/g, '').replace(/\s+/g, ' ').replace('rect(', '').replace(')', '').split(' ');
+                        // var oClip = getStyle(ele, 'clip') === 'auto' ? [getStyle(ele, 'top'), getStyle(ele, 'width'), getStyle(ele, 'height'), getStyle(ele, 'left')] : getStyle(ele, 'clip').replace(/,/g, '').replace(/\s+/g, ' ').replace('rect(', '').replace(')', '').split(' ');
+                        var oClip = getStyle(ele, 'clip') === 'auto' ? [0, getStyle(ele, 'width') + 10, getStyle(ele, 'height') + 10, 0] : getStyle(ele, 'clip').replace(/,/g, '').replace(/\s+/g, ' ').replace('rect(', '').replace(')', '').split(' ');
                         origin.push(parseFloat(oClip[0]));
                         origin.push(parseFloat(oClip[1]));
                         origin.push(parseFloat(oClip[2]));
@@ -608,7 +630,6 @@
                         target.push(parseFloat(propVals[2]));
                         target.push(parseFloat(propVals[3]));
                     }
-                    // cubicBezierFunction('cubic-bezier(.17,.67,.78,.31)');
                     count++;
                 }
 
@@ -618,7 +639,14 @@
                 for (var i = 0; i < count; i++) {
                     var tempKeyFrames = [], tempKeyFrame = origin[i], per = 0, gap = target[i] - origin[i];
 
-                    while (gap > 0 ? tempKeyFrame < target[i] : tempKeyFrame > target[i]) {
+                    if (gap > 0)
+                    while (tempKeyFrame < target[i]) {
+                        per += 1000 / 60 / duration;
+                        tempKeyFrames.push(tempKeyFrame);
+                        tempKeyFrame = origin[i] + parseFloat((cubicBezierFunction(animType, per) * gap).toLocaleString());
+                    }
+                    else
+                    while (tempKeyFrame > target[i]) {
                         per += 1000 / 60 / duration;
                         tempKeyFrames.push(tempKeyFrame);
                         tempKeyFrame = origin[i] + parseFloat((cubicBezierFunction(animType, per) * gap).toLocaleString());
@@ -631,7 +659,7 @@
                 // Fix 0 gap
                 for (var i = 0; i < keyframes.length; i++) {
                     if (keyframes[i].length !== 1) {
-                        progressNum = keyframes[i].length;
+                        if (progressNum < keyframes[i].length) progressNum = keyframes[i].length;
                     } else {
                         zeroGapIndex.push(i);
                     }
@@ -646,7 +674,7 @@
 
                 // console.log(origin);
                 // console.log(target);
-                // console.log(keyframes);
+                console.log(keyframes);
                 // console.log(keyframes[0]);
                 var requestAnimFrame =
                     window.requestAnimationFrame ||
@@ -658,13 +686,16 @@
                         window.setTimeout(callback, 1000 / 60);
                     };
 
+                    console.log(props);
                 var go = function () {
                     var pi = 0;
                     for (var prop in props) {
-                        //console.log('rect(' + keyframes[pi][index] + 'px, ' + keyframes[pi + 1][index] + 'px, ' + keyframes[pi + 2][index] + 'px, ' + keyframes[pi + 3][index] + 'px' + ')');
-                        prop === 'opacity' ? ele.style[prop] = keyframes[pi][index] :
-                            prop === 'clip' ? ele.style[prop] = 'rect(' + keyframes[pi][index] + 'px, ' + keyframes[pi + 1][index] + 'px, ' + keyframes[pi + 2][index] + 'px, ' + keyframes[pi + 3][index] + 'px' + ')' : ele.style[prop] = keyframes[pi][index] + 'px';
-                        // prop === 'clip' ? pi+=4 : pi++;
+                        if (prop === 'clip') {
+                            ele.style[prop] = 'rect(' + keyframes[pi][index] + 'px, ' + keyframes[pi + 1][index] + 'px, ' + keyframes[pi + 2][index] + 'px, ' + keyframes[pi + 3][index] + 'px' + ')';
+                            pi += 4;
+                            continue;
+                        }
+                        prop === 'opacity' ? ele.style[prop] = keyframes[pi][index] : ele.style[prop] = keyframes[pi][index] + 'px';
                         pi++;
                     }
                     index++;
@@ -1748,13 +1779,15 @@
          * Make a list's items to be Carousel items
          * @param {NodeList|HTMLCollection} carouselList Carousel items' collection
          * @param {string} type Type of carousel
-         * @param {{size : ([number,number]), isResize, hasButton : (Boolean), hasBottomBar : (Boolean), duration : (number)}=} options Parameters to initial Carousel
+         * @param {{size : ([number,number]), isResizable, hasButton : (Boolean), hasBottomBar : (Boolean), duration : (number)}=} options Parameters to initial Carousel
          *          size=: Size(width,height) of carousel.
+         *          isResizable=: If allow resize.
+         *          isAuto=: If allow auto play.
          *          hasButton=: If there should be previous/next button.
          *          hasBottomBar=: If there should be a bottom navigation bar.
          *          duration=: Duration to switch carousel item.
          * @return Return null if carouselList is undefined or carouselList's length is less than 2
-         */
+         */// TODO: Add isAuto; Using Yuko.util.animate rather than CSS3 transition.
         function carouselV2(carouselList, type, options) {
             if (!carouselList || carouselList.length < 2) return;
             // Public parameter
@@ -1764,7 +1797,7 @@
                 carouselContainer = document.querySelector('.yuko-carousel-v2-container'),
                 carousel = document.querySelector('.yuko-carousel-v2'),
                 width = carouselContainer.offsetWidth, height = carouselContainer.offsetHeight,
-                duration, iconList, preButton, nextButton, isResizable = false;
+                duration, iconList, preButton, nextButton, isResizable = false, isAuto;
 
             if (options) {
                 if (options.duration) duration = options.duration;
