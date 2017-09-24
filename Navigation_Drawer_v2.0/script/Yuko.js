@@ -173,8 +173,8 @@
                 target.appendChild(ripple);
             }
             ripple.classList.remove('show');
-            var top = event.changedTouches[0].pageY - rect.top - ripple.offsetHeight / 2 - document.body.scrollTop;
-            var left = event.changedTouches[0].pageX - rect.left - ripple.offsetWidth / 2 - document.body.scrollLeft;
+            var top = (event instanceof MouseEvent ? event.clientY - ripple.offsetHeight / 2 : event.changedTouches[0].pageY - rect.top - ripple.offsetHeight / 2 - document.body.scrollTop);
+            var left = (event instanceof MouseEvent ? event.clientX - ripple.offsetWidth / 2 : event.changedTouches[0].pageX - rect.left - ripple.offsetWidth / 2 - document.body.scrollLeft);
             ripple.style.top = top + 'px';
             ripple.style.left = left + 'px';
             ripple.classList.add('show');

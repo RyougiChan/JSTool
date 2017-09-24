@@ -522,10 +522,10 @@
          * @param {string} type A string representing the event type to listen for
          * @param {*} listener The object which receives a notification. This must be an object implementing the EventListener interface, or a JavaScript function
          */
-        function addEvent(target, type, listener) {
+        function addEvent(target, type, listener, useCapture) {
             if (target == null || typeof (target) == 'undefined') return;
             if (target.addEventListener) {
-                target.addEventListener(type, listener, false);
+                target.addEventListener(type, listener, useCapture||false);
             } else if (target.attachEvent) {
                 target.attachEvent('on' + type, listener);
             } else {
@@ -812,18 +812,19 @@
          * @return {Boolean} Return true all the time
          */
         function rippleEffect(event) {
-            var target = event.target;
-            var rect = target.getBoundingClientRect();
-            var ripple = target.querySelector('.ripple');
+            event.stopPropagation();
+            // var target = event.target;
+            var rect = this.getBoundingClientRect();
+            var ripple = this.querySelector('.ripple');
             if (!ripple) {
                 ripple = document.createElement('span');
                 ripple.className = 'ripple';
                 ripple.style.height = ripple.style.width = Math.max(rect.width, rect.height) + 'px';
-                target.appendChild(ripple);
+                this.appendChild(ripple);
             }
-            ripple.classList.remove('show');
-            var top = event.changedTouches[0].pageY - rect.top - ripple.offsetHeight / 2 - document.body.scrollTop;
-            var left = event.changedTouches[0].pageX - rect.left - ripple.offsetWidth / 2 - document.body.scrollLeft;
+            ripple.classList.remove('show'); 
+            var top = (event instanceof MouseEvent ? event.clientY - rect.top - ripple.offsetHeight / 2 - document.body.scrollTop: event.changedTouches[0].pageY - rect.top - ripple.offsetHeight / 2 - document.body.scrollTop);
+            var left = (event instanceof MouseEvent ? event.clientX - rect.left - ripple.offsetWidth / 2  - document.body.scrollLeft: event.changedTouches[0].pageX - rect.left - ripple.offsetWidth / 2 - document.body.scrollLeft);
             ripple.style.top = top + 'px';
             ripple.style.left = left + 'px';
             ripple.classList.add('show');

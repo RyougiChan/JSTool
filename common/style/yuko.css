@@ -468,7 +468,7 @@ footer a {
 }
 
 .ripple.show {
-    animation: ripple .75s ease-out;
+    animation: ripple .3s ease-out;
 }
 
 
