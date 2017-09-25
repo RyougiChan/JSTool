@@ -128,6 +128,7 @@
     Yuko.utility = (function () {
         /**
          * Calculation for cubic equation : y = a * x * x * x + b * x * x + c * x + d
+         * 
          * @param {number} a Cubic equation parameter a
          * @param {number} b Cubic equation parameter b
          * @param {number} c Cubic equation parameter b
@@ -141,6 +142,7 @@
 
         /**
          * Calculation for quadratic equation : y = a * x * x + b * x + c
+         * 
          * @param {number} a Quadratic equation parameter a
          * @param {number} b Quadratic equation parameter b
          * @param {number} c Quadratic equation parameter c
@@ -155,6 +157,7 @@
 
         /**
          * Gaussian elimination to calculate parameter inmultivariate equation
+         * 
          * @param {Array} arr Matrix x in array
          * @param {Array} b Matrix y in array
          * @returns Resurn result in array
@@ -273,9 +276,10 @@
 
         /**
          * Calculation of cubic bezier function f(x) = a * x * x * x + b * x *x + c * x + d.
+         * 
          * @param {string} bp Cubic bezier adjust point format in 'cubic-bezier(.17,.67,.78,.31)' or 'cubic-bezier(.17,.67,.78,.31,.17,.67,.78,.31)'
          * @param {number} x Progress
-         */
+         *///TOFIX: ERROR calculation result is wrong
         function cubicBezierFunction(bp, x) {
             var calcFp = function (ps, t) {
                 return Math.pow(1 - t, 3) * ps[0] + 3 * t * Math.pow(1 - t, 2) * ps[1] + 3 * (1 - t) * Math.pow(t, 2) * ps[2] + Math.pow(t, 3) * ps[3];
@@ -286,25 +290,37 @@
                     : bpInArray.length >= 4 && bpInArray.length < 8 ? [].concat([0, 0], bpInArray.slice(0, 4), [1.0, 1.0])
                         : bpInArray.length > 8 ? bpInArray.slice(0, 8) : bpInArray,
                 // parameters to calculate a, b, c, d
-                ft1 = .25,
-                ft2 = .75,
-                fp1 = calcFp([ps[0], ps[2], ps[4], ps[6]], ft1),
-                fp2 = calcFp([ps[0], ps[2], ps[4], ps[6]], ft2),
-                fp3 = calcFp([ps[1], ps[3], ps[5], ps[7]], ft1),
-                fp4 = calcFp([ps[1], ps[3], ps[5], ps[7]], ft2),
+                ft1 = .1,
+                ft2 = .2,
+                fpx1 = calcFp([ps[0], ps[2], ps[4], ps[6]], ft1),
+                fpx2 = calcFp([ps[0], ps[2], ps[4], ps[6]], ft2),
+                fpy1 = calcFp([ps[1], ps[3], ps[5], ps[7]], ft1),
+                fpy2 = calcFp([ps[1], ps[3], ps[5], ps[7]], ft2),
                 // Coefficient of cubic equation
                 cs = gaussianElimination([
                     [0, 0, 0, 1],
-                    [Math.pow(fp1, 3), Math.pow(fp1, 2), fp1, 1],
-                    [Math.pow(fp2, 3), Math.pow(fp2, 2), fp2, 1],
+                    [Math.pow(fpx1, 3), Math.pow(fpx1, 2), fpx1, 1],
+                    [Math.pow(fpx2, 3), Math.pow(fpx2, 2), fpx2, 1],
                     [1, 1, 1, 1]
-                ], [0, fp3, fp4, 1]),
+                ], [0, fpy1, fpy2, 1]),
                 a = cs[0], b = cs[1], c = cs[2], d = cs[3];
+                console.log('a = ' + a + ' b = ' + b + ' c = ' + c + ' d = ' + d);
+                // console.log(ps);
+                // Test gaussianElimination
+                // console.log(
+                //     gaussianElimination([
+                //         [1, 1, 1],
+                //         [2, 1, 2],
+                //         [2, 2, 1]
+                //     ], [8, 12, 14])
+                // );
+
             return a * x * x * x + b * x * x + c * x + d;
         }
 
         /**
          * Elements must implement biggerThan() or greaterThan(), or otherwise can be compared via 'greater than' sign
+         * 
          * @param {Array} array 
          * @param {number} value 
          * @return {number} Return the index of the first element that is greater than the given value in an array.
@@ -338,11 +354,13 @@
 
         /**
          * Get CSS property of 'font-size' with window.document.body
+         * 
          */
         var fontSizeInPx = getComputedSizeInPx(win.document.body, 'font-size');
 
         /**
-         * Get computed style.
+         * Get element computed style.
+         * 
          * @param {Element} ele Target element.
          * @param {String} prop Target property.
          * @returns Return a computed style.
@@ -360,6 +378,7 @@
 
         /**
          * Get computed size in px of an element.
+         * 
          * @param {Element} ele An element with document or window or otherwise.
          * @param {string} type A CSS property that wanna to get.
          * @return {number} Return computed size in px of the element {@param ele}
@@ -385,6 +404,7 @@
 
         /**
          * Get browser type
+         * 
          * @returns Return type of browser: Firefox|Chrome|IE|Opera|Safari|Edge|Unknown
          */
         function getBrowserType() {
@@ -399,7 +419,8 @@
         }
 
         /**
-         * Create a copy od obj
+         * Create a copy of obj
+         * 
          * @param {{}} obj The object to make a copy
          * @returns return a copy of obj if it's really Object
          *          return obj itself if obj is null or it's not a Object
@@ -445,6 +466,7 @@
          **      If rectArr's length is 2 and item in rectArr is not undefined, set width and height
          **      If rectArr's length is 3 and item in rectArr is not undefined, set width, height and left
          **      Default: set width, height, left and top for target
+
          * @param {Element} target The element to set bounding rectangle
          * @param {[(undefined|string),(undefined|string),(undefined|string),(undefined|string)]} rectArr A <strong>number</strong> string array ([width?, height?, left?, top?]) represented the bound rectangle of target
          */
@@ -476,6 +498,7 @@
 
         /**
          * A detection for CSS3 style property in current browser
+         * 
          * @param {string} cssProp CSS3 style property in string
          * @returns return true if the browser support the css style property, return false otherowise
          */
@@ -489,7 +512,8 @@
 
         /**
          * Polyfill for requestAnimationFrame
-         * @returns 
+         * 
+         * @returns browser polyfill requestAnimationFrame
          */
         function requestAnimFrame() {
             return window.requestAnimationFrame ||
@@ -504,6 +528,7 @@
 
         /**
          * Round a number to a specific scale
+         * 
          * @param {number} number The number to be rounded
          * @param {number} scale The scale to round to
          * @return {number} Return the {@param number} rounded result
@@ -517,7 +542,19 @@
         }
 
         /**
+         * Get first parent element that first CSS property position is relative
+         * 
+         * @param {any} ele The element to get  first parent element that first CSS property position is relative
+         * @returns first parent element that first CSS property position is relative if there existe one, else return document.documentElement
+         */
+        function getFirstRelativeParent (ele) {
+            if (ele === document.documentElement) return ele;
+            return getStyle(ele.parentNode, 'position') === 'relative' ? ele.parentNode : getFirstRelativeParent(ele.parentNode);
+        }
+
+        /**
          * Add a event listener for a element
+         * 
          * @param {Element} target The element to attach listener
          * @param {string} type A string representing the event type to listen for
          * @param {*} listener The object which receives a notification. This must be an object implementing the EventListener interface, or a JavaScript function
@@ -525,7 +562,7 @@
         function addEvent(target, type, listener, useCapture) {
             if (target == null || typeof (target) == 'undefined') return;
             if (target.addEventListener) {
-                target.addEventListener(type, listener, useCapture||false);
+                target.addEventListener(type, listener, useCapture || false);
             } else if (target.attachEvent) {
                 target.attachEvent('on' + type, listener);
             } else {
@@ -534,7 +571,59 @@
         }
 
         /**
+         * Remove a event listener for a element.
+         * 
+         * @param {Element} target target The element to attach listener.
+         * @param {string} type The type name of the event.
+         */
+        function removeEvent(target, type) {
+            if (!target || !type || !listener) return;
+            if (target.removeEventListener) {
+                target.removeEventListener(type, listener);
+            } else {
+                target.detachEvent("on"+type, listener);
+            }
+        }
+
+        /**
+         * Create an event object.
+         *
+         * @param {string} eventType The type name of the event.
+         * @param {boolean} bubbles Whether the event should bubble up the DOM.
+         * @param {boolean} cancelable Whether the event can be canceled.
+         * @returns {!Event}
+         */
+        function createEvent(eventType, bubbles, cancelable) {
+            if ('CustomEvent' in window && typeof window.CustomEvent === 'function') {
+                return new CustomEvent(eventType, {
+                    bubbles: bubbles,
+                    cancelable: cancelable
+                });
+            } else {
+                var evt = document.createEvent('Events');
+                evt.initEvent(eventType, bubbles, cancelable);
+                return evt;
+            }
+        }
+
+        /**
+         * Dispatches an Event at the specified EventTarget
+         * 
+         * @param {Element} target is used to initialize the Event.target and determine which event listeners to invoke.
+         * @param {Event} event is the Event object to be dispatched.
+         */
+        function dispatchEvent(target, type, event) {
+            if (target.dispatchEvent) {
+                return target.dispatchEvent(event);
+            } 
+            if (target.fireEvent) {
+                return target.fireEvent('on' + type, event)
+            }
+        }
+
+        /**
          * Create a specific animaion
+         * 
          * @param {Element} ele The element to execute animation.
          * @param {{properties: ({}), duration?: (string|number), easing?: (string), start?: (Function), complete? : (Function)}} options Parameters to initial animation.
          *   properties=: An object of CSS properties and values that the animation will move toward.
@@ -578,8 +667,7 @@
                     if (props[p].indexOf('%') > -1) {
                         if (/.*height|.*top/i.test(p)) {
                             target.push(parseFloat(props[p]) / 100 * document.documentElement.clientHeight);
-                        }
-                        if (p === 'margin' || p === 'padding') {
+                        } else if (p === 'margin' || p === 'padding') {
                             var propVals = props[p].split(' ');
                             if (propVals.length === 1) {
                                 props[p + 'Top'] = props[p + 'Bottom'] = parseFloat(propVals[0]) / 100 * document.documentElement.clientHeight;
@@ -610,6 +698,9 @@
                             target.push(props[p + 'Right']);
                             delete props[p];
                             count += 3;
+                        } else {
+                            var firstRelativeParent = getFirstRelativeParent(ele);
+                            target.push(parseFloat(props[p]) / 100 * parseFloat(getStyle(firstRelativeParent, 'width')));
                         }
                     } else {
                         if (p !== 'clip') target.push(parseFloat(props[p]));
@@ -635,22 +726,24 @@
 
                 if ('clip' in props) count = count + 3;
 
-                animType = anim[easing] ? anim[easing] : /cubic-bezier\([\d|,|\.]+\)/g.test(easing) ? anim['cubic-bezier'] : 'linear';
+                animType = anim[easing] ? anim[easing] : /cubic-bezier\([\d|,|\.]+\)/g.test(easing) ? anim['cubic-bezier'] : anim['linear'];
                 for (var i = 0; i < count; i++) {
                     var tempKeyFrames = [], tempKeyFrame = origin[i], per = 0, gap = target[i] - origin[i];
-
+                    var test = [];
                     if (gap > 0)
-                    while (tempKeyFrame < target[i]) {
-                        per += 1000 / 60 / duration;
-                        tempKeyFrames.push(tempKeyFrame);
-                        tempKeyFrame = origin[i] + parseFloat((cubicBezierFunction(animType, per) * gap).toLocaleString());
-                    }
+                        while (tempKeyFrame < target[i]) {
+                            per += 1000 / 60 / duration;
+                            tempKeyFrames.push(tempKeyFrame);
+                            test.push(per);
+                            tempKeyFrame = origin[i] + parseFloat((cubicBezierFunction(animType, per) * gap).toLocaleString());
+                            // console.log('per = ' + per + ' tempKeyFrame = ' + tempKeyFrame + ' origin = ' + origin[i] + ' target = ' + target[i] + ' gap = ' + gap + ' cubic = ' + cubicBezierFunction(animType, per))
+                        }
                     else
-                    while (tempKeyFrame > target[i]) {
-                        per += 1000 / 60 / duration;
-                        tempKeyFrames.push(tempKeyFrame);
-                        tempKeyFrame = origin[i] + parseFloat((cubicBezierFunction(animType, per) * gap).toLocaleString());
-                    }
+                        while (tempKeyFrame > target[i]) {
+                            per += 1000 / 60 / duration;
+                            tempKeyFrames.push(tempKeyFrame);
+                            tempKeyFrame = origin[i] + parseFloat((cubicBezierFunction(animType, per) * gap).toLocaleString());
+                        }
 
                     tempKeyFrames.push(target[i]);
                     keyframes.push(tempKeyFrames);
@@ -674,7 +767,11 @@
 
                 // console.log(origin);
                 // console.log(target);
-                console.log(keyframes);
+                // console.log(keyframes);
+                console.log(test);
+                for (var i = 0; i < test.length; i++) {
+                    // console.log(test[i]);
+                }
                 // console.log(keyframes[0]);
                 var requestAnimFrame =
                     window.requestAnimationFrame ||
@@ -686,7 +783,7 @@
                         window.setTimeout(callback, 1000 / 60);
                     };
 
-                    console.log(props);
+                // console.log(props);
                 var go = function () {
                     var pi = 0;
                     for (var prop in props) {
@@ -822,9 +919,9 @@
                 ripple.style.height = ripple.style.width = Math.max(rect.width, rect.height) + 'px';
                 this.appendChild(ripple);
             }
-            ripple.classList.remove('show'); 
-            var top = (event instanceof MouseEvent ? event.clientY - rect.top - ripple.offsetHeight / 2 - document.body.scrollTop: event.changedTouches[0].pageY - rect.top - ripple.offsetHeight / 2 - document.body.scrollTop);
-            var left = (event instanceof MouseEvent ? event.clientX - rect.left - ripple.offsetWidth / 2  - document.body.scrollLeft: event.changedTouches[0].pageX - rect.left - ripple.offsetWidth / 2 - document.body.scrollLeft);
+            ripple.classList.remove('show');
+            var top = (event instanceof MouseEvent ? event.clientY - rect.top - ripple.offsetHeight / 2 - document.body.scrollTop : event.changedTouches[0].pageY - rect.top - ripple.offsetHeight / 2 - document.body.scrollTop);
+            var left = (event instanceof MouseEvent ? event.clientX - rect.left - ripple.offsetWidth / 2 - document.body.scrollLeft : event.changedTouches[0].pageX - rect.left - ripple.offsetWidth / 2 - document.body.scrollLeft);
             ripple.style.top = top + 'px';
             ripple.style.left = left + 'px';
             ripple.classList.add('show');
