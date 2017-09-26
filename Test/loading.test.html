@@ -71,13 +71,13 @@
   <script src="../common/script/Yuko.js"></script>
   <script>
     var progressbar = document.querySelector('.yuko-loading-progressbar-indeterminate > .progressbar');
-    console.log(progressbar);
     Yuko.utility.animate(
       progressbar,
       {
-        properties: {left: '100%'},
-        easing: 'cubic-bezier(1,0,1,1)',
-        duration: 10000
+        properties: {left: '100%', width: '80%'},
+        easing: 'cubic-bezier(.4,0,.2,1)',
+        duration: 2500,
+        cycle: true
       }
     );
   </script>

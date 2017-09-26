@@ -134,7 +134,7 @@
          * @param {number} c Cubic equation parameter b
          * @param {number} d Cubic equation parameter d
          * @param {number} x Cubic equation variable x
-         * @return {number} Return the calculated result when all parameters are given
+         * @returns {number} Return the calculated result when all parameters are given
          */
         function calcCubicEquation(a, b, c, d, x) {
             return a * x * x * x + b * x * x + c * x + d;
@@ -147,7 +147,7 @@
          * @param {number} b Quadratic equation parameter b
          * @param {number} c Quadratic equation parameter c
          * @param {number} x Quadratic equation variable x
-         * @return {number} Return the zero point of a quadratic equation in array (if x is not given).
+         * @returns {number} Return the zero point of a quadratic equation in array (if x is not given).
          *                  Or return the value of y (if x is given).
          *                  Return undefined when the solutions of equations don't exist or when there are something wrong with parameters.
          */
@@ -275,28 +275,46 @@
         }
 
         /**
+         * Calculation of cubic bezier curve points value.
+         * 
+         * @param {Array} ps four value with four points, mapping to x or y.
+         * @param {number} t timespan
+         * @returns return 0 if @param(ps) is not instance of Array or @param(ps) count less than 4, 
+         *          else return calculation result according to given formula.
+         */
+        function calccubicBezierPoint(ps, t) {
+            if (!(ps instanceof Array)) return 0;
+            if (ps.length < 4) return 0;
+            if (ps.length > 4) ps = ps.slice(0, 4);
+            return parseFloat((Math.pow(1 - t, 3) * ps[0] + 3 * t * Math.pow(1 - t, 2) * ps[1] + 3 * (1 - t) * Math.pow(t, 2) * ps[2] + Math.pow(t, 3) * ps[3]).toLocaleString());
+        }
+
+        /**
          * Calculation of cubic bezier function f(x) = a * x * x * x + b * x *x + c * x + d.
          * 
          * @param {string} bp Cubic bezier adjust point format in 'cubic-bezier(.17,.67,.78,.31)' or 'cubic-bezier(.17,.67,.78,.31,.17,.67,.78,.31)'
          * @param {number} x Progress
+         * @property obsolete
          *///TOFIX: ERROR calculation result is wrong
         function cubicBezierFunction(bp, x) {
             var calcFp = function (ps, t) {
-                return Math.pow(1 - t, 3) * ps[0] + 3 * t * Math.pow(1 - t, 2) * ps[1] + 3 * (1 - t) * Math.pow(t, 2) * ps[2] + Math.pow(t, 3) * ps[3];
+                return parseFloat((Math.pow(1 - t, 3) * ps[0] + 3 * t * Math.pow(1 - t, 2) * ps[1] + 3 * (1 - t) * Math.pow(t, 2) * ps[2] + Math.pow(t, 3) * ps[3]).toLocaleString());
             }
             var bpInArray = bp.substring(bp.indexOf('(') + 1, bp.indexOf(')')).split(',').map(function (i) { return parseFloat(i) }),
                 // Cubic Bézier curves points
-                ps = bpInArray.length < 4 ? []
+                ps = bpInArray.length < 4 ? [0, 0, 0, 0, 1, 1, 1, 1]
                     : bpInArray.length >= 4 && bpInArray.length < 8 ? [].concat([0, 0], bpInArray.slice(0, 4), [1.0, 1.0])
                         : bpInArray.length > 8 ? bpInArray.slice(0, 8) : bpInArray,
                 // parameters to calculate a, b, c, d
-                ft1 = .1,
-                ft2 = .2,
+                ft1 = 0.1,
+                ft2 = 0.8,
                 fpx1 = calcFp([ps[0], ps[2], ps[4], ps[6]], ft1),
-                fpx2 = calcFp([ps[0], ps[2], ps[4], ps[6]], ft2),
                 fpy1 = calcFp([ps[1], ps[3], ps[5], ps[7]], ft1),
+                fpx2 = calcFp([ps[0], ps[2], ps[4], ps[6]], ft2),
                 fpy2 = calcFp([ps[1], ps[3], ps[5], ps[7]], ft2),
                 // Coefficient of cubic equation
+                // TOFIX: ERROR there may be a wrong logic, calculation result of a,b,c,d seems wrong.
+                // ERROR: four points on line cannot give only one bezier curve, two points on line and two control points needed instead.
                 cs = gaussianElimination([
                     [0, 0, 0, 1],
                     [Math.pow(fpx1, 3), Math.pow(fpx1, 2), fpx1, 1],
@@ -304,26 +322,18 @@
                     [1, 1, 1, 1]
                 ], [0, fpy1, fpy2, 1]),
                 a = cs[0], b = cs[1], c = cs[2], d = cs[3];
-                console.log('a = ' + a + ' b = ' + b + ' c = ' + c + ' d = ' + d);
-                // console.log(ps);
-                // Test gaussianElimination
-                // console.log(
-                //     gaussianElimination([
-                //         [1, 1, 1],
-                //         [2, 1, 2],
-                //         [2, 2, 1]
-                //     ], [8, 12, 14])
-                // );
 
-            return a * x * x * x + b * x * x + c * x + d;
+            return parseFloat((a * Math.pow(x, 3) + b * Math.pow(x, 2) + c * x + d).toLocaleString());
         }
+
+
 
         /**
          * Elements must implement biggerThan() or greaterThan(), or otherwise can be compared via 'greater than' sign
          * 
          * @param {Array} array 
          * @param {number} value 
-         * @return {number} Return the index of the first element that is greater than the given value in an array.
+         * @returns {number} Return the index of the first element that is greater than the given value in an array.
          *                  Return -1 if there exists no element greater than the given value.
          */
         function firstGreaterThan(array, value) {
@@ -547,7 +557,7 @@
          * @param {any} ele The element to get  first parent element that first CSS property position is relative
          * @returns first parent element that first CSS property position is relative if there existe one, else return document.documentElement
          */
-        function getFirstRelativeParent (ele) {
+        function getFirstRelativeParent(ele) {
             if (ele === document.documentElement) return ele;
             return getStyle(ele.parentNode, 'position') === 'relative' ? ele.parentNode : getFirstRelativeParent(ele.parentNode);
         }
@@ -581,7 +591,7 @@
             if (target.removeEventListener) {
                 target.removeEventListener(type, listener);
             } else {
-                target.detachEvent("on"+type, listener);
+                target.detachEvent("on" + type, listener);
             }
         }
 
@@ -615,7 +625,7 @@
         function dispatchEvent(target, type, event) {
             if (target.dispatchEvent) {
                 return target.dispatchEvent(event);
-            } 
+            }
             if (target.fireEvent) {
                 return target.fireEvent('on' + type, event)
             }
@@ -631,6 +641,7 @@
          *   easing=: A string indicating which easing function to use for the transition. default: 'linear'.
          *   start=? A function to call when the animation on an element begins.
          *   complete=? A function to call once the animation is complete.
+         *   cycle=? If the animate is cycle.
          * @returns Return while there are something not match.
          */
         function animate(ele, options) {
@@ -639,14 +650,17 @@
             var props = options.properties,
                 duration = options.duration === 'fast' ? 300 : options.duration === 'normal' ? 900 : options.duration === 'slow' ? 1500 : options.duration || 400,
                 easing = options.easing || 'linear',
-                start = options.start || function () { console.log('Now Start!') },
-                complete = options.complete || function () { console.log('Now Completed!') };
+                start = options.start || function () { },
+                complete = options.complete || function () { },
+                cycle = options.cycle || false;
 
             start();
 
             var mainEntry = (function () {
                 // Initial parameters
-                var style, count = 0, progressNum = 0, zeroGapIndex = [], index = 0, origin = [], target = [], anim, keyframes = [], animType,
+                var count = 0, progressNum = 0, tsNum = 0, t = 0, timespan = 0, index = 0,
+                    zeroGapIndex = [], origin = [], target = [], keyframes = [], x = [], y = [],
+                    animType, style,
                     supportProps = {
                         backgroundPosition: 'backgroundPosition', borderWidth: 'borderWidth', borderBottomWidth: 'borderBottomWidth', borderLeftWidth: 'borderLeftWidth', borderRightWidth: 'borderRightWidth', borderTopWidth: 'borderTopWidth', borderSpacing: 'borderSpacing', margin: 'margin', marginBottom: 'marginBottom', marginLeft: 'marginLeft', marginRight: 'marginRight', marginTop: 'marginTop', outlineWidth: 'outlineWidth', padding: 'padding', paddingBottom: 'paddingBottom', paddingLeft: 'paddingLeft', paddingRight: 'paddingRight', paddingTop: 'paddingTop', height: 'height', width: 'width', maxHeight: 'maxHeight', maxWidth: 'maxWidth', minHeight: 'minHeight', maxWidth: 'maxWidth', font: 'font', fontSize: 'fontSize', bottom: 'bottom', left: 'left', right: 'right', top: 'top', letterSpacing: 'letterSpacing', wordSpacing: 'wordSpacing', lineHeight: 'lineHeight', textIndent: 'textIndent', opacity: 'opacity', clip: 'clip'
                     },
@@ -727,23 +741,28 @@
                 if ('clip' in props) count = count + 3;
 
                 animType = anim[easing] ? anim[easing] : /cubic-bezier\([\d|,|\.]+\)/g.test(easing) ? anim['cubic-bezier'] : anim['linear'];
+
+                var calcCBPoints = (function () {
+                    tsNum = duration * 60 / 1000;
+                    timespan = 1 / tsNum;
+                    var bpInArray = animType.substring(animType.indexOf('(') + 1, animType.indexOf(')')).split(',').map(function (i) { return parseFloat(i) }),
+                        // Cubic Bézier curves points
+                        ps = bpInArray.length < 4 ? [0, 0, 0, 0, 1, 1, 1, 1]
+                            : bpInArray.length >= 4 && bpInArray.length < 8 ? [].concat([0, 0], bpInArray.slice(0, 4), [1.0, 1.0])
+                                : bpInArray.length > 8 ? bpInArray.slice(0, 8) : bpInArray;
+                    for (var i = 0; i < tsNum; i++) {
+                        x.push(calccubicBezierPoint([ps[0], ps[2], ps[4], ps[6]], t));
+                        y.push(calccubicBezierPoint([ps[1], ps[3], ps[5], ps[7]], t));
+                        t += timespan;
+                    }
+                })();
+
                 for (var i = 0; i < count; i++) {
                     var tempKeyFrames = [], tempKeyFrame = origin[i], per = 0, gap = target[i] - origin[i];
-                    var test = [];
-                    if (gap > 0)
-                        while (tempKeyFrame < target[i]) {
-                            per += 1000 / 60 / duration;
-                            tempKeyFrames.push(tempKeyFrame);
-                            test.push(per);
-                            tempKeyFrame = origin[i] + parseFloat((cubicBezierFunction(animType, per) * gap).toLocaleString());
-                            // console.log('per = ' + per + ' tempKeyFrame = ' + tempKeyFrame + ' origin = ' + origin[i] + ' target = ' + target[i] + ' gap = ' + gap + ' cubic = ' + cubicBezierFunction(animType, per))
-                        }
-                    else
-                        while (tempKeyFrame > target[i]) {
-                            per += 1000 / 60 / duration;
-                            tempKeyFrames.push(tempKeyFrame);
-                            tempKeyFrame = origin[i] + parseFloat((cubicBezierFunction(animType, per) * gap).toLocaleString());
-                        }
+                    for (var j = 0; j < tsNum; j++) {
+                        tempKeyFrame = origin[i] + y[j] * gap;
+                        tempKeyFrames.push(tempKeyFrame);
+                    }
 
                     tempKeyFrames.push(target[i]);
                     keyframes.push(tempKeyFrames);
@@ -767,11 +786,8 @@
 
                 // console.log(origin);
                 // console.log(target);
+                // console.log(x);
                 // console.log(keyframes);
-                console.log(test);
-                for (var i = 0; i < test.length; i++) {
-                    // console.log(test[i]);
-                }
                 // console.log(keyframes[0]);
                 var requestAnimFrame =
                     window.requestAnimationFrame ||
@@ -796,8 +812,20 @@
                         pi++;
                     }
                     index++;
-                    if (index !== keyframes[pi - 1].length) requestAnimFrame(go);
-                    else complete();
+                    if (index !== keyframes[pi - 1].length) {
+                        requestAnimFrame(go);
+                    } else {
+                        complete();
+                        setTimeout(function(){
+                            if (cycle) {
+                                for (var p in props) {
+                                    ele.style[p] = props[p];
+                                }
+                                index = 0;
+                                requestAnimFrame(go);
+                            }
+                        }, 500);
+                    };
                 }
                 requestAnimFrame(go);
             })();
