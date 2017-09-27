@@ -635,9 +635,9 @@
          * Create a specific animaion
          * 
          * @param {Element} ele The element to execute animation.
-         * @param {{properties: ({}), duration?: (string|number), easing?: (string), start?: (Function), complete? : (Function)}} options Parameters to initial animation.
+         * @param {{properties: ({}), duration?: ([string]|[number]), easing?: (string), start?: (Function), complete? : (Function)}} options Parameters to initial animation.
          *   properties=: An object of CSS properties and values that the animation will move toward.
-         *   duration=: A string or number determining how long the animation will run. default: 400.
+         *   duration=: A series of strings or numbers determining how long the animation will run. default: [400].
          *   easing=: A string indicating which easing function to use for the transition. default: 'linear'.
          *   start=? A function to call when the animation on an element begins.
          *   complete=? A function to call once the animation is complete.
@@ -649,8 +649,8 @@
             // Initial parameters
             var props = options.properties,
                 duration = options.duration === 'fast' ? 300 : options.duration === 'normal' ? 900 : options.duration === 'slow' ? 1500 : options.duration || 400,
+                durations = options.durations || [],
                 easing = options.easing || 'linear',
-                easings = options.easings || [],
                 start = options.start || function () { },
                 complete = options.complete || function () { },
                 cycle = options.cycle || false;
@@ -659,9 +659,10 @@
 
             var mainEntry = (function () {
                 // Initial parameters
-                var count = 0, progressNum = 0, tsNum = 0, t = 0, timespan = 0, index = 0, time = 0,
-                    zeroGapIndex = [], origin = [], target = [], keyframes = [], x = [], xs = [], y = [], ys = [], animTypes = [], psList = [], trueTimeframes = [], trueKeyFrames = [], indexs = [],
-                    animType, style, bpInArray, ps,
+                // count: offset properties number;
+                var count = 0, propNum = 0, progressNum = 0, tsNum = 0, t = 0, timespan = 0, index = 0,
+                    zeroGapIndex = [], origin = [], target = [], keyframes = [], tsNums = [], xs = [], ys = [], x = [], y = [],
+                    animType, style,
                     supportProps = {
                         backgroundPosition: 'backgroundPosition', borderWidth: 'borderWidth', borderBottomWidth: 'borderBottomWidth', borderLeftWidth: 'borderLeftWidth', borderRightWidth: 'borderRightWidth', borderTopWidth: 'borderTopWidth', borderSpacing: 'borderSpacing', margin: 'margin', marginBottom: 'marginBottom', marginLeft: 'marginLeft', marginRight: 'marginRight', marginTop: 'marginTop', outlineWidth: 'outlineWidth', padding: 'padding', paddingBottom: 'paddingBottom', paddingLeft: 'paddingLeft', paddingRight: 'paddingRight', paddingTop: 'paddingTop', height: 'height', width: 'width', maxHeight: 'maxHeight', maxWidth: 'maxWidth', minHeight: 'minHeight', maxWidth: 'maxWidth', font: 'font', fontSize: 'fontSize', bottom: 'bottom', left: 'left', right: 'right', top: 'top', letterSpacing: 'letterSpacing', wordSpacing: 'wordSpacing', lineHeight: 'lineHeight', textIndent: 'textIndent', opacity: 'opacity', clip: 'clip'
                     },
@@ -674,53 +675,65 @@
                         'cubic-bezier': easing
                     };
 
+                // Reset duration in number
+                for (var i = 0; i < durations.length; i++) {
+                    durations[i] === 'fast' ? durations[i] = 300 : durations[i] === 'normal' ? durations[i] = 900 : durations[i] === 'slow' ? durations[i] = 1500 : typeof durations[i] === 'string' && isNaN(parseFloat(durations[i])) ? durations[i] = 400 : parseFloat(durations[i]);
+                }
+
                 for (var p in props) {
                     props[p] += '';
                     if (!(p in supportProps)) continue;
                     style = getStyle(ele, p);
-                    if (p !== 'clip') origin.push(parseFloat(style));
-                    if (props[p].indexOf('%') > -1) {
-                        if (/.*height|.*top/i.test(p)) {
-                            target.push(parseFloat(props[p]) / 100 * document.documentElement.clientHeight);
-                        } else if (p === 'margin' || p === 'padding') {
-                            var propVals = props[p].split(' ');
-                            if (propVals.length === 1) {
-                                props[p + 'Top'] = props[p + 'Bottom'] = parseFloat(propVals[0]) / 100 * document.documentElement.clientHeight;
-                                props[p + 'Left'] = props[p + 'Right'] = parseFloat(propVals[0]) / 100 * document.documentElement.clientWidth;
+
+                    if (p !== 'clip') {
+                        origin.push(parseFloat(style));
+                        if (props[p].indexOf('%') > -1) {
+                            if (/.*height|.*top/i.test(p)) {
+                                durations.push(durations[propNum] ? durations[propNum] : 400);
+                                target.push(parseFloat(props[p]) / 100 * document.documentElement.clientHeight);
+                            } else if (p === 'margin' || p === 'padding') {
+                                durations[propNum] ? durations = [].concat(durations, [durations[propNum], durations[propNum], durations[propNum]]) : durations = [].concat(durations, [400, 400, 400, 400]);
+                                var propVals = props[p].split(' ');
+                                if (propVals.length === 1) {
+                                    props[p + 'Top'] = props[p + 'Bottom'] = parseFloat(propVals[0]) / 100 * document.documentElement.clientHeight;
+                                    props[p + 'Left'] = props[p + 'Right'] = parseFloat(propVals[0]) / 100 * document.documentElement.clientWidth;
+                                }
+                                if (propVals.length === 2) {
+                                    props[p + 'Top'] = props[p + 'Bottom'] = parseFloat(propVals[0]) / 100 * document.documentElement.clientHeight;
+                                    props[p + 'Left'] = props[p + 'Right'] = parseFloat(propVals[1]) / 100 * document.documentElement.clientWidth;
+                                }
+                                if (propVals.length === 3) {
+                                    props[p + 'Top'] = parseFloat(propVals[0]) / 100 * document.documentElement.clientHeight;
+                                    props[p + 'Bottom'] = parseFloat(propVals[2]) / 100 * document.documentElement.clientHeight;
+                                    props[p + 'Left'] = props[p + 'Right'] = parseFloat(propVals[1]) / 100 * document.documentElement.clientWidth;
+                                }
+                                if (propVals.length >= 4) {
+                                    props[p + 'Top'] = parseFloat(propVals[0]) / 100 * document.documentElement.clientHeight;
+                                    props[p + 'Bottom'] = parseFloat(propVals[2]) / 100 * document.documentElement.clientHeight;
+                                    props[p + 'Left'] = parseFloat(propVals[3]) / 100 * document.documentElement.clientWidth;
+                                    props[p + 'Right'] = parseFloat(propVals[1]) / 100 * document.documentElement.clientWidth;
+                                }
+                                origin.push(parseFloat(getStyle(ele, p + '-top')));
+                                origin.push(parseFloat(getStyle(ele, p + '-bottom')));
+                                origin.push(parseFloat(getStyle(ele, p + '-left')));
+                                origin.push(parseFloat(getStyle(ele, p + '-right')));
+                                target.push(props[p + 'Top']);
+                                target.push(props[p + 'Bottom']);
+                                target.push(props[p + 'Left']);
+                                target.push(props[p + 'Right']);
+                                delete props[p];
+                                count += 3;
+                            } else {
+                                if (!durations[propNum]) durations.push(400);
+                                var firstRelativeParent = getFirstRelativeParent(ele);
+                                target.push(parseFloat(props[p]) / 100 * parseFloat(getStyle(firstRelativeParent, 'width')));
                             }
-                            if (propVals.length === 2) {
-                                props[p + 'Top'] = props[p + 'Bottom'] = parseFloat(propVals[0]) / 100 * document.documentElement.clientHeight;
-                                props[p + 'Left'] = props[p + 'Right'] = parseFloat(propVals[1]) / 100 * document.documentElement.clientWidth;
-                            }
-                            if (propVals.length === 3) {
-                                props[p + 'Top'] = parseFloat(propVals[0]) / 100 * document.documentElement.clientHeight;
-                                props[p + 'Bottom'] = parseFloat(propVals[2]) / 100 * document.documentElement.clientHeight;
-                                props[p + 'Left'] = props[p + 'Right'] = parseFloat(propVals[1]) / 100 * document.documentElement.clientWidth;
-                            }
-                            if (propVals.length >= 4) {
-                                props[p + 'Top'] = parseFloat(propVals[0]) / 100 * document.documentElement.clientHeight;
-                                props[p + 'Bottom'] = parseFloat(propVals[2]) / 100 * document.documentElement.clientHeight;
-                                props[p + 'Left'] = parseFloat(propVals[3]) / 100 * document.documentElement.clientWidth;
-                                props[p + 'Right'] = parseFloat(propVals[1]) / 100 * document.documentElement.clientWidth;
-                            }
-                            origin.push(parseFloat(getStyle(ele, p + '-top')));
-                            origin.push(parseFloat(getStyle(ele, p + '-bottom')));
-                            origin.push(parseFloat(getStyle(ele, p + '-left')));
-                            origin.push(parseFloat(getStyle(ele, p + '-right')));
-                            target.push(props[p + 'Top']);
-                            target.push(props[p + 'Bottom']);
-                            target.push(props[p + 'Left']);
-                            target.push(props[p + 'Right']);
-                            delete props[p];
-                            count += 3;
                         } else {
-                            var firstRelativeParent = getFirstRelativeParent(ele);
-                            target.push(parseFloat(props[p]) / 100 * parseFloat(getStyle(firstRelativeParent, 'width')));
+                            if (!durations[propNum]) durations.push(400);
+                            if (p !== 'clip') target.push(parseFloat(props[p]));
                         }
                     } else {
-                        if (p !== 'clip') target.push(parseFloat(props[p]));
-                    }
-                    if (p === 'clip') {
+                        durations[propNum] ? durations = [].concat(durations, [durations[propNum], durations[propNum], durations[propNum]]) : durations = [].concat(durations, [400, 400, 400, 400]);
                         // console.log('A');
                         if (getStyle(ele, 'position') !== 'absolute' || !(/rect\((\d+px[,|\s]{1}\s*){3}\d+px\)/g.test(props[p]))) return;
                         // console.log('B');
@@ -736,57 +749,43 @@
                         target.push(parseFloat(propVals[2]));
                         target.push(parseFloat(propVals[3]));
                     }
+                    propNum++;
                     count++;
                 }
 
                 if ('clip' in props) count = count + 3;
 
-                if (easings.length === 0) {
-                    animType = anim[easing] ? anim[easing] : /cubic-bezier\([\d|,|\.]+\)/g.test(easing) ? anim['cubic-bezier'] : anim['linear'];
-                    animTypes.push(animType);
-                } else {
-                    for (var i = 0; i < easings.length; i++) {
-                        animType = anim[easings[i]] ? anim[easings[i]] : /cubic-bezier\([\d|,|\.]+\)/g.test(easings[i]) ? easings[i] : anim['linear'];
-                        animTypes.push(animType);
-                    }
-                }
+                animType = anim[easing] ? anim[easing] : /cubic-bezier\([\d|,|\.]+\)/g.test(easing) ? anim['cubic-bezier'] : anim['linear'];
 
-                // Calculation of cubic-bezier curve points list.
                 var calcCBPoints = (function () {
-                    tsNum = duration * 60 / 1000;
-                    timespan = 1 / tsNum;
-                    for (var i = 0; i < animTypes.length; i++) {
-                        bpInArray = animTypes[i].substring(animTypes[i].indexOf('(') + 1, animTypes[i].indexOf(')')).split(',').map(function (i) { return parseFloat(i) });
-                        // Cubic Bézier curves points
-                        ps = bpInArray.length < 4 ? [0, 0, 0, 0, 1, 1, 1, 1]
-                            : bpInArray.length >= 4 && bpInArray.length < 8 ? [].concat([0, 0], bpInArray.slice(0, 4), [1.0, 1.0]) : bpInArray.length > 8 ? bpInArray.slice(0, 8) : bpInArray;
-                        psList.push(ps);
-                    }
+                    var bpInArray = animType.substring(animType.indexOf('(') + 1, animType.indexOf(')')).split(',').map(function (i) { return parseFloat(i) }),
+                    // Cubic Bézier curves points
+                    ps = bpInArray.length < 4 ? [0, 0, 0, 0, 1, 1, 1, 1]
+                        : bpInArray.length >= 4 && bpInArray.length < 8 ? [].concat([0, 0], bpInArray.slice(0, 4), [1.0, 1.0]) : bpInArray.length > 8 ? bpInArray.slice(0, 8) : bpInArray;
 
                     for (var k = 0; k < count; k++) {
-                        t = 0; x = []; y = [];
+                        x = []; y = []; t = 0;
+                        tsNum = durations[k] * 60 / 1000;
+                        timespan = 1 / tsNum;
                         for (var i = 0; i < tsNum; i++) {
-                            if (psList[k]) {
-                                x.push(calccubicBezierPoint([psList[k][0], psList[k][2], psList[k][4], psList[k][6]], t));
-                                y.push(calccubicBezierPoint([psList[k][1], psList[k][3], psList[k][5], psList[k][7]], t));
-                            } else {
-                                x.push(calccubicBezierPoint([0, 0, 1, 1], t));
-                                y.push(calccubicBezierPoint([0, 0, 1, 1], t));
-                            }
+                            x.push(calccubicBezierPoint([ps[0], ps[2], ps[4], ps[6]], t));
+                            y.push(calccubicBezierPoint([ps[1], ps[3], ps[5], ps[7]], t));
                             t += timespan;
                         }
+                        tsNums.push(tsNum);
                         xs.push(x);
                         ys.push(y);
                     }
                 })();
 
-                // Calculation of linear time keyframe.
                 for (var i = 0; i < count; i++) {
                     var tempKeyFrames = [], tempKeyFrame = origin[i], per = 0, gap = target[i] - origin[i];
-                    for (var j = 0; j < tsNum; j++) {
-                        tempKeyFrames.push(tempKeyFrame);
-                        // cubic-bezier curve's x is not in linear state. so the calculation result of tempKeyFrame cannot be used immediately.
-                        tempKeyFrame = origin[i] + ys[i][j] * gap;
+                    
+                    for (var k = 0; k < tsNums[i]; k++) {
+                        for (var j = 0; j < k; j++) {
+                            tempKeyFrame = origin[i] + y[j] * gap;
+                            tempKeyFrames.push(tempKeyFrame);
+                        }
                     }
 
                     tempKeyFrames.push(target[i]);
@@ -809,6 +808,14 @@
                     }
                 }
 
+                // console.log(origin);
+                // console.log(target);
+                console.log(xs);
+                console.log(ys);
+                // console.log(tsNums);
+                // console.log(durations);
+                // console.log(keyframes);
+                // console.log(keyframes[0]);
                 var requestAnimFrame =
                     window.requestAnimationFrame ||
                     window.webkitRequestAnimationFrame ||
@@ -819,51 +826,19 @@
                         window.setTimeout(callback, 1000 / 60);
                     };
 
-                // time mapping : timespan to cubic-bezier time
-                var timeKeyframeCorrection = (function () {
-                    for (var k = 0; k < xs.length; k++) {
-                        var trueTimeframe = xs[k].map(function (i) {
-                            return i * duration;
-                        });
-                        trueTimeframes.push(trueTimeframe);
-                    }
-
-                    for (var i = 0; i < trueTimeframes.length; i++) {
-                        time = 0;
-                        var tempIndex = [];
-                        var times = [];
-                        for (; time < duration; time += 1000 / 60) {
-                            times.push(time);
-                            if (time > duration) {
-                                time = duration;
-                            }
-                            for (var k = 0; k < trueTimeframes[i].length; k++) {
-                                if (time <= trueTimeframes[i][k]) {
-                                    tempIndex.push(k);
-                                    break;
-                                }
-                            }
-                        }
-                        tempIndex.push(trueTimeframes[0].length);
-                        indexs.push(tempIndex);
-                    }
-
-                })();
-
+                // console.log(props);
                 var go = function () {
-                    var pi = 0, ti = 0;
+                    var pi = 0;
                     for (var prop in props) {
-                        ti = indexs[pi][index];
                         if (prop === 'clip') {
-                            ele.style[prop] = 'rect(' + keyframes[pi][ti] + 'px, ' + keyframes[pi + 1][ti] + 'px, ' + keyframes[pi + 2][ti] + 'px, ' + keyframes[pi + 3][ti] + 'px' + ')';
+                            ele.style[prop] = 'rect(' + keyframes[pi][index] + 'px, ' + keyframes[pi + 1][index] + 'px, ' + keyframes[pi + 2][index] + 'px, ' + keyframes[pi + 3][index] + 'px' + ')';
                             pi += 4;
                             continue;
                         }
-                        prop === 'opacity' ? ele.style[prop] = keyframes[pi][ti] : ele.style[prop] = keyframes[pi][ti] + 'px';
+                        prop === 'opacity' ? ele.style[prop] = keyframes[pi][index] : ele.style[prop] = keyframes[pi][index] + 'px';
                         pi++;
                     }
                     index++;
-
                     if (index !== keyframes[pi - 1].length) {
                         requestAnimFrame(go);
                     } else {
