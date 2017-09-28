@@ -54,6 +54,26 @@
     .yuko-loading-progressbar.yuko-loading-progressbar-indeterminate>.progressbar {
       width: 0;
     }    
+
+    .yuko-loading-spinner {
+      position: relative;
+      background: none;
+      width: 28px;
+      height: 28px;
+
+      margin: 0 auto;
+    }
+    .spinner {
+      position: absolute;
+      top: 0;
+      left: 0;
+      background: none;
+      border: 3px solid #42a5f5;
+      /* border-left: none */
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+    }
   </style>
 </head>
 
@@ -67,6 +87,12 @@
         <div class="bar progressbar"></div>
         <div class="bar bufferbar"></div>
       </div>
+      <div class="yuko-loading-spinner">
+        <div class="spinner spinner-layer-1"></div>
+        <div class="spinner spinner-layer-2"></div>
+        <div class="spinner spinner-layer-3"></div>
+        <div class="spinner spinner-layer-4"></div>
+      </div>
   </div>
   <script src="../common/script/Yuko.js"></script>
   <script>
@@ -75,8 +101,8 @@
       progressbar,
       {
         properties: {left: '100%', width: '80%'},
-        easing: 'cubic-bezier(.4,0,.2,1)',
-        easings: ['cubic-bezier(.65,0,.65,0)', 'cubic-bezier(.4,0,.2,1)'],
+        // easing: 'cubic-bezier(.4,0,.2,1)',
+        easings: ['cubic-bezier(.65,0,.65,0)', 'cubic-bezier(.4,0,.4,1)'],
         duration: 1500,
         cycle: true
       }
