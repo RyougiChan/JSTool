@@ -722,7 +722,7 @@
                     }
                     if (p === 'clip') {
                         // console.log('A');
-                        if (getStyle(ele, 'position') !== 'absolute' || !(/rect\((\d+px[,|\s]{1}\s*){3}\d+px\)/g.test(props[p]))) return;
+                        if (getStyle(ele, 'position') !== 'absolute' || !(/rect\((-?\d+px[,|\s]{1}\s*){3}-?\d+px\)/g.test(props[p]))) return;
                         // console.log('B');
                         var propVals = props[p].replace(/,/g, ' ').replace(/\s+/g, ' ').replace('rect(', '').replace(')', '').split(' ');
                         // var oClip = getStyle(ele, 'clip') === 'auto' ? [getStyle(ele, 'top'), getStyle(ele, 'width'), getStyle(ele, 'height'), getStyle(ele, 'left')] : getStyle(ele, 'clip').replace(/,/g, '').replace(/\s+/g, ' ').replace('rect(', '').replace(')', '').split(' ');
@@ -766,6 +766,7 @@
                     for (var k = 0; k < count; k++) {
                         t = 0; x = []; y = [];
                         for (var i = 0; i < tsNum; i++) {
+                            // TODO: BUG -> margin/padding/clip haven't been considered!
                             if (psList[k]) {
                                 x.push(calccubicBezierPoint([psList[k][0], psList[k][2], psList[k][4], psList[k][6]], t));
                                 y.push(calccubicBezierPoint([psList[k][1], psList[k][3], psList[k][5], psList[k][7]], t));
@@ -864,7 +865,7 @@
                     }
                     index++;
 
-                    if (index !== keyframes[pi - 1].length) {
+                    if (index !== indexs[pi - 1].length) {
                         requestAnimFrame(go);
                     } else {
                         complete();

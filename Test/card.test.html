@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title></title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    * {
+      margin: 0;
+      padding: 0
+    }
+
+    .main {
+      position: relative;
+      float: left;
+      width: 300px;
+      margin: 10px;
+    }
+
+    .trigger-button {
+      width: 60px;
+      height: 60px;
+      line-height: 60px;
+      text-align: center;
+      color: #4285f4;
+      border: 1px dashed #4285f4;
+      cursor: pointer;
+    }
+
+    .card-container {
+      width: 450px;
+      overflow: hidden;
+      position: absolute;
+      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12);
+      background: #ffffff;
+    }
+
+    .card-avatar {
+      position: relative;
+      width: 450px;
+      height: 150px;
+      background: #4285f4;
+      color: #f1f1f1;
+      font-weight: 800;
+    }
+
+    .card-avatar-icon {
+      text-align: right;
+      padding: .5em;
+    }
+
+    .card-avatar-icon > i {
+      cursor: pointer;
+    }
+
+    .card-avatar-icon > i:hover {
+      background: rgba(158, 158, 158, 0.2);
+    }
+
+    .card-avatar-title {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 60px;
+      line-height: 60px;
+      text-indent: 16px;
+      font-size: 36px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      -ms-text-overflow: ellipsis;
+      -o-text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .card-content {
+      min-height: 120px;
+      border-bottom: 1px solid #cccccc;
+      padding: 16px;
+      line-height: 22px;
+      overflow: hidden;
+      color: #878787;
+    }
+
+    .card-trigger {
+      height: 60px;
+      line-height: 60px;
+      padding: 0 16px;
+      color:#4285f4;
+      font-weight: 800;
+      text-align: right;
+    }
+
+    .card-trigger > div {
+      display: inline-block;
+      cursor: pointer;
+      padding: 12px 0;
+    }
+
+    .card-trigger > div > span{
+      display: block;
+      height: 36px;
+      line-height: 36px;    
+      padding: 0 12px;
+      border-radius: 1px;
+    }
+
+    .card-trigger > div > span:hover {
+      background: rgba(158, 158, 158, 0.2);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="main">
+    <div class="trigger-button" data-index="1">CARD</div>
+    <div class="card-container">
+      <div class="card-avatar">
+        <div class="card-avatar-icon"><i> -ICON- </i></div>
+        <div class="card-avatar-title"> Google&Alphabet </div>
+      </div>
+      <div class="card-content">
+          On August 10, 2015, Google announced plans to reorganize its various interests as a conglomerate called Alphabet. Google became Alphabet's leading subsidiary, and will continue to be the umbrella company for Alphabet's Internet interests. Upon completion of the restructure, Sundar Pichai became CEO of Google, replacing Larry Page, who became CEO of Alphabet.
+      </div>
+      <div class="card-trigger">
+          <div><span>GET STARTED</span></div>
+      </div>
+    </div>
+  </div>
+  <script src="../common/script/Yuko.js"></script>
+  <script>
+    var trig = document.querySelectorAll('.trigger-button');
+
+    function callback(e) {
+      var menuContainer = e.target.nextElementSibling,
+        isshow = menuContainer.getAttribute('data-show') === 'false' ? false : true,
+        index = parseInt(e.target.getAttribute('data-index')),
+        menuHeight = menuContainer.offsetHeight,
+        menuWidth = menuContainer.offsetWidth,
+        clip = [
+          [
+            // left-top
+            'rect(' + 0 + 'px,' + 0 + 'px,' + 0 + 'px,' + 0 + 'px)',
+            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,-' + 10 + 'px)'
+          ],
+          [
+            // right-top
+            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + 0 + 'px,' + (menuWidth + 10) + 'px)',
+            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,-' + 10 + 'px)'
+          ],
+          [
+            // left-bottom
+            'rect(' + (menuHeight + 10) + 'px,' + 0 + 'px,' + (menuHeight + 10) + 'px,' + 0 + 'px)',
+            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,-' + 10 + 'px)'
+          ],
+          [
+            // right-bottom
+            'rect(' + (menuHeight + 10) + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,' + (menuWidth + 10) + 'px)',
+            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,-' + 10 + 'px)'
+          ],
+          [
+            // left
+            'rect(' + 0 + 'px,' + 0 + 'px,' + (menuHeight + 10) + 'px,' + 0 + 'px)',
+            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,-' + 10 + 'px)'
+          ],
+          [
+            // top
+            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + 0 + 'px,' + 0 + 'px)',
+            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,-' + 10 + 'px)'
+          ],
+          [
+            // right
+            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,' + (menuWidth + 10) + 'px)',
+            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,-' + 10 + 'px)'
+          ],
+          [
+            // bottom
+            'rect(' + (menuHeight + 10) + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,' + 0 + 'px)',
+            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,-' + 10 + 'px)'
+          ],
+          [
+            // middle
+            'rect(' + (menuHeight + 10) + 'px,' + 0 + 'px,' + 0 + 'px,' + (menuWidth + 10) + 'px)',
+            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,-' + 10 + 'px)'
+          ]
+        ];
+      if (isshow) {
+        Yuko.utility.animate(menuContainer, {
+          properties: { clip: clip[index +4][0], opacity: 0 },
+          duration: 1000,
+          easing: 'cubic-bezier(0,1,1,0)'
+        });
+        menuContainer.setAttribute('data-show', 'false');
+        // menuContainer.style.display = 'none';
+      } else {
+        menuContainer.style.display = 'block';
+        Yuko.utility.animate(menuContainer, {
+          properties: { clip: clip[index + 4][1], opacity: 1 },
+          duration: 1000,
+          easing: 'cubic-bezier(0,1,1,0)'
+        });
+        menuContainer.setAttribute('data-show', 'true');
+      }
+    }
+    for (var i = 0; i < trig.length; i++) {
+      Yuko.utility.addEvent(trig[i], 'click', callback);
+    }
+  </script>
+</body>
+
+</html>
