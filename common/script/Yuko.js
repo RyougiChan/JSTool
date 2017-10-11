@@ -510,7 +510,7 @@
          * A detection for CSS3 style property in current browser
          * 
          * @param {string} cssProp CSS3 style property in string
-         * @returns return true if the browser support the css style property, return false otherowise
+         * @returns return true if the browser support the css style property, return false otherwise
          */
         function isBrowserSupportProp(cssProp) {
             var root = document.documentElement;
@@ -660,7 +660,7 @@
             var mainEntry = (function () {
                 // Initial parameters
                 var count = 0, progressNum = 0, tsNum = 0, t = 0, timespan = 0, index = 0, time = 0,
-                    zeroGapIndex = [], origin = [], target = [], keyframes = [], x = [], xs = [], y = [], ys = [], animTypes = [], psList = [], trueTimeframes = [], trueKeyFrames = [], indexs = [],
+                    zeroGapIndex = [], origin = [], target = [], keyframes = [], x = [], xs = [], y = [], ys = [], animTypes = [], psList = [], propInArray = [],trueTimeframes = [], trueKeyFrames = [], indexs = [],
                     animType, style, bpInArray, ps,
                     supportProps = {
                         backgroundPosition: 'backgroundPosition', borderWidth: 'borderWidth', borderBottomWidth: 'borderBottomWidth', borderLeftWidth: 'borderLeftWidth', borderRightWidth: 'borderRightWidth', borderTopWidth: 'borderTopWidth', borderSpacing: 'borderSpacing', margin: 'margin', marginBottom: 'marginBottom', marginLeft: 'marginLeft', marginRight: 'marginRight', marginTop: 'marginTop', outlineWidth: 'outlineWidth', padding: 'padding', paddingBottom: 'paddingBottom', paddingLeft: 'paddingLeft', paddingRight: 'paddingRight', paddingTop: 'paddingTop', height: 'height', width: 'width', maxHeight: 'maxHeight', maxWidth: 'maxWidth', minHeight: 'minHeight', minWidth: 'minWidth', font: 'font', fontSize: 'fontSize', bottom: 'bottom', left: 'left', right: 'right', top: 'top', letterSpacing: 'letterSpacing', wordSpacing: 'wordSpacing', lineHeight: 'lineHeight', textIndent: 'textIndent', opacity: 'opacity', clip: 'clip'
@@ -675,6 +675,7 @@
                     };
 
                 for (var p in props) {
+                    propInArray.push(p);
                     props[p] += '';
                     if (!(p in supportProps)) continue;
                     style = getStyle(ele, p);
@@ -760,13 +761,20 @@
                         // Cubic Bézier curves points
                         ps = bpInArray.length < 4 ? [0, 0, 0, 0, 1, 1, 1, 1]
                             : bpInArray.length >= 4 && bpInArray.length < 8 ? [].concat([0, 0], bpInArray.slice(0, 4), [1.0, 1.0]) : bpInArray.length > 8 ? bpInArray.slice(0, 8) : bpInArray;
-                        psList.push(ps);
+                        if (propInArray[i] == 'margin' || propInArray[i] == 'padding' || propInArray[i] == 'clip') {
+                            var x = 0;
+                            while (x < 4) {
+                                psList.push(ps);
+                            x++;
+                            }
+                        } else {
+                            psList.push(ps);
+                        }
                     }
 
                     for (var k = 0; k < count; k++) {
                         t = 0; x = []; y = [];
                         for (var i = 0; i < tsNum; i++) {
-                            // TODO: BUG -> margin/padding/clip haven't been considered!
                             if (psList[k]) {
                                 x.push(calccubicBezierPoint([psList[k][0], psList[k][2], psList[k][4], psList[k][6]], t));
                                 y.push(calccubicBezierPoint([psList[k][1], psList[k][3], psList[k][5], psList[k][7]], t));

@@ -5,11 +5,10 @@
   <title></title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../common/style/yuko-reset.css">
+  <link rel="stylesheet" href="../common/style/yuko.css">
+  
   <style>
-    * {
-      margin: 0;
-      padding: 0
-    }
 
     .main {
       position: relative;
@@ -51,11 +50,14 @@
     }
 
     .card-avatar-icon > i {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
       cursor: pointer;
     }
 
     .card-avatar-icon > i:hover {
-      background: rgba(158, 158, 158, 0.2);
+      background: rgba(255, 255, 255, 0.1);
     }
 
     .card-avatar-title {
@@ -98,6 +100,8 @@
     }
 
     .card-trigger > div > span{
+      position: relative;
+      overflow: hidden;
       display: block;
       height: 36px;
       line-height: 36px;    
@@ -130,11 +134,13 @@
   <script src="../common/script/Yuko.js"></script>
   <script>
     var trig = document.querySelectorAll('.trigger-button');
+    var cardTrig = document.querySelector('.card-trigger > div > span');
+    var cardIconTrig = document.querySelector('.card-avatar-icon > i');
 
     function callback(e) {
-      var menuContainer = e.target.nextElementSibling,
+      var menuContainer = this.nextElementSibling,
         isshow = menuContainer.getAttribute('data-show') === 'false' ? false : true,
-        index = parseInt(e.target.getAttribute('data-index')),
+        index = parseInt(this.getAttribute('data-index')),
         menuHeight = menuContainer.offsetHeight,
         menuWidth = menuContainer.offsetWidth,
         clip = [
@@ -188,7 +194,7 @@
         Yuko.utility.animate(menuContainer, {
           properties: { clip: clip[index +4][0], opacity: 0 },
           duration: 1000,
-          easing: 'cubic-bezier(0,1,1,0)'
+          easing: 'cubic-bezier(.17,.67,.83,.67)'
         });
         menuContainer.setAttribute('data-show', 'false');
         // menuContainer.style.display = 'none';
@@ -197,7 +203,7 @@
         Yuko.utility.animate(menuContainer, {
           properties: { clip: clip[index + 4][1], opacity: 1 },
           duration: 1000,
-          easing: 'cubic-bezier(0,1,1,0)'
+          easing: 'cubic-bezier(.17,.67,.83,.67)'
         });
         menuContainer.setAttribute('data-show', 'true');
       }
@@ -205,6 +211,9 @@
     for (var i = 0; i < trig.length; i++) {
       Yuko.utility.addEvent(trig[i], 'click', callback);
     }
+    Yuko.utility.addEvent(cardTrig, 'click', Yuko.effect.rippleEffect);
+    Yuko.utility.addEvent(cardIconTrig, 'click', Yuko.effect.rippleEffect);
+    
   </script>
 </body>
 
