@@ -8,17 +8,142 @@
   <link rel="stylesheet" href="../common/style/yuko-reset.css">
   <link rel="stylesheet" href="../common/style/yuko.css">
   <style>
-    
+    .yuko-textfields-container {
+      background: #f1f1f1;
+      width: 80%;
+      height: 100%;
+      margin: 0 auto;
+    }
+
+    .yuko-textfield {
+      position: relative;
+      font-size: 16px;
+      display: inline-block;
+      box-sizing: border-box;
+      width: 300px;
+      max-width: 100%;
+      margin: 0;
+      padding: 20px 0;
+    }
+
+    .yuko-textfield {
+      width: 100px;
+    }
+
+    .yuko-textfield-input {
+      border: none;
+      border-bottom: 1px solid rgba(0, 0, 0, .12);
+      display: block;
+      font-size: 16px;
+      font-family: "Helvetica", "Arial", sans-serif;
+      margin: 0;
+      padding: 4px 0;
+      width: 100%;
+      background: 0 0;
+      text-align: left;
+      color: inherit;
+    }
+
+    .yuko-textfield-label {
+      bottom: 0;
+      color: rgba(0, 0, 0, .26);
+      font-size: 16px;
+      left: 0;
+      right: 0;
+      pointer-events: none;
+      position: absolute;
+      display: block;
+      top: 24px;
+      width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+      text-align: left;
+      visibility: visible;
+    }
+
+    .yuko-textfield-label:after {
+      background-color: #3f51b5;
+      bottom: 20px;
+      content: '';
+      height: 2px;
+      left: 45%;
+      position: absolute;
+      transition-duration: .2s;
+      transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+      visibility: hidden;
+      width: 10px;
+    }
+
+    .yuko-textfield.is-invalid .yuko-textfield-label:after {
+      background-color: #d50000;
+    }
+
+    .yuko-textfield.is-focused .yuko-textfield-label:after {
+      left: 0;
+      visibility: visible;
+      width: 100%
+    }
+
+    .yuko-textfield.is-dirty .yuko-textfield-label {
+      visibility: hidden;
+    }
+
+    .yuko-textfield-error {
+      color: #d50000;
+      position: absolute;
+      font-size: 12px;
+      margin-top: 3px;
+      visibility: hidden;
+      display: block;
+    }
+
+    .yuko-textfield.is-invalid .yuko-textfield-error {
+      visibility: visible;
+    }
   </style>
 </head>
 
 <body>
   <div class="yuko-textfields-container">
-      
+    <div class="yuko-textfield yuko-js-textfield">
+      <input class="yuko-textfield-input" type="text" pattern="^-?[0-9]*\.?[0-9]+$" id="yuko-input">
+      <label class="yuko-textfield-label" for="yuko-input">Number...</label>
+      <span class="yuko-textfield-error">Input is not a number!</span>
+    </div>
   </div>
   <script src="../common/script/Yuko.js"></script>
   <script>
-    
+    var textfiled = document.querySelectorAll('.yuko-js-textfield > .yuko-textfield-input');
+    var focusinCall = function (e) {
+      // this.parentNode.classList.add('is-focused');
+      // this.parentNode.classList.add('is-dirty');
+      this.parentNode.className += ' is-focused';
+      this.parentNode.className += ' is-dirty';
+    }
+    var focusoutCall = function (e) {
+      // this.parentNode.classList.remove('is-focused');
+      // this.parentNode.classList.remove('is-dirty');
+      this.parentNode.className = this.parentNode.className.replace(' is-focused', '');
+      this.parentNode.className = this.parentNode.className.replace(' is-dirty', '');
+    }
+    console.log(textfiled);
+    for (var i = 0; i < 1; i++) {
+      var pattern = textfiled[i].getAttribute('pattern');
+      if (pattern) {
+        Yuko.utility.addEvent(textfiled[i], 'input', function (i) {
+          var re = new RegExp(pattern);
+          if (this.value.trim() != '' && !(re.test(this.value))) {
+            // this.parentNode.classList.add('is-invalid');
+            this.parentNode.className += ' is-invalid';
+          } else {
+            // this.parentNode.classList.remove('is-invalid');
+            this.parentNode.className = this.parentNode.className.replace(' is-invalid', '');
+          }
+        });
+      }
+      Yuko.utility.addEvent(textfiled[i], 'focusin', focusinCall);
+      Yuko.utility.addEvent(textfiled[i], 'focusout', focusoutCall);
+    }
   </script>
 </body>
 
