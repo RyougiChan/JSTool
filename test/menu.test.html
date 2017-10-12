@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title></title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    * {
+      margin: 0;
+      padding: 0
+    }
+
+    .main {
+      position: relative;
+      float: left;
+      width: 300px;
+      margin: 10px;
+    }
+
+    .trigger-button {
+      width: 60px;
+      height: 60px;
+      line-height: 60px;
+      text-align: center;
+      color: lightcoral;
+      border: 1px dashed lightcoral;
+    }
+
+    .menu-container {
+      width: 300px;
+      overflow: hidden;
+      position: absolute;
+      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12);
+      background: lightskyblue;
+    }
+
+    .menu-container>ul {
+      list-style: none;
+      width: 300px;
+    }
+
+    .menu-container>ul>li {
+      width: 300px;
+      height: 60px;
+      line-height: 60px;
+      text-align: center;
+      color: lightcoral;
+      list-style: none;
+      border-bottom: darkgray dashed 1px
+    }
+
+    .menu-container>ul>li:last-child {
+      border: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="main">
+    <div class="trigger-button" data-index="1">MENU</div>
+    <div class="menu-container">
+      <ul>
+        <li>Yuki</li>
+        <li>Yuko</li>
+        <li>Yuri</li>
+        <li>Yui</li>
+      </ul>
+    </div>
+  </div>
+  <div class="main">
+    <div class="trigger-button" data-index="2">MENU</div>
+    <div class="menu-container">
+      <ul>
+        <li>Yuki</li>
+        <li>Yuko</li>
+        <li>Yuri</li>
+        <li>Yui</li>
+      </ul>
+    </div>
+  </div>
+  <div class="main">
+    <div class="trigger-button" data-index="3">MENU</div>
+    <div class="menu-container">
+      <ul>
+        <li>Yuki</li>
+        <li>Yuko</li>
+        <li>Yuri</li>
+        <li>Yui</li>
+      </ul>
+    </div>
+  </div>
+  <div class="main">
+    <div class="trigger-button" data-index="4">MENU</div>
+    <div class="menu-container">
+      <ul>
+        <li>Yuki</li>
+        <li>Yuko</li>
+        <li>Yuri</li>
+        <li>Yui</li>
+      </ul>
+    </div>
+  </div>
+  <script src="../common/script/Yuko.js"></script>
+  <script>
+    var trig = document.querySelectorAll('.trigger-button');
+
+    function callback(e) {
+      var menuContainer = e.target.nextElementSibling,
+        isshow = menuContainer.getAttribute('data-show') === 'false' ? false : true,
+        index = parseInt(e.target.getAttribute('data-index')),
+        menuHeight = menuContainer.offsetHeight,
+        menuWidth = menuContainer.offsetWidth,
+        clip = [
+          [
+            // left-top
+            'rect(' + 0 + 'px,' + 0 + 'px,' + 0 + 'px,' + 0 + 'px)',
+            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,' + 0 + 'px)'
+          ],
+          [
+            // right-top
+            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + 0 + 'px,' + (menuWidth + 10) + 'px)',
+            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,' + 0 + 'px)'
+          ],
+          [
+            // left-bottom
+            'rect(' + (menuHeight + 10) + 'px,' + 0 + 'px,' + (menuHeight + 10) + 'px,' + 0 + 'px)',
+            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,' + 0 + 'px)'
+          ],
+          [
+            // right-bottom
+            'rect(' + (menuHeight + 10) + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,' + (menuWidth + 10) + 'px)',
+            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,' + 0 + 'px)'
+          ],
+          [
+            // left
+            'rect(' + 0 + 'px,' + 0 + 'px,' + (menuHeight + 10) + 'px,' + 0 + 'px)',
+            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,' + 0 + 'px)'
+          ],
+          [
+            // top
+            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + 0 + 'px,' + 0 + 'px)',
+            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,' + 0 + 'px)'
+          ],
+          [
+            // right
+            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,' + (menuWidth + 10) + 'px)',
+            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,' + 0 + 'px)'
+          ],
+          [
+            // bottom
+            'rect(' + (menuHeight + 10) + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,' + 0 + 'px)',
+            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,' + 0 + 'px)'
+          ],
+          [
+            // middle
+            'rect(' + (menuHeight + 10) + 'px,' + 0 + 'px,' + 0 + 'px,' + (menuWidth + 10) + 'px)',
+            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,' + 0 + 'px)'
+          ]
+        ];
+      if (isshow) {
+        Yuko.utility.animate(menuContainer, {
+          properties: { clip: clip[index +3][0], opacity: 0 },
+          duration: 3000,
+          easing: 'cubic-bezier(0,1,1,0)'
+        });
+        menuContainer.setAttribute('data-show', 'false');
+        // menuContainer.style.display = 'none';
+      } else {
+        menuContainer.style.display = 'block';
+        Yuko.utility.animate(menuContainer, {
+          properties: { clip: clip[index + 3][1], opacity: 1 },
+          duration: 3000,
+          easing: 'cubic-bezier(0,1,1,0)'
+        });
+        menuContainer.setAttribute('data-show', 'true');
+      }
+    }
+    for (var i = 0; i < trig.length; i++) {
+      Yuko.utility.addEvent(trig[i], 'click', callback);
+    }
+  </script>
+</body>
+
+</html>
