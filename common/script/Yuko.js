@@ -635,10 +635,11 @@
          * Create a specific animaion
          * 
          * @param {Element} ele The element to execute animation.
-         * @param {{properties: ({}), duration?: (string|number), easing?: (string), start?: (Function), complete? : (Function)}} options Parameters to initial animation.
+         * @param {{properties: ({}), duration?: (string|number), easing?: (string), easings?: ([string]), start?: (Function), complete? : (Function)}} options Parameters to initial animation.
          *   properties=: An object of CSS properties and values that the animation will move toward.
          *   duration=: A string or number determining how long the animation will run. default: 400.
          *   easing=: A string indicating which easing function to use for the transition. default: 'linear'.
+         *   easings=: A series strings in array indicating which easing function to use for the transition. default: [].
          *   start=? A function to call when the animation on an element begins.
          *   complete=? A function to call once the animation is complete.
          *   cycle=? If the animate is cycle.
