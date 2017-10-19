@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>SnackBar.Test</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../common/style/yuko-reset.css">
+  <link rel="stylesheet" href="../common/style/yuko.css">
+  <link rel="stylesheet" href="../common/style/material-icons.css">
+  <style>
+    .yuko-snackbar-container {
+      background: #f1f1f1;
+      width: 80%;
+      height: 100%;
+      margin: 0 auto;
+    }
+
+    .yuko-snackbar {
+      position: fixed;
+      bottom: 0px;
+      left: 50%;
+      min-width: 288px;
+      max-width: 568px;
+      transform: translate(-50%, 80px);
+      border-radius: 2px;
+      cursor: default;
+      background-color: rgb(50, 50, 50);
+      z-index: 3;
+      display: flex;
+      justify-content: space-between;
+      font-family: Roboto, Helvetica, Arial, sans-serif;
+      will-change: transform;
+      transform: translate(0px, 80px);
+      transform: translate(-50%, 80px);
+      pointer-events: none;
+      transition: transform 0.25s cubic-bezier(0.4, 0, 1, 1), -webkit-transform 0.25s cubic-bezier(0.4, 0, 1, 1);
+    }
+
+    .yuko-snackbar.is-active {
+      transform: translate(-50%, 0px);
+      pointer-events: auto;
+      transition: transform 0.25s cubic-bezier(0, 0, 0.2, 1), -webkit-transform 0.25s cubic-bezier(0, 0, 0.2, 1);
+    }
+
+    .material-icons {
+      width: 10%
+    }
+  </style>
+</head>
+
+<body>
+  <div class="yuko-snackbar-container">
+    <div class="material-icons" style="margin: 10% 45%">add</div>
+    <div class="yuko-snackbar">
+      Follow
+    </div>
+  </div>
+  <script src="../common/script/Yuko.js"></script>
+  <script>
+    var snackbarIcons = document.querySelectorAll('.yuko-snackbar-container .material-icons');
+    for (var i = 0; i < snackbarIcons.length; i++) {
+      Yuko.utility.addEvent(snackbarIcons[i], 'mouseover', function (evt) {
+        var snackbar = this.nextElementSibling,
+          iconBound = this.getBoundingClientRect(),
+          snackbarBound = snackbar.getBoundingClientRect();
+        if (snackbar.className.indexOf('is-active') == -1) {
+          snackbar.className += ' is-active';
+        }
+      });
+      Yuko.utility.addEvent(snackbarIcons[i], 'mouseout', function (evt) {
+        var snackbar = this.nextElementSibling;
+        var iconBound = this.getBoundingClientRect();
+        if (snackbar.className.indexOf('is-active') > -1) {
+          snackbar.className = snackbar.className.replace(' is-active', '');
+        }
+      });
+    }
+  </script>
+</body>
+
+</html>
