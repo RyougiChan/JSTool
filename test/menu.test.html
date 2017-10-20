@@ -2,14 +2,12 @@
 <html lang="en">
 
 <head>
-  <title></title>
+  <title>Menu.test</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../common/style/yuko-reset.css">
+  <link rel="stylesheet" href="../common/style/yuko.component.css">
   <style>
-    * {
-      margin: 0;
-      padding: 0
-    }
 
     .main {
       position: relative;
@@ -26,40 +24,13 @@
       color: lightcoral;
       border: 1px dashed lightcoral;
     }
-
-    .menu-container {
-      width: 300px;
-      overflow: hidden;
-      position: absolute;
-      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12);
-      background: lightskyblue;
-    }
-
-    .menu-container>ul {
-      list-style: none;
-      width: 300px;
-    }
-
-    .menu-container>ul>li {
-      width: 300px;
-      height: 60px;
-      line-height: 60px;
-      text-align: center;
-      color: lightcoral;
-      list-style: none;
-      border-bottom: darkgray dashed 1px
-    }
-
-    .menu-container>ul>li:last-child {
-      border: none;
-    }
   </style>
 </head>
 
 <body>
   <div class="main">
     <div class="trigger-button" data-index="1">MENU</div>
-    <div class="menu-container">
+    <div class="yuko-menu_container">
       <ul>
         <li>Yuki</li>
         <li>Yuko</li>
@@ -70,7 +41,7 @@
   </div>
   <div class="main">
     <div class="trigger-button" data-index="2">MENU</div>
-    <div class="menu-container">
+    <div class="yuko-menu_container">
       <ul>
         <li>Yuki</li>
         <li>Yuko</li>
@@ -81,7 +52,7 @@
   </div>
   <div class="main">
     <div class="trigger-button" data-index="3">MENU</div>
-    <div class="menu-container">
+    <div class="yuko-menu_container">
       <ul>
         <li>Yuki</li>
         <li>Yuko</li>
@@ -92,7 +63,7 @@
   </div>
   <div class="main">
     <div class="trigger-button" data-index="4">MENU</div>
-    <div class="menu-container">
+    <div class="yuko-menu_container">
       <ul>
         <li>Yuki</li>
         <li>Yuko</li>

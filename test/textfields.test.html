@@ -2,230 +2,39 @@
 <html lang="en">
 
 <head>
-  <title>Loading.Test</title>
+  <title>Textfield.Test</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="../common/style/yuko-reset.css">
   <link rel="stylesheet" href="../common/style/yuko.css">
   <link rel="stylesheet" href="../common/style/material-icons.css">
-  <style>
-    .yuko-textfields-container {
-      background: #f1f1f1;
-      width: 80%;
-      height: 100%;
-      margin: 0 auto;
-    }
-
-    .yuko-textfield {
-      position: relative;
-      font-size: 16px;
-      display: inline-block;
-      box-sizing: border-box;
-      width: 300px;
-      max-width: 100%;
-      margin: 0;
-      padding: 20px 0;
-    }
-
-    .yuko-textfield {
-      width: 150px;
-      margin: 50px;
-    }
-
-    .yuko-textfield-input {
-      border: none;
-      border-bottom: 1px solid rgba(0, 0, 0, .12);
-      display: block;
-      font-size: 16px;
-      font-family: "Helvetica", "Arial", sans-serif;
-      margin: 0;
-      padding: 4px 0;
-      width: 100%;
-      background: 0 0;
-      text-align: left;
-      color: inherit;
-    }
-
-    .yuko-textfield-label {
-      bottom: 0;
-      color: rgba(0, 0, 0, .26);
-      font-size: 16px;
-      left: 0;
-      right: 0;
-      pointer-events: none;
-      position: absolute;
-      display: block;
-      top: 24px;
-      width: 100%;
-      overflow: hidden;
-      white-space: nowrap;
-      text-align: left;
-      visibility: visible;
-    }
-
-    .yuko-textfield-label::after {
-      background-color: #3f51b5;
-      bottom: 20px;
-      content: '';
-      height: 2px;
-      left: 45%;
-      position: absolute;
-      transition-duration: .2s;
-      transition-timing-function: cubic-bezier(.4, 0, .2, 1);
-      -webkit-transition-duration: .2s;
-      -webkit-transition-timing-function: cubic-bezier(.4, 0, .2, 1);
-      visibility: hidden;
-      width: 10px;
-    }
-
-    .yuko-textfield.is-invalid .yuko-textfield-label::after {
-      background-color: #d50000;
-    }
-
-    .yuko-textfield.is-invalid .yuko-textfield-label {
-      color: #d50000;
-    }
-
-    .yuko-textfield.is-focused .yuko-textfield-label::after {
-      left: 0;
-      visibility: visible;
-      width: 100%
-    }
-
-    .yuko-textfield.is-dirty .yuko-textfield-label {
-      visibility: hidden !important;
-    }
-
-    .yuko-textfield.yuko-textfield-floating-label .yuko-textfield-label {
-      transition-duration: .2s;
-      transition-timing-function: cubic-bezier(.4, 0, .2, 1);
-      -webkit-transition-duration: .2s;
-      -webkit-transition-timing-function: cubic-bezier(.4, 0, .2, 1);
-    }
-
-    .yuko-textfield.yuko-textfield-floating-label.is-dirty .yuko-textfield-label {
-      visibility: visible !important;
-      top: 4px;
-    }
-
-    .yuko-textfield-error {
-      color: #d50000;
-      position: absolute;
-      font-size: 12px;
-      margin-top: 3px;
-      visibility: hidden;
-      display: block;
-      width: 100%;
-    }
-
-    .yuko-textfield.is-invalid .yuko-textfield-error {
-      visibility: visible;
-    }
-
-    .yuko-button {
-      background: 0 0;
-      border: none;
-      border-radius: 2px;
-      color: #000;
-      position: relative;
-      height: 36px;
-      margin: 0;
-      min-width: 64px;
-      padding: 0 16px;
-      display: inline-block;
-      font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-      font-size: 14px;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0;
-      overflow: hidden;
-      will-change: box-shadow;
-      transition: box-shadow .2s cubic-bezier(.4, 0, 1, 1), background-color .2s cubic-bezier(.4, 0, .2, 1), color .2s cubic-bezier(.4, 0, .2, 1);
-      outline: none;
-      cursor: pointer;
-      text-decoration: none;
-      text-align: center;
-      line-height: 36px;
-      vertical-align: middle;
-    }
-
-    .yuko-button-icon {
-      border-radius: 50%;
-      font-size: 24px;
-      height: 32px;
-      margin-left: 0;
-      margin-right: 0;
-      min-width: 32px;
-      width: 32px;
-      padding: 0;
-      overflow: hidden;
-      color: inherit;
-      line-height: normal;
-    }
-
-    .yuko-textfield .yuko-button {
-      position: absolute;
-      bottom: 20px;
-    }
-
-    .yuko-button .material-icons{
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      -webkit-transform: translate(-12px, -12px);
-      transform: translate(-12px, -12px);
-      line-height: 24px;
-      width: 24px;
-    }
-
-    .yuko-textfield-expandable .yuko-textfield-input {
-      margin-left: 32px;
-      visibility: hidden;
-    }
-
-    .yuko-textfield-expandable .yuko-textfield-label {
-      left: 32px;
-      visibility: hidden;
-    }
-
-    .yuko-textfield-expandable .yuko-textfield-error {
-      margin-left: 32px;
-    }
-
-    .yuko-textfield.is-focused .yuko-textfield-input {
-      visibility: visible;
-    }
-
-    .yuko-textfield-expandable.is-focused .yuko-textfield-label {
-      visibility: visible;
-    }
-  </style>
+  <link rel="stylesheet" href="../common/style/yuko.component.css">
 </head>
 
 <body>
   <div class="yuko-textfields-container">
     <div class="yuko-textfield yuko-js-textfield">
-      <input class="yuko-textfield-input" type="text" pattern="^-?[0-9]*\.?[0-9]+$" id="yuko-input1">
-      <label class="yuko-textfield-label" for="yuko-input1">Number...</label>
-      <span class="yuko-textfield-error">Input is not a number!</span>
+      <input class="yuko-textfield_input" type="text" pattern="^-?[0-9]*\.?[0-9]+$" id="yuko-input1">
+      <label class="yuko-textfield_label" for="yuko-input1">Number...</label>
+      <span class="yuko-textfield_error">Input is not a number!</span>
     </div>
 
-    <div class="yuko-textfield yuko-js-textfield yuko-textfield-floating-label">
-      <input class="yuko-textfield-input" type="text" pattern="^-?[0-9]*\.?[0-9]+$" id="yuko-input2">
-      <label class="yuko-textfield-label" for="yuko-input2">Number...</label>
-      <span class="yuko-textfield-error">Input is not a number!</span>
+    <div class="yuko-textfield yuko-js-textfield yuko-textfield_floating-label">
+      <input class="yuko-textfield_input" type="text" pattern="^-?[0-9]*\.?[0-9]+$" id="yuko-input2">
+      <label class="yuko-textfield_label" for="yuko-input2">Number...</label>
+      <span class="yuko-textfield_error">Input is not a number!</span>
     </div>
 
-    <div class="yuko-textfield yuko-js-textfield yuko-textfield-expandable">
+    <div class="yuko-textfield yuko-js-textfield yuko-textfield_expandable">
       <label class="yuko-button yuko-button-icon" for="yuko-input3"><i class="material-icons">&#xe8b6;</i></label>
-      <input class="yuko-textfield-input" type="text" pattern="^-?[0-9]*\.?[0-9]+$" id="yuko-input3">
-      <label class="yuko-textfield-label" for="yuko-input3">Number...</label>
-      <span class="yuko-textfield-error">Input is not a number!</span>
+      <input class="yuko-textfield_input" type="text" pattern="^-?[0-9]*\.?[0-9]+$" id="yuko-input3">
+      <label class="yuko-textfield_label" for="yuko-input3">Number...</label>
+      <span class="yuko-textfield_error">Input is not a number!</span>
     </div>
   </div>
   <script src="../common/script/Yuko.js"></script>
   <script>
-    var textfiled = document.querySelectorAll('.yuko-js-textfield .yuko-textfield-input');
+    var textfiled = document.querySelectorAll('.yuko-js-textfield .yuko-textfield_input');
     var focusinCall = function (e) {
       if (this.parentNode.className.indexOf('is-focus') == -1) {
         this.parentNode.className += ' is-focused';

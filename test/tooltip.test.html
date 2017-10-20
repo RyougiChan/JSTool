@@ -2,89 +2,17 @@
 <html lang="en">
 
 <head>
-  <title>Loading.Test</title>
+  <title>Tooltip.Test</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="../common/style/yuko-reset.css">
   <link rel="stylesheet" href="../common/style/yuko.css">
   <link rel="stylesheet" href="../common/style/material-icons.css">
-  <style>
-    .yuko-tooltip-container {
-      background: #f1f1f1;
-      width: 80%;
-      height: 100%;
-      margin: 0 auto;
-    }
-
-    .yuko-tooltip {
-      -webkit-transform: scale(0);
-      transform: scale(0);
-      -webkit-transform-origin: top center;
-      transform-origin: top center;
-      z-index: 999;
-      background: rgba(97, 97, 97, .9);
-      border-radius: 2px;
-      color: #fff;
-      display: inline-block;
-      font-size: 10px;
-      font-weight: 500;
-      line-height: 14px;
-      max-width: 170px;
-      position: fixed;
-      padding: 8px;
-      text-align: center;
-    }
-
-    .yuko-tooltip.is-active {
-      -webkit-animation: pulse 200ms cubic-bezier(0, 0, .2, 1)forwards;
-      animation: pulse 200ms cubic-bezier(0, 0, .2, 1)forwards;
-    }
-
-
-    @-webkit-keyframes pulse {
-      0% {
-        -webkit-transform: scale(0);
-        transform: scale(0);
-        opacity: 0
-      }
-
-      50% {
-        -webkit-transform: scale(.99);
-        transform: scale(.99)
-      }
-
-      100% {
-        -webkit-transform: scale(1);
-        transform: scale(1);
-        opacity: 1;
-        visibility: visible
-      }
-    }
-
-    @keyframes pulse {
-      0% {
-        -webkit-transform: scale(0);
-        transform: scale(0);
-        opacity: 0
-      }
-
-      50% {
-        -webkit-transform: scale(.99);
-        transform: scale(.99)
-      }
-
-      100% {
-        -webkit-transform: scale(1);
-        transform: scale(1);
-        opacity: 1;
-        visibility: visible
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="../common/style/yuko.component.css">
 </head>
 
 <body>
-  <div class="yuko-tooltip-container">
+  <div class="yuko-tooltip_container">
     <div class="material-icons" style="margin: 10% 45%">add</div>
     <div class="yuko-tooltip">
       Follow
@@ -92,7 +20,7 @@
   </div>
   <script src="../common/script/Yuko.js"></script>
   <script>
-    var tooltipIcons = document.querySelectorAll('.yuko-tooltip-container .material-icons');
+    var tooltipIcons = document.querySelectorAll('.yuko-tooltip_container .material-icons');
     for (var i = 0; i < tooltipIcons.length; i++) {
       Yuko.utility.addEvent(tooltipIcons[i], 'mouseover', function (evt) {
         var tooltip = this.nextElementSibling,
