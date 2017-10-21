@@ -51,7 +51,7 @@
 .yuko-textfield_error { color: #d50000; position: absolute; font-size: 12px; margin-top: 3px; visibility: hidden; display: block; width: 100%; }
 .yuko-textfield.is-invalid .yuko-textfield_error { visibility: visible; }
 .yuko-button_icon { border-radius: 50%; font-size: 24px; height: 32px; margin-left: 0; margin-right: 0; min-width: 32px; width: 32px; padding: 0; overflow: hidden; color: inherit; line-height: normal; }
-.yuko-textfield .yuko-button { position: absolute; bottom: 20px; color: #000000; width: 36px }
+.yuko-textfield .yuko-button { position: absolute; bottom: 20px; color: #000000; width: 24px; height: 24px; line-height: 1em }
 .yuko-button .material-icons{ position: absolute; top: 50%; left: 50%; -webkit-transform: translate(-12px, -12px); transform: translate(-12px, -12px); line-height: 24px; width: 24px; }
 .yuko-textfield_expandable .yuko-textfield_input { margin-left: 32px; visibility: hidden; }
 .yuko-textfield_expandable .yuko-textfield_label { left: 32px; visibility: hidden; }
