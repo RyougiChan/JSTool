@@ -985,9 +985,24 @@
             }
         }
 
-        return {
-            bindDrawerNavItemToPage: bindDrawerNavItemToPage
+        function bindListItemToPage(list, pageContainer) {
+            var listItems = list.children;
+            for (var i = 0; i < listItems.length; i++) {
+                if(!listItems[i].getAttribute('data-disabled')) {
+                    Yuko.utility.addEvent(listItems[i], 'click', (function (i) {
+                        return function () {
+                            // Switch main page to show
+                            pageContainer.slideTo(i);
+                        };
+                    })(i));
+                }
+            }
         }
+
+        return {
+            bindDrawerNavItemToPage: bindDrawerNavItemToPage,
+            bindListItemToPage: bindListItemToPage
+        };
 
     })();
 

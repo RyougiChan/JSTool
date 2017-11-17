@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Tab.Test</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../common/style/yuko-reset.css">
+  <link rel="stylesheet" href="../common/style/yuko.css">
+  <link rel="stylesheet" href="../common/style/material-icons.css">
+  <link rel="stylesheet" href="../common/style/yuko.component.css">
+  <style>
+    .text_ellipsis {overflow: hidden; text-overflow: ellipsis; white-space: nowrap}
+    .yuko-tab {position: relative; width: 100%; height: 55px; background: mediumpurple;float: left}
+    .yuko-tab > .yuko-tab_item {position: relative; float: left; display: block; height: 100%; width: 25%; line-height: 55px; text-align: center; color: #f0f8ff; overflow: hidden;}
+    .yuko-tab > .yuko-tab_item-bar {position: absolute; left: 0; bottom: 0; width: 25%; height: 2px; background: rgb(255, 255, 255)}
+    .yuko-tab > .yuko-tab_item:hover {background: rgba(255,255,255, 0.05) }
+    .yuko-tab > .yuko-tab_item:active {background: rgba(255,255,255, 0.1)}
+  </style>
+</head>
+
+<body>
+  <div class="yuko-tab_container">
+    <ul class="yuko-tab">
+      <li class="yuko-tab_item">
+        <span class="yuko-tab_item-avatar">
+          I
+        </span>
+        <span class="yuko-tab_item-content">
+          TAB_1
+        </span>
+      </li>
+      <li class="yuko-tab_item">
+        <span class="yuko-tab_item-avatar">
+          I
+        </span>
+        <span class="yuko-tab_item-content">
+            TAB_2
+        </span>
+      </li>
+      <li class="yuko-tab_item-bar" data-disabled="true"></li>
+    </ul>
+  </div>
+  <main id="yuko-main-content" data-role="yuko-page-container" data-page-index="0">
+    <div data-role="yuko-page" data-page-id="0" class="yuko-content" style="height: 300px; background: #eee">
+        Hello! RyougiChan!
+    </div>
+    <div data-role="yuko-page" data-page-id="1" class="yuko-content" style="height: 600px; background: #eee">
+        Hello! RyougiChan! Again!
+    </div>
+    <div data-role="yuko-page" data-page-id="2" class="yuko-content" style="height: 900px; background:#eee">
+        Hello! RyougiChan! 3!
+    </div>
+    <div data-role="yuko-page" data-page-id="3" class="yuko-content" style="height: 1200px; background: #eee">
+        Hello! RyougiChan! 4!
+    </div>
+</main>
+  <script src="../common/script/Yuko.js"></script>
+  <script>
+    var tabItems = document.querySelectorAll('.yuko-tab .yuko-tab_item');
+    for (var i = 0; i < tabItems.length; i++) {
+        Yuko.utility.addEvent(tabItems[i], 'click', Yuko.effect.rippleEffect);
+        Yuko.utility.addEvent(tabItems[i], 'click', function(){
+            console.log();
+            var tabItemBar = this.parentNode.lastElementChild;
+            Yuko.utility.animate(tabItemBar, {
+                properties: {
+                    left: this.offsetLeft + 'px'
+                },
+                easing: 'ease-in-out',
+                duration: 200
+            });
+        });
+    }
+  </script>
+  <script>
+        // Bind Drawer
+        var tab = document.querySelector('.yuko-tab');
+        // Bind page
+        var content = document.getElementById('yuko-main-content');
+        var pageContainer = Yuko.widget.pageContainer(content, {
+            allowSwipe: false,
+            timeSpan: 384,
+            animationType: 'linear',
+            swipeScale: 0.5
+        }, function(a) {}, true);
+        // Bind nav item to pageContainer
+        Yuko.event.bindListItemToPage(tab, pageContainer);
+  </script>
+</body>
+
+</html>

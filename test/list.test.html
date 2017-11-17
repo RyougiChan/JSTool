@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>List.Test</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../common/style/yuko-reset.css">
+  <link rel="stylesheet" href="../common/style/yuko.css">
+  <link rel="stylesheet" href="../common/style/material-icons.css">
+  <link rel="stylesheet" href="../common/style/yuko.component.css">
+  <style>
+    .text_ellipsis {overflow: hidden; text-overflow: ellipsis; white-space: nowrap}
+    .yuko-list {max-width: 450px; }
+    .yuko-list > .yuko-list_item {height: 55px; line-height: 55px; border-bottom: 1px dashed rgba(0,0,0,.8); padding: 10px 0;position: relative; overflow: hidden;}
+    .yuko-list > .yuko-list_item:hover {background: rgba(0, 0, 0, 0.05)}
+    .yuko-list > .yuko-list_item:active {background: rgba(0, 0, 0, 0.1)}
+    .yuko-list > .yuko-list_item > span {display: inline-block;text-align: center;height: 100%;line-height: 55px;}
+    .yuko-list > .yuko-list_item > span i {text-align: center; float: left; user-select: none; }
+    .yuko-list > .yuko-list_item > span > span {display: block; height: 100%; padding: 0 5px;}
+    .yuko-list > .yuko-list_item > span > span > span {display:block; height: 50%;line-height: 27.5px;}
+    .yuko-list > .yuko-list_item .yuko-list_item-avatar {width: 45px; height: 45px; line-height: 45px; margin: 5px;}
+    .yuko-list > .yuko-list_item .yuko-list_item-content {width: calc(100% - 55px); text-align: left; float: left;}
+    .yuko-list > .yuko-list_item .yuko-list_item-action {width: 55px;float: right; color: rgba(0, 225, 255, 1)}
+    .yuko-list_item-content .title { color: rgba(0,0,0,.87);}
+    .yuko-list_item-content .abstract { color:rgba(0,0,0,.54);}
+  </style>
+</head>
+
+<body>
+  <div class="yuko-list_container">
+    <ul class="yuko-list">
+      <li class="yuko-list_item">
+        <span class="yuko-list_item-action">
+          ICON
+        </span>
+        <span class="yuko-list_item-content">
+          <i class="yuko-list_item-avatar material-icons">menu</i>
+          <span>
+            <span class="title text_ellipsis">TITLE</span>
+            <span class="abstract text_ellipsis">ABSTRACT</span>
+          </span>
+        </span>
+      </li>
+      
+      <li class="yuko-list_item">
+          <span class="yuko-list_item-action">
+            ICON
+          </span>
+          <span class="yuko-list_item-content">
+            <i class="yuko-list_item-avatar material-icons">menu</i>
+            <span>
+              <span class="title text_ellipsis">TITLE</span>
+              <span class="abstract text_ellipsis">ABSTRACT</span>
+            </span>
+          </span>
+        </li>
+        
+      <li class="yuko-list_item">
+          <span class="yuko-list_item-action">
+            ICON
+          </span>
+          <span class="yuko-list_item-content">
+            <i class="yuko-list_item-avatar material-icons">menu</i>
+            <span>
+              <span class="title text_ellipsis">TITLE</span>
+              <span class="abstract text_ellipsis">ABSTRACT</span>
+            </span>
+          </span>
+        </li>
+    </ul>
+
+  </div>
+  <script src="../common/script/Yuko.js"></script>
+  <script>
+    // Verify Style
+    var listItemContent = document.querySelectorAll('.yuko-list > .yuko-list_item > .yuko-list_item-content');
+    for (var i = 0; i < listItemContent.length; i++) {
+      var ele = listItemContent[i];
+      if(ele.offsetWidth !== ele.parentNode.offsetWidth - 55) {
+        ele.style.width = (ele.parentNode.offsetWidth - 55) + 'px';
+      }
+    }
+    // List items ripple effect
+    var listItems = document.querySelectorAll('.yuko-list .yuko-list_item');
+    for (var i = 0; i < listItems.length; i++) {
+      Yuko.utility.addEvent(listItems[i], 'click', Yuko.effect.rippleEffect);
+    }
+  </script>
+</body>
+
+</html>
