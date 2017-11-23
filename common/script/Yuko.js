@@ -653,6 +653,7 @@
                 easing = options.easing || 'linear',
                 easings = options.easings || [],
                 start = options.start || function () { },
+                process = options.process || function() { },
                 complete = options.complete || function () { },
                 cycle = options.cycle || false;
 
@@ -873,7 +874,7 @@
                         pi++;
                     }
                     index++;
-
+                    process();
                     if (index !== indexs[pi - 1].length) {
                         requestAnimFrame(go);
                     } else {

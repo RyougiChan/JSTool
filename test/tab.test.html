@@ -38,23 +38,31 @@
             TAB_2
         </span>
       </li>
+      <li class="yuko-tab_item">
+        <span class="yuko-tab_item-avatar">
+          I
+        </span>
+        <span class="yuko-tab_item-content">
+            TAB_3
+        </span>
+      </li>
       <li class="yuko-tab_item-bar" data-disabled="true"></li>
     </ul>
+    <main id="yuko-main-content" data-role="yuko-page-container" data-page-index="0">
+      <div data-role="yuko-page" data-page-id="0" class="yuko-content" style="height: 300px; background: #eee">
+          Hello! RyougiChan!
+      </div>
+      <div data-role="yuko-page" data-page-id="1" class="yuko-content" style="height: 600px; background: #eee">
+          Hello! RyougiChan! Again!
+      </div>
+      <div data-role="yuko-page" data-page-id="2" class="yuko-content" style="height: 900px; background:#eee">
+          Hello! RyougiChan! 3!
+      </div>
+      <div data-role="yuko-page" data-page-id="3" class="yuko-content" style="height: 1200px; background: #eee">
+          Hello! RyougiChan! 4!
+      </div>
+  </main>
   </div>
-  <main id="yuko-main-content" data-role="yuko-page-container" data-page-index="0">
-    <div data-role="yuko-page" data-page-id="0" class="yuko-content" style="height: 300px; background: #eee">
-        Hello! RyougiChan!
-    </div>
-    <div data-role="yuko-page" data-page-id="1" class="yuko-content" style="height: 600px; background: #eee">
-        Hello! RyougiChan! Again!
-    </div>
-    <div data-role="yuko-page" data-page-id="2" class="yuko-content" style="height: 900px; background:#eee">
-        Hello! RyougiChan! 3!
-    </div>
-    <div data-role="yuko-page" data-page-id="3" class="yuko-content" style="height: 1200px; background: #eee">
-        Hello! RyougiChan! 4!
-    </div>
-</main>
   <script src="../common/script/Yuko.js"></script>
   <script>
     var tabItems = document.querySelectorAll('.yuko-tab .yuko-tab_item');
@@ -74,7 +82,7 @@
     }
   </script>
   <script>
-        // Bind Drawer
+        // Bind Tab
         var tab = document.querySelector('.yuko-tab');
         // Bind page
         var content = document.getElementById('yuko-main-content');
