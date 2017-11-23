@@ -41,54 +41,70 @@
 
 <body>
     <button class="open">open</button>
-    <div class="scale ripple">
+    <div class="scale">
         <div class="page">
             <button class="close">close</button>
         </div>
     </div>
-    <div style="width:1px; height:120%;background:#ff8800"></div>
     <script src="../common/script/Yuko.js"></script>
     <script>
-        var close = document.querySelector('.close'),
-            open = document.querySelector('.open'),
-            scale = document.querySelector('.scale'),
-            page = document.querySelector('.page'),
-            radius = document.documentElement.offsetHeight;
+        /**
+         * Make an Element to be a scalable element.
+         * 
+         * @param {string} openBtn Selector of element to trigger scale spread.
+         * @param {string} closeBtn Selector of element to trigger scale shrink.
+         * @param {string} scaleContainer Selector of element to be made as a scalabe element.
+         * @param {string} page Selector of the only element in scaleContainer(
+         *  its width is document's width, and height is document's height.
+         *  In other words, in most cases, it will be a full screen element
+         *  that always be set to visable in screen.).
+         * @param {number} duration Time for scale effect.
+         */
+        function scaleContainer(openBtn, closeBtn, scaleContainer, page, duration) {
+            var close = document.querySelector(closeBtn),
+                open = document.querySelector(openBtn),
+                scale = document.querySelector(scaleContainer),
+                page = document.querySelector(page),
+                radius = document.documentElement.offsetHeight;
+            page.style.width = document.documentElement.offsetWidth + 'px';
+            page.style.height = document.documentElement.offsetHeight + 'px';
 
-        page.style.width = document.documentElement.offsetWidth + 'px';
-        page.style.height = document.documentElement.offsetHeight + 'px';
-
-        var onOpenClick = function (event) {
-            Yuko.utility.animate(scale, {
-                properties: {
-                    width: radius * 2 + 'px',
-                    height: radius * 2 + 'px'
-                },
-                process: function () {
-                    scale.style.top = event.clientY + document.body.scrollTop - scale.offsetHeight / 2 + 'px';
-                    scale.style.left = event.clientX + document.body.scrollLeft - scale.offsetHeight / 2 + 'px';
-                    page.style.top = -scale.offsetTop + 'px';
-                    page.style.left = page.offsetTop * scale.offsetLeft / scale.offsetTop + 'px';
-                }
-            });
-        },
-            onCloseClick = function (event) {
+            var onOpenClick = function (event) {
+                console.log(document.documentElement.offsetHeight);
                 Yuko.utility.animate(scale, {
                     properties: {
-                        width: 0,
-                        height: 0
+                        width: radius * 2 + 'px',
+                        height: radius * 2 + 'px'
                     },
                     process: function () {
                         scale.style.top = event.clientY + document.body.scrollTop - scale.offsetHeight / 2 + 'px';
                         scale.style.left = event.clientX + document.body.scrollLeft - scale.offsetHeight / 2 + 'px';
                         page.style.top = -scale.offsetTop + 'px';
                         page.style.left = page.offsetTop * scale.offsetLeft / scale.offsetTop + 'px';
-                    }
+                    },
+                    duration: duration
                 });
-            };
+            },
+                onCloseClick = function (event) {
+                    Yuko.utility.animate(scale, {
+                        properties: {
+                            width: 0,
+                            height: 0
+                        },
+                        process: function () {
+                            scale.style.top = event.clientY + document.body.scrollTop - scale.offsetHeight / 2 + 'px';
+                            scale.style.left = event.clientX + document.body.scrollLeft - scale.offsetHeight / 2 + 'px';
+                            page.style.top = -scale.offsetTop + 'px';
+                            page.style.left = page.offsetTop * scale.offsetLeft / scale.offsetTop + 'px';
+                        },
+                        duration: duration                        
+                    });
+                };
 
-        Yuko.utility.addEvent(close, 'click', onCloseClick);
-        Yuko.utility.addEvent(open, 'click', onOpenClick);
+            Yuko.utility.addEvent(open, 'click', onOpenClick);
+            Yuko.utility.addEvent(close, 'click', onCloseClick);
+        }
+        scaleContainer('.open', '.close', '.scale', '.page', 200);
     </script>
 </body>
 
