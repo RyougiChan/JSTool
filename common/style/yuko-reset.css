@@ -82,3 +82,15 @@ h5 {
 h6 {
     font-size: 14px;
 }
+
+sub, sup {
+    font-size: smaller;
+}
+
+sub {
+    vertical-align: sub;
+}
+
+sup {
+    vertical-align: super;
+}
