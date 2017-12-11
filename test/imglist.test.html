@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Imglist.Test</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../common/style/yuko-reset.css">
+  <link rel="stylesheet" href="../common/style/yuko.css">
+  <link rel="stylesheet" href="../common/style/material-icons.css">
+  <link rel="stylesheet" href="../common/style/yuko-material.css">
+  <link rel="stylesheet" href="../common/style/yuko.component.css">
+  <style>
+    body.yuko-docs .yuko-imglist_container {margin: 0 auto; max-width: 1200px; height: 100%; background: #e4d4ff}
+    body.yuko-docs .yuko-imglist {padding-top: 16px;}
+    body.yuko-docs .yuko-imglist ul li {width: 45.5%; height: auto; margin: 0 0 3% 3%; border-radius: 8px; background: #ffffff; float: left; overflow: hidden;}
+    body.yuko-docs .yuko-imglist ul li:active {background: #f1f1f1; }
+    body.yuko-docs .yuko-imglist ul li a {display:block; width: 100%; height: 100%; color: inherit; }
+    body.yuko-docs .yuko-imglist ul li p {margin: 0; padding: 0 5px; height: 24px; line-height: 24px; }
+    body.yuko-docs .yuko-imglist ul li .yuko-imglist_img {width: 100%; height: 120px;}
+    body.yuko-docs .yuko-imglist ul li .yuko-imglist_abstract { height: 32px; line-height: 32px; font-size: 16px; overflow: hidden; }
+    body.yuko-docs .yuko-imglist ul li .yuko-imglist_sort {font-size: 14px; color: #a1a1a1; }
+    body.yuko-docs .yuko-imglist ul li .yuko-imglist_sort span { float: right; }
+    @media screen and (min-width: 768px) {
+      body.yuko-docs .yuko-imglist ul li .yuko-imglist_img { height: 220px;}
+    }
+    @media screen and (min-width: 1024px) {
+      body.yuko-docs .yuko-imglist ul li .yuko-imglist_img { height: 280px;}
+    }
+  </style>
+</head>
+
+<body class="icons-docs yuko-docs">
+  <div class="yuko-imglist_container">
+    <div class="yuko-imglist">
+      <ul>
+        <li>
+          <a href="">
+            <div class="yuko-imglist_img" style="background:url(https://ws1.sinaimg.cn/large/005ODKsIgy1fip1i5u5v7j30iw0c7myf.jpg) 50% 50% no-repeat / cover"></div>
+            <p class="yuko-imglist_abstract">忍者ツールズ</p>
+            <p class="yuko-imglist_sort">添付ファイル<span class="yuko-material-icons"><i class="material-icons md-18">more_vert</i></span></p>
+          </a>
+        </li>
+        <li>
+          <a href="">
+            <div class="yuko-imglist_img" style="background:url(https://ws1.sinaimg.cn/large/005ODKsIgy1fip1i5u5v7j30iw0c7myf.jpg) 50% 50% no-repeat / cover"></div>
+            <p class="yuko-imglist_abstract text-overflow">忍者ツールズ忍者ツールズ忍者ツールズ</p>
+            <p class="yuko-imglist_sort">添付ファイル<span class="yuko-material-icons"><i class="material-icons md-18">more_vert</i></span></p>
+          </a>
+        </li>
+        <li>
+          <a href="">
+            <div class="yuko-imglist_img" style="background:url(https://ws1.sinaimg.cn/large/005ODKsIgy1fip1i5u5v7j30iw0c7myf.jpg) 50% 50% no-repeat / cover"></div>
+            <p class="yuko-imglist_abstract">忍者ツールズ</p>
+            <p class="yuko-imglist_sort">添付ファイル<span class="yuko-material-icons"><i class="material-icons md-18">more_vert</i></span></p>
+          </a>
+        </li>
+        <li>
+          <a href="">
+            <div class="yuko-imglist_img" style="background:url(https://ws1.sinaimg.cn/large/005ODKsIgy1fip1i5u5v7j30iw0c7myf.jpg) 50% 50% no-repeat / cover"></div>
+            <p class="yuko-imglist_abstract">忍者ツールズ</p>
+            <p class="yuko-imglist_sort">添付ファイル<span class="yuko-material-icons"><i class="material-icons md-18">more_vert</i></span></p>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <script src="../common/script/Yuko.js"></script>
+  <script>
+    var icon = document.querySelector('body.yuko-docs .yuko-imglist ul li .yuko-imglist_sort span');
+    icon.addEventListener('click', function(evt){
+      evt.preventDefault();
+      console.log('clicked');
+    });
+  </script>
+</body>
+
+</html>
