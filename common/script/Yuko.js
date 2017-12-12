@@ -578,6 +578,7 @@
             } else {
                 target['on' + type] = listener;
             }
+            return listener;
         }
 
         /**
@@ -586,7 +587,7 @@
          * @param {Element} target target The element to attach listener.
          * @param {string} type The type name of the event.
          */
-        function removeEvent(target, type) {
+        function removeEvent(target, type, listener) {
             if (!target || !type || !listener) return;
             if (target.removeEventListener) {
                 target.removeEventListener(type, listener);
@@ -631,7 +632,7 @@
             }
         }
 
-        /**
+       /**
          * Create a specific animaion
          * 
          * @param {Element} ele The element to execute animation.
@@ -904,6 +905,7 @@
             setBoundingRectangle: setBoundingRectangle,
             roundTo: roundTo,
             addEvent: addEvent,
+            removeEvent: removeEvent,
             cloneObject: cloneObject,
             isBrowserSupportProp: isBrowserSupportProp,
             requestAnimFrame: requestAnimFrame,
