@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Carousel</title>
+    <link href="../common/style/yuko-reset.css" rel="stylesheet">
+    <link href="../common/style/material-icons.css" rel="stylesheet">
+    <link href="../common/style/yuko.css" rel="stylesheet">
+</head>
+
+<body class="yuko-docs">
+    <div id="yuko-main-container">
+        <!-- Header S -->
+        <header id="yuko-header">
+            <div id="yuko-nav-drawer-button">
+                <i class="material-icons md-36">&#xe5d2;</i>
+            </div>
+        </header>
+        <!-- Header E -->
+        <!-- Main S -->
+        <main id="yuko-main" data-role="yuko-page-container" data-page-index="0">
+            <div class="yuko-content" style="background: #eee">
+                <div id="yuko-carousel-container">
+                    <div id="yuko-carousel-title">yuko-carousel</div>
+                    <div id="yuko-carousel">
+                        <div id="yuko-carousel-list">
+                            <span id="yuko-carousel-pre"></span>
+                            <span id="yuko-carousel-next"></span>
+                            <ul data-page-index="0">
+                                <li class="yuko-carousel-item" data-page-id="0"></li>
+                                <li class="yuko-carousel-item" data-page-id="1"></li>
+                                <li class="yuko-carousel-item" data-page-id="2"></li>
+                                <li class="yuko-carousel-item" data-page-id="3"></li>
+                                <li class="yuko-carousel-item" data-page-id="4"></li>
+                                <li class="yuko-carousel-item" data-page-id="5"></li>
+                                <!-- <li class="yuko-carousel-item" data-page-id="6"></li> -->
+                                <!-- <li class="yuko-carousel-item" data-page-id="7"></li> -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- Main E -->
+        <!-- Footer S -->
+        <footer>
+            <div id="copyright">Copyright &copy;
+                <a href="https://github.com/RyougiChan">RyougiChan</a>
+            </div>
+            <div id="license">Released under the
+                <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GNU General Public License v3.0</a>
+            </div>
+        </footer>
+        <!-- Footer E -->
+    </div>
+    <script src="../common/script/Yuko.js"></script>
+    <script>
+        function log(m) {
+            console.log(m)
+        }
+        /**
+        * seal for drag event
+        * @param {string} selector selector of element to attach drag event.
+        * @param {{moveX:boolean, moveY:boolean, start:Function, move:Function, end:Function}} obj parameter to initialize callback.
+        *          moveX=: is horizontal movement support. default: true.
+        *          moveY=: is vertical movement support. default: true.
+        *          start=: drag start callback.
+        *          move=: drag move callback.
+        *          end=: drag end callback.
+        */
+        function drag(selector, obj) {
+            var hasTouchEvent = 'ontouchstart' in window,
+                target = document.querySelector(selector),
+                body = document.body,
+                settings = {
+                    hasTouchEvent: hasTouchEvent,
+                    isMouseDown: false,
+                    startEvent: hasTouchEvent ? 'touchstart' : 'mousedown',
+                    moveEvent: hasTouchEvent ? 'touchmove' : 'mousemove',
+                    endEvent: hasTouchEvent ? 'touchend' : 'mouseup'
+                },
+                targetCoord = { x: 0, y: 0 },
+                startCoord = { x: 0, y: 0 },
+                moveCoord = { x: 0, y: 0 },
+                endCoord = { x: 0, y: 0 },
+                
+                moveX = obj && obj.hasOwnProperty('moveX') ? obj.moveX : true,
+                moveY = obj && obj.hasOwnProperty('moveY') ? obj.moveY : true,
+                startHandler = obj && obj.start ? obj.start : function () { },
+                moveHandler = obj && obj.move ? obj.move : function () { },
+                endHandler = obj && obj.end ? obj.end : function () { }
+                ;
+                
+            if (!target) return;
+            else setCanBeDrag(target);
+
+            // set target can be drag
+            function setCanBeDrag(e) {
+                var position = window.getComputedStyle(e, null).getPropertyValue('position'),
+                    p = getFirstRelativeParent(e),
+                    eRect = e.getBoundingClientRect(),
+                    pRect = p.getBoundingClientRect();
+                if (!position || !(position === 'absolute' || position === 'fix')) {
+                    e.style.position = 'absolute';
+                    e.style.margin = 0 + 'px';
+                    e.style.left = (eRect.left - pRect.left) + 'px';
+                    e.style.top = (eRect.top - pRect.top) + 'px';
+                }
+            }
+
+            // get first position relative parent of e
+            function getFirstRelativeParent(e) {
+                var parent = e.parentElement,
+                    position = window.getComputedStyle(parent, null).getPropertyValue('position');
+                return position === 'relative' || e === document.body ? parent : getFirstRelativeParent(parent);
+            }
+
+            // set coordination for e
+            function setCoord(e, x, y) {
+                if (!e || !(e instanceof Element)) return;
+                log('>> x = ' + x + ' y = ' + y);
+                try {
+                    if (typeof x !== 'number') x = parseFloat(x);
+                    if (typeof y !== 'number') y = parseFloat(y);
+                } catch (error) {
+                    log('>> WRONG FORMAT FOR x, y');
+                    return;
+                }
+                if (e.style.position !== 'absoulte' || e.style.position !== 'fixed') e.style.position = 'absoulte';
+                log(moveX + ' -- ' + moveY)
+                if (moveX) e.style.left = x + 'px';
+                if (moveY) e.style.top = y + 'px';
+            }
+
+            // start event handler
+            function start(e) {
+                startCoord.x = hasTouchEvent ? e.changedTouches[0].pageX : e.pageX;
+                startCoord.y = hasTouchEvent ? e.changedTouches[0].pageY : e.pageY;
+                targetCoord.x = parseFloat(target.offsetLeft);
+                targetCoord.y = parseFloat(target.offsetTop);
+
+                // if is a mouse event
+                // mousemove handler must be triggered only under the mousedown condition
+                var mouseMoveEvent;
+                if (!hasTouchEvent) {
+                    settings.isMouseDown = true;
+                    if (!mouseMoveEvent) {
+                        mouseMoveEvent = Yuko.utility.addEvent(target, settings.moveEvent, move);
+                    }
+                }
+                startHandler();
+
+            }
+            // move event handler
+            function move(e) {
+                moveCoord.x = hasTouchEvent ? e.changedTouches[0].pageX : e.pageX;
+                moveCoord.y = hasTouchEvent ? e.changedTouches[0].pageY : e.pageY;
+
+                var disX = moveCoord.x - startCoord.x,
+                    disY = moveCoord.y - startCoord.y,
+                    left = targetCoord.x,
+                    top = targetCoord.y;
+
+                // while is mouse event, change coord while mouse hold down
+                if (hasTouchEvent) {
+                    setCoord(target, left + disX, top + disY);
+                } else {
+                    if (settings.isMouseDown) setCoord(target, left + disX, top + disY);
+                }
+                moveHandler();
+            }
+            // end event handler
+            function end(e) {
+                endCoord.x = hasTouchEvent ? e.changedTouches[0].pageX : e.pageX;
+                endCoord.y = hasTouchEvent ? e.changedTouches[0].pageY : e.pageY;
+
+                endHandler();
+
+                settings.isMouseDown = false;
+            }
+
+            // attach event to target
+            Yuko.utility.addEvent(target, settings.startEvent, start);
+            Yuko.utility.addEvent(target, settings.endEvent, end);
+            if (hasTouchEvent) Yuko.utility.addEvent(target, settings.moveEvent, move);
+        }
+    </script>
+    <script>
+        var carouselList = document.querySelectorAll('.yuko-carousel-item');
+        var carouselPre = document.getElementById('yuko-carousel-pre');
+        var carouselNext = document.getElementById('yuko-carousel-next');
+        Yuko.widget.carousel(carouselList, carouselPre, carouselNext, {
+            positions: [
+                ['100%', '100%', '0', '0'],
+                ['80%', '80%', '10%', '-12.5%'],
+                ['60%', '60%', '20%', '20%'],
+                ['80%', '80%', '10%', '32.5%']
+            ],
+            duration: .3
+        });
+
+        drag('.yuko-carousel-item:nth-child(1)', {
+            moveX: true,
+            moveY: false
+        });
+
+    </script>
+</body>
+
+</html>

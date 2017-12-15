@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>pagination.Test</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../common/style/yuko-reset.css">
+  <link rel="stylesheet" href="../common/style/yuko.css">
+  <link rel="stylesheet" href="../common/style/material-icons.css">
+  <link rel="stylesheet" href="../common/style/yuko.component.css">
+  <style>
+  body.yuko-docs .yuko-pagination { overflow: hidden; text-align: center; padding: 1em }
+  body.yuko-docs .yuko-pagination_list { display: inline-block; }
+  body.yuko-docs .yuko-pagination_list li { display: inline; text-align: center; user-select: none; cursor: pointer; }
+  body.yuko-docs .yuko-pagination_list li a,
+  body.yuko-docs .yuko-pagination_list li span { float: left; margin-right: 10px; padding: 12px; min-width: 16px; height: 16px; border: 1px solid #4285f4; color: #4285f4; }
+  body.yuko-docs .yuko-pagination_list li a:hover,
+  body.yuko-docs .yuko-pagination_list li span:hover,
+  body.yuko-docs .yuko-pagination_list li.active a,
+  body.yuko-docs .yuko-pagination_list li.active span { background: #4285f4; color: #ffffff }
+  body.yuko-docs .yuko-pagination_list li:last-child a { margin-right: 0 }
+
+  </style>
+</head>
+
+<body class="yuko-docs">
+  <div class="yuko-pagination">
+    <ul class="yuko-pagination_list">
+        <li><a>&lt;</a></li>
+        <li><a>1</a></li>
+        <li class="hided"><span>...</span></li>
+        <li class="active"><a>7</a></li>
+        <li><a>8</a></li>
+        <li><a>9</a></li>
+        <li><a>10</a></li>
+        <li><a>11</a></li>
+        <li><a>12</a></li>
+        <li class="hided"><span>...</span></li>
+        <li><a>100</a></li>
+        <li><a>&gt;</a></li>
+    </ul>
+  </div>
+  <script src="../common/script/Yuko.js"></script>
+  <script>
+    function pagingHandler (selector){
+        var paginations = document.querySelectorAll(selector),
+            actived = document.querySelector(selector + '.active');
+        for (var i = 0; i < paginations.length; i++) {
+            // Add click event
+            var _this = paginations[i];
+            Yuko.utility.addEvent(_this, 'click', (function(i){
+                var __this = paginations[i];
+                return function(){
+                    if (i !== 0 && i !== paginations.length - 1 && !__this.classList.contains('hided')) {
+                        if (!__this.classList.contains('active')) __this.classList.add('active');
+                        actived.classList.remove('active');
+                        actived = __this;
+                    }
+                }
+            })(i));
+        }
+    }
+    pagingHandler('.yuko-pagination .yuko-pagination_list li');
+  </script>
+</body>
+
+</html>
