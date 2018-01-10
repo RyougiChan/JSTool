@@ -1,6 +1,7 @@
 var main = document.querySelector('.main-container'),
     canvas = document.querySelector('#canvas'),
     ctx = canvas.getContext('2d'),
+    bgYukis = [],
     yukis = [],
     savedCanvasData,
     p;
@@ -39,8 +40,20 @@ function getYukiImg(rNo) {
     return img;
 }
 
-function createRandomYuki(p, alpha) {
-    var rNo = Math.round(Math.random() * 54),
+function initYukis(yukis, num) {
+    if(yukis.length === 0) {
+        for (var i = 0; i < num; i++) {
+            var x = Math.random() * canvas.width,
+            y = Math.random() * canvas.height;
+    
+            createYuki(yukis, {x: x, y: y}, 1);
+        }
+    }
+}
+initYukis(bgYukis, 200);
+
+function createYuki(yukis, p, alpha, no) {
+    var rNo = no || Math.round(Math.random() * 54),
         img = getYukiImg(rNo),
         a = alpha || 1.0;
     img.onload = function () {
@@ -50,33 +63,52 @@ function createRandomYuki(p, alpha) {
     };
 }
 
-function drawEffect(p) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    updateYukis(yukis, p);
-    drawYukis(yukis, ctx);
-}
-
 function drawYukis(yukis, ctx) {
     yukis.forEach(function (yuki) {
         yuki.yuki.createYuki(ctx);
     }, this);
 }
 
-var count = 0;
 function updateYukis(yukis, p) {
     yukis.forEach(function (yuki) {
-        var y = yuki.yuki;
+        var y = yuki.yuki,
+            sp = p || yuki.sp;
         if (y.alpha > 0) {
-            y.alpha -= 1 / 120;
+            y.alpha -= 1 / 480;
             y.dx += Math.random() > 0.5 ? Math.random() * 1 : -Math.random() * 1;
-            y.dy += 1;
+            y.dy += 0.5;
         } else {
-            y.dx = p.x;
-            y.dy = p.y;
+            y.dx = sp.x;
+            y.dy = sp.y;
             y.alpha = 1;
         }
     }, this);
+}
+
+function updateBgYukis(yukis, p) {
+    yukis.forEach(function (yuki) {
+        var y = yuki.yuki,
+            sp = p || yuki.sp;
+        if (y.dy < canvas.height) {
+            y.alpha = (canvas.height - y.dy) / canvas.height;
+            y.dx += Math.random() > 0.5 ? Math.random() * 1 : -Math.random() * 1;
+            y.dy += 0.5;
+        } else {
+            y.dx = sp.x;
+            y.dy = 0;
+            y.alpha = 1;
+        }
+    }, this);
+}
+
+function drawEffect(p) {
+    clearCanvas();
+
+    updateYukis(yukis, p);
+    drawYukis(yukis, ctx);
+    
+    updateBgYukis(bgYukis);
+    drawYukis(bgYukis, ctx);
 }
 
 var intervalID,
@@ -88,15 +120,18 @@ function mouseMoveHandler(e) {
         y = p.y,
         a = 1,
         // Number of yuki
-        n = 8;
+        n = 8,
+        h = 240;
+        
     if (yukis.length === 0) {
         for (var i = 0; i < n; i++) {
             var tp = { x: x, y: y };
-            createRandomYuki(tp, a);
-            y += n;
+            createYuki(yukis, tp, a);
+            y += h / n;
             a -= 1 / n;
         }
     }
+    
     intervalID = setInterval(function () {
         drawEffect(p);
     }, 50 / 3);
