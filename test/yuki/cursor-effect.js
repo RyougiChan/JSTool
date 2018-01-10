@@ -1,5 +1,7 @@
 var main = document.querySelector('.main-container'),
-    canvas = document.querySelector('#canvas'),
+    bgYukiCanvas = document.querySelector('#bg-yuki'),
+    canvas = document.querySelector('#bg-cursor'),
+    bgYukiCtx = bgYukiCanvas.getContext('2d'),
     ctx = canvas.getContext('2d'),
     bgYukis = [],
     yukis = [],
@@ -14,7 +16,7 @@ function restoreCanvas() {
     ctx.putImageData(savedCanvasData, 0, 0);
 }
 
-function clearCanvas() {
+function clearCanvas(ctx) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
@@ -33,28 +35,28 @@ function getRelPoint(e) {
     };
 }
 
-function getYukiImg(rNo) {
+function getYukiImg(rNo, path) {
     var img = new Image();
     if (rNo === 0) rNo = 1;
-    img.src = 'images/yuki_' + (rNo <= 9 ? '0' + rNo : rNo) + '.png';
+    img.src = path + '/yuki_' + (rNo <= 9 ? '0' + rNo : rNo) + '.png';
     return img;
 }
 
-function initYukis(yukis, num) {
+function initYukis(ctx, yukis, path, num) {
     if(yukis.length === 0) {
         for (var i = 0; i < num; i++) {
             var x = Math.random() * canvas.width,
             y = Math.random() * canvas.height;
     
-            createYuki(yukis, {x: x, y: y}, 1);
+            createYuki(ctx, yukis, path, {x: x, y: y}, 1);
         }
     }
 }
-initYukis(bgYukis, 200);
+initYukis(bgYukiCtx, bgYukis, 'images-s', 200);
 
-function createYuki(yukis, p, alpha, no) {
+function createYuki(ctx, yukis, path, p, alpha, no) {
     var rNo = no || Math.round(Math.random() * 54),
-        img = getYukiImg(rNo),
+        img = getYukiImg(rNo, path),
         a = alpha || 1.0;
     img.onload = function () {
         var yuki = new Yuki(img, a, p.x, p.y);
@@ -102,13 +104,14 @@ function updateBgYukis(yukis, p) {
 }
 
 function drawEffect(p) {
-    clearCanvas();
+    clearCanvas(ctx);
+    clearCanvas(bgYukiCtx);
 
     updateYukis(yukis, p);
     drawYukis(yukis, ctx);
     
     updateBgYukis(bgYukis);
-    drawYukis(bgYukis, ctx);
+    drawYukis(bgYukis, bgYukiCtx);
 }
 
 var intervalID,
@@ -126,7 +129,7 @@ function mouseMoveHandler(e) {
     if (yukis.length === 0) {
         for (var i = 0; i < n; i++) {
             var tp = { x: x, y: y };
-            createYuki(yukis, tp, a);
+            createYuki(ctx, yukis, 'images-s', tp, a);
             y += h / n;
             a -= 1 / n;
         }
