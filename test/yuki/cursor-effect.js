@@ -1,4 +1,5 @@
-var canvas = document.querySelector('#canvas'),
+var main = document.querySelector('.main-container'),
+    canvas = document.querySelector('#canvas'),
     ctx = canvas.getContext('2d'),
     yukis = [],
     savedCanvasData,
@@ -10,6 +11,10 @@ function saveCanvas() {
 
 function restoreCanvas() {
     ctx.putImageData(savedCanvasData, 0, 0);
+}
+
+function clearCanvas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
 function getRelPoint(e) {
@@ -34,55 +39,85 @@ function getYukiImg(rNo) {
     return img;
 }
 
-function drawYuki(yuki) {
-    yuki.createYuki(ctx);
-    yukis.push(yuki);
-}
-
-function drawEffect(p) {
+function createRandomYuki(p, alpha) {
     var rNo = Math.round(Math.random() * 54),
-        img = getYukiImg(rNo);
+        img = getYukiImg(rNo),
+        a = alpha || 1.0;
     img.onload = function () {
-        var yuki = new Yuki(img, 1.0, p.x, p.y);
-        drawYuki(yuki);
+        var yuki = new Yuki(img, a, p.x, p.y);
+        yuki.createYuki(ctx);
+        yukis.push({ yuki: yuki, sp: p });
     };
 }
 
-function update() {
-    yukis.forEach(function (yuki) {
-        var alpha = yuki.getAlpha(),
-            changeAlpha = function () {
-                alpha -= 0.2;
-                if(alpha < 0) alpha = 0;
-                log(alpha);
-                yuki.setAlpha(alpha);
-                drawYuki(yuki);
-                if(alpha > 0) {
-                    window.requestAnimationFrame(changeAlpha);
-                }
-            };
-        window.requestAnimationFrame(changeAlpha);
-    });
+function drawEffect(p) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    updateYukis(yukis, p);
+    drawYukis(yukis, ctx);
 }
 
+function drawYukis(yukis, ctx) {
+    yukis.forEach(function (yuki) {
+        yuki.yuki.createYuki(ctx);
+    }, this);
+}
+
+var count = 0;
+function updateYukis(yukis, p) {
+    yukis.forEach(function (yuki) {
+        var y = yuki.yuki;
+        if (y.alpha > 0) {
+            y.alpha -= 1 / 120;
+            y.dx += Math.random() > 0.5 ? Math.random() * 1 : -Math.random() * 1;
+            y.dy += 1;
+        } else {
+            y.dx = p.x;
+            y.dy = p.y;
+            y.alpha = 1;
+        }
+    }, this);
+}
+
+var intervalID,
+    anim;
 function mouseMoveHandler(e) {
-    // p = getRelPoint(e);
-    // drawEffect(p);
+    if (intervalID) clearInterval(intervalID);
+    var p = getRelPoint(e),
+        x = p.x,
+        y = p.y,
+        a = 1,
+        // Number of yuki
+        n = 8;
+    if (yukis.length === 0) {
+        for (var i = 0; i < n; i++) {
+            var tp = { x: x, y: y };
+            createRandomYuki(tp, a);
+            y += n;
+            a -= 1 / n;
+        }
+    }
+    intervalID = setInterval(function () {
+        drawEffect(p);
+    }, 50 / 3);
+}
+
+function mouseOutHandler(e) {
+    // if (intervalID) clearInterval(intervalID);    
+    clearCanvas();
 }
 
 function mouseOverHandler(e) {
 
 }
 
+saveCanvas();
 function mouseDownHandler(e) {
-    // saveCanvas();
-    p = getRelPoint(e);
-    drawEffect(p);
+
 }
 
 function mouseUpHandler(e) {
-    // restoreCanvas();
-    update();
+
 }
 
 function log(s) {
@@ -91,5 +126,9 @@ function log(s) {
 
 canvas.addEventListener('mousemove', mouseMoveHandler);
 canvas.addEventListener('mouseover', mouseOverHandler);
+canvas.addEventListener('mouseout', mouseOutHandler);
 canvas.addEventListener('mousedown', mouseDownHandler);
 canvas.addEventListener('mouseup', mouseUpHandler);
+
+main.addEventListener('mousemove', mouseMoveHandler);
+main.addEventListener('mouseout', mouseOutHandler);
