@@ -151,7 +151,7 @@ function mouseMoveHandler(e) {
 
 function mouseOutHandler(e) {
     // if (intervalID) clearInterval(intervalID);    
-    clearCanvas();
+    clearCanvas(ctx);
 }
 
 function mouseOverHandler(e) {

@@ -7,8 +7,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>cursor effect</title>
     <style>
-        html,
-        body,
         .main-container,
         .main {
             width: 100%;
@@ -55,22 +53,20 @@
         </div>
     </div>
     <script>
-        // Style 'html, body { height: 100% }' is required. 
-        // Or canvas's height property will be '0' here.
-        var mc = document.querySelector('div.main-container'),
+        var mc = window,
             bgYuki = document.querySelector('canvas#bg-yuki'),
             bgCursor = document.querySelector('canvas#bg-cursor');
 
-        bgYuki.width = mc.offsetWidth;
-        bgYuki.height = mc.offsetHeight;
-        bgCursor.width = mc.offsetWidth;
-        bgCursor.height = mc.offsetHeight;
+        bgYuki.width = mc.innerWidth;
+        bgYuki.height = mc.innerHeight;
+        bgCursor.width = mc.innerWidth;
+        bgCursor.height = mc.innerHeight;
 
         window.addEventListener('resize', function () {
-            bgYuki.width = mc.offsetWidth;
-            bgYuki.height = mc.offsetHeight;
-            bgCursor.width = mc.offsetWidth;
-            bgCursor.height = mc.offsetHeight;
+            bgYuki.width = mc.innerWidth;
+            bgYuki.height = mc.innerHeight;
+            bgCursor.width = mc.innerWidth;
+            bgCursor.height = mc.innerHeight;
         });
     </script>
     <script src="canvas-yuki.js"></script>
