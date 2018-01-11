@@ -45,14 +45,14 @@ function getYukiImg(rNo, path) {
 function initYukis(ctx, yukis, path, num) {
     if(yukis.length === 0) {
         for (var i = 0; i < num; i++) {
-            var x = Math.random() * canvas.width,
-            y = Math.random() * canvas.height;
+            var x = Math.random() > 0.5 ? Math.random() * canvas.width : -Math.random() * canvas.width,
+            y = Math.random() > 0.5 ? Math.random() * canvas.height : -Math.random() * canvas.height;
     
             createYuki(ctx, yukis, path, {x: x, y: y}, 1);
         }
     }
 }
-initYukis(bgYukiCtx, bgYukis, 'images-s', 200);
+initYukis(bgYukiCtx, bgYukis, 'images-s', 400);
 
 function createYuki(ctx, yukis, path, p, alpha, no) {
     var rNo = no || Math.round(Math.random() * 54),
@@ -78,6 +78,7 @@ function updateYukis(yukis, p) {
         if (y.alpha > 0) {
             y.alpha -= 1 / 480;
             // y.dx += Math.random() > 0.5 ? Math.random() * 1 : -Math.random() * 1;
+            y.dx += Math.random() * 1;
             y.dy += Math.random() * 1;
         } else {
             y.dx = sp.x;
@@ -94,7 +95,11 @@ function updateBgYukis(yukis, p) {
         if (y.dy < canvas.height) {
             y.alpha = (canvas.height - y.dy) / canvas.height;
             // y.dx += Math.random() > 0.5 ? Math.random() * 1 : -Math.random() * 1;
+            y.dx += Math.random() * 1;
             y.dy += Math.random() * 1;
+            // y.tx = y.dx + y.dw / 2;
+            // y.ty = y.dy + y.dy / 2;
+            // y.angle += Math.random() * 1 * Math.PI / 360;
         } else {
             y.dx = sp.x;
             y.dy = 0;

@@ -7,9 +7,34 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>cursor effect</title>
     <style>
-        .main-container, .main {width: 100%; height: 100%;}
-        .bg {width:100%; height:100%; position:fixed; top: 0; left: 0; z-index: -10; opacity: .8; background:url('yae-sakura.jpg') no-repeat center center; background-size:cover;}
-        #bg-yuki,#bg-cursor {display: block; position: fixed; top: 0; left: 0; z-index: -9;}
+        html,
+        body,
+        .main-container,
+        .main {
+            width: 100%;
+            height: 100%;
+        }
+
+        .bg {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -10;
+            opacity: .8;
+            background: url('yae-sakura.jpg') no-repeat center center;
+            background-size: cover;
+        }
+
+        #bg-yuki,
+        #bg-cursor {
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -9;
+        }
     </style>
 </head>
 
@@ -19,26 +44,33 @@
         <canvas id="bg-yuki" width="1920" height="1080"></canvas>
         <canvas id="bg-cursor" width="1920" height="1080"></canvas>
         <div class="main" style="text-align:center">
-            <font color=#6e7dbd size=72>
+            <!-- <font color=#6e7dbd size=72>
                 YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>
                 YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>
                 YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>
                 YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>
                 YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>
                 YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA<br>YAE SAKURA
-            </font>
+            </font> -->
         </div>
     </div>
     <script>
+        // Style 'html, body { height: 100% }' is required. 
+        // Or canvas's height property will be '0' here.
         var mc = document.querySelector('div.main-container'),
-            canvas = document.querySelector('canvas#canvas');
+            bgYuki = document.querySelector('canvas#bg-yuki'),
+            bgCursor = document.querySelector('canvas#bg-cursor');
 
-        canvas.width = mc.offsetWidth;
-        canvas.height = mc.offsetHeight;
+        bgYuki.width = mc.offsetWidth;
+        bgYuki.height = mc.offsetHeight;
+        bgCursor.width = mc.offsetWidth;
+        bgCursor.height = mc.offsetHeight;
 
         window.addEventListener('resize', function () {
-            canvas.width = mc.offsetWidth;
-            canvas.height = mc.offsetHeight;
+            bgYuki.width = mc.offsetWidth;
+            bgYuki.height = mc.offsetHeight;
+            bgCursor.width = mc.offsetWidth;
+            bgCursor.height = mc.offsetHeight;
         });
     </script>
     <script src="canvas-yuki.js"></script>
