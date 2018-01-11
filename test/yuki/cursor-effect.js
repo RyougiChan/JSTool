@@ -77,8 +77,8 @@ function updateYukis(yukis, p) {
             sp = p || yuki.sp;
         if (y.alpha > 0) {
             y.alpha -= 1 / 480;
-            y.dx += Math.random() > 0.5 ? Math.random() * 1 : -Math.random() * 1;
-            y.dy += 0.5;
+            // y.dx += Math.random() > 0.5 ? Math.random() * 1 : -Math.random() * 1;
+            y.dy += Math.random() * 1;
         } else {
             y.dx = sp.x;
             y.dy = sp.y;
@@ -93,8 +93,8 @@ function updateBgYukis(yukis, p) {
             sp = p || yuki.sp;
         if (y.dy < canvas.height) {
             y.alpha = (canvas.height - y.dy) / canvas.height;
-            y.dx += Math.random() > 0.5 ? Math.random() * 1 : -Math.random() * 1;
-            y.dy += 0.5;
+            // y.dx += Math.random() > 0.5 ? Math.random() * 1 : -Math.random() * 1;
+            y.dy += Math.random() * 1;
         } else {
             y.dx = sp.x;
             y.dy = 0;
@@ -103,15 +103,19 @@ function updateBgYukis(yukis, p) {
     }, this);
 }
 
+setInterval(function () {
+    clearCanvas(bgYukiCtx);
+    
+    updateBgYukis(bgYukis);
+    drawYukis(bgYukis, bgYukiCtx);
+});
+
 function drawEffect(p) {
     clearCanvas(ctx);
-    clearCanvas(bgYukiCtx);
 
     updateYukis(yukis, p);
     drawYukis(yukis, ctx);
     
-    updateBgYukis(bgYukis);
-    drawYukis(bgYukis, bgYukiCtx);
 }
 
 var intervalID,
@@ -137,7 +141,7 @@ function mouseMoveHandler(e) {
     
     intervalID = setInterval(function () {
         drawEffect(p);
-    }, 50 / 3);
+    });
 }
 
 function mouseOutHandler(e) {

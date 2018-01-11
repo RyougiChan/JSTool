@@ -6,27 +6,35 @@
  * @param {number} dw The width to draw the image in the destination canvas. This allows scaling of the drawn image. If not specified, the image is not scaled in width when drawn.
  * @param {number} dh The height to draw the image in the destination canvas. This allows scaling of the drawn image. If not specified, the image is not scaled in height when drawn.
  * @param {number} alpha The canvas context's globalAlpha property. Default: 1.0.
+ * @param {number} angle The angle to rotate clockwise in radians. You can use degree * Math.PI / 180 if you want to calculate from a degree value.
+ * @param {number} tx Distance to move in the horizontal direction.
+ * @param {number} ty Distance to move in the vertical direction.
  */
-var Yuki = function (image, alpha, dx, dy, dw, dh) {
+var Yuki = function (image, alpha, dx, dy, dw, dh, angle, tx, ty) {
     this.image = image;
     this.dx = dx;
     this.dy = dy;
     this.dw = dw || image.width;
     this.dh = dh || image.height;
     this.alpha = alpha || 1.0;
+    this.angle = angle || 0;
+    this.tx = tx || 0;
+    this.ty = ty || 0;
 };
 
 Yuki.prototype = {
     createYuki: function (ctx) {
+        ctx.save();
         ctx.globalAlpha = this.alpha;
         ctx.beginPath();
+        ctx.translate(this.tx, this.ty);
+        ctx.rotate(this.angle);
         ctx.drawImage(this.image, this.dx, this.dy, this.dw, this.dh);
         ctx.closePath();
+        ctx.restore();
     },
     init: function (ctx) {
-        ctx.save();
         this.createYuki(ctx);
-        ctx.restore();
     },
     setImage: function (image) {
         this.image = image;

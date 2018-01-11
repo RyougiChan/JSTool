@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Yuki rotation test</title>
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        canvas {
+            display: block;
+            background: pink
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="bg-yuki_rotate" width="1080" height="1080"></canvas>
+
+    <script src="canvas-yuki.js"></script>
+    <script>
+        var canvas = document.querySelector('#bg-yuki_rotate'),
+            ctx = canvas.getContext('2d');
+
+        canvas.height = document.body.clientHeight;
+        canvas.width = document.body.clientHeight;
+
+        var imgs = [],
+            yukis = [];
+        for (var i = 1; i < 8; i++) {
+            var img = new Image();
+            img.src = 'yae-sakura.jpg';
+            imgs.push(img);
+        }
+        for (var k = 0; k < imgs.length; k++) {
+            var e = imgs[k];
+            (function (k) {
+                imgs[k].onload = function () {
+                    var yuki = new Yuki(imgs[k], 1, -25, -25, 50, 50, 0, (k + 1) * 100, (k + 1) * 100);
+                    yuki.init(ctx);
+                    yukis.push(yuki);
+                }
+            })(k)
+        }
+        function clear() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+        setInterval(function () {
+            clear();
+            for (var i = 0; i < yukis.length; i++) {
+                var yuki = yukis[i];
+                yuki.angle += (i + 1) * Math.PI / 180;
+                yuki.init(ctx);
+            }
+        });
+    </script>
+</body>
+
+</html>
