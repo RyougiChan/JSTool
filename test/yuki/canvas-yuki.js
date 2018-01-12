@@ -10,7 +10,7 @@
  * @param {number} tx Distance to move in the horizontal direction.
  * @param {number} ty Distance to move in the vertical direction.
  */
-var Yuki = function (image, alpha, dx, dy, dw, dh, angle, tx, ty) {
+var Yuki = function (image, alpha, dx, dy, dw, dh, angle, tx, ty, sx, sy) {
     this.image = image;
     this.dx = dx;
     this.dy = dy;
@@ -20,6 +20,8 @@ var Yuki = function (image, alpha, dx, dy, dw, dh, angle, tx, ty) {
     this.angle = angle || 0;
     this.tx = tx || 0;
     this.ty = ty || 0;
+    this.sx = sx || 1.0;
+    this.sy = sy || 1.0;
 };
 
 Yuki.prototype = {
@@ -28,6 +30,7 @@ Yuki.prototype = {
         ctx.globalAlpha = this.alpha;
         ctx.beginPath();
         ctx.translate(this.tx, this.ty);
+        ctx.scale(this.sx, this.sy);
         ctx.rotate(this.angle);
         ctx.drawImage(this.image, this.dx, this.dy, this.dw, this.dh);
         ctx.closePath();

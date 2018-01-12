@@ -34,7 +34,8 @@
         canvas.width = document.body.clientHeight;
 
         var imgs = [],
-            yukis = [];
+            yukis = [],
+            flags = [];
         for (var i = 1; i < 8; i++) {
             var img = new Image();
             img.src = 'yae-sakura.jpg';
@@ -44,20 +45,70 @@
             var e = imgs[k];
             (function (k) {
                 imgs[k].onload = function () {
-                    var yuki = new Yuki(imgs[k], 1, -25, -25, 50, 50, 0, (k + 1) * 100, (k + 1) * 100);
+                    var yuki = new Yuki(imgs[k], 1, -25, -25, 50, 50, 0, (k + 1) * 100, (k + 1) * 100, 1, 1);
                     yuki.init(ctx);
                     yukis.push(yuki);
+                    flags.push(false);
                 }
             })(k)
         }
+        
         function clear() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
+        function calcTransCoord(x, y, a, b, c, d, e, f) {
+            var newX, newY,
+                a = a || 1.0,
+                b = b || 0,
+                c = c || 0,
+                d = d || 1,
+                e = e || 0,
+                f = f || 0;
+            
+            newX = a * x + c * y + e;
+            newY = b * x + d * y + f;
+
+            return {x: newX, y: newY};
+        }
+        function calcDeltaMove(nx, ny, x, y, a, b, c, d) {
+            var e, f,
+                a = a || 1.0,
+                b = b || 0,
+                c = c || 0,
+                d = d || 1;
+            
+            e = nx - a * x - c * y;
+            f = ny - b * x - d * y;
+
+            return {e: e, f: f};
+        }
+
         setInterval(function () {
             clear();
             for (var i = 0; i < yukis.length; i++) {
                 var yuki = yukis[i];
+                // yuki.dx += 0.1;
+                // yuki.dy += 0.1;
+                if(flags[i]) {
+                    yuki.tx -= 0.1;
+                    yuki.ty -= 0.1;
+                    if(yuki.tx + yuki.dx <= 0) {
+                        flags[i] = false;
+                    }
+                } else {
+                    yuki.tx += 0.1;
+                    yuki.ty += 0.1;
+                    if(yuki.tx + yuki.dx >= canvas.width - 50) {
+                        flags[i] = true;
+                    }
+                }
+
+                console.log(yuki.tx + yuki.dx);
                 yuki.angle += (i + 1) * Math.PI / 180;
+                // if(yuki.sx > 0) {
+                //     yuki.sx -= 0.0001;
+                //     yuki.sy -= 0.0001;
+                // }
                 yuki.init(ctx);
             }
         });

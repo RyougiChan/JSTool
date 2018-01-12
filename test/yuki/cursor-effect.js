@@ -92,17 +92,23 @@ function updateBgYukis(yukis, p) {
     yukis.forEach(function (yuki) {
         var y = yuki.yuki,
             sp = p || yuki.sp;
-        if (y.dy < canvas.height) {
-            y.alpha = (canvas.height - y.dy) / canvas.height;
+        if (y.dy + y.ty < canvas.height) {
+            var deltaX = Math.random() * 1,
+                deltaY = Math.random() * 1;
+            y.tx += deltaX;
+            y.ty += deltaY;
+            // y.dx += deltaX;
+            // y.dy += deltaY;
+            y.alpha = (canvas.height - y.dy - y.ty) / canvas.height;
             // y.dx += Math.random() > 0.5 ? Math.random() * 1 : -Math.random() * 1;
-            y.dx += Math.random() * 1;
-            y.dy += Math.random() * 1;
             // y.tx = y.dx + y.dw / 2;
             // y.ty = y.dy + y.dy / 2;
             // y.angle += Math.random() * 1 * Math.PI / 360;
         } else {
             y.dx = sp.x;
             y.dy = 0;
+            y.tx = 0;
+            y.ty = 0;
             y.alpha = 1;
         }
     }, this);
