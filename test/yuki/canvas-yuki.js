@@ -32,6 +32,11 @@ Yuki.prototype = {
         ctx.translate(this.tx, this.ty);
         ctx.scale(this.sx, this.sy);
         ctx.rotate(this.angle);
+        // Create a path can be detect by isPointInPath() method.
+        ctx.rect(this.dx, this.dy, this.dw, this.dh);
+        ctx.strokeStyle = 'rgba(0,0,0,0)';
+        ctx.stroke();
+        // Draw Image.
         ctx.drawImage(this.image, this.dx, this.dy, this.dw, this.dh);
         ctx.closePath();
         ctx.restore();
