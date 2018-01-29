@@ -8,7 +8,7 @@ a,abbr,acronym,address,applet,article,aside,audio,b,big,blockquote,body,canvas,c
     vertical-align: baseline
 }
 
-article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section {
+article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section,canvas {
     display: block
 }
 

@@ -27,7 +27,7 @@
     var global = win;
 
     if (!global.Yuko) {
-        global.Yuko = global.Yuko = global.yuko = Object();
+        global.Yuko = global.YUKO = global.yuko = Object();
     }
 
     Yuko.polyfill = (function () {
