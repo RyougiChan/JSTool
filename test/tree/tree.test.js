@@ -8,9 +8,9 @@
         var x = e.clientX,
             y = e.clientY,
             
-            tree = new Tree(16, 240);
+            tree = new Tree(16, 240, 10);
         
-        tree.createTree(ctx, x, canvas.height);
+        tree.createTree(ctx, x, canvas.height, 240, Math.PI / 6);
     };
     canvas.addEventListener('click', clickHandler);
 

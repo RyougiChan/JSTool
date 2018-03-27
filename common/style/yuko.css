@@ -406,52 +406,52 @@
     float: left;
 }
 
-.yuko-docs .yuko-docs .yuko-carousel-v2-pre:hover {
+.yuko-docs .yuko-carousel-v2-pre:hover {
     background: url(../../Carousel_v2.0/images/ic_navigate_before_white_48dp.png) no-repeat center;
     background-size: 80%;
 }
 
-.yuko-docs .yuko-docs .yuko-carousel-v2-next:hover {
+.yuko-docs .yuko-carousel-v2-next:hover {
     background: url(../../Carousel_v2.0/images/ic_navigate_next_white_48dp.png) no-repeat center;
     background-size: 80%;
 }
 
-.yuko-docs .yuko-docs .yuko-carousel-v2-item_a {
+.yuko-docs .yuko-carousel-v2-item_a {
     background: url(../../Carousel_v2.0/images/Kara.no.Kyoukai.jpg) no-repeat;
     background-size: 100%;
 }
 
-.yuko-docs .yuko-docs .yuko-carousel-v2-item_b {
+.yuko-docs .yuko-carousel-v2-item_b {
     background: url(../../Carousel_v2.0/images/yukong.jpg) no-repeat;
     background-size: 100%;
 }
 
-.yuko-docs .yuko-docs .yuko-carousel-v2-item_c {
+.yuko-docs .yuko-carousel-v2-item_c {
     background: url(../../Carousel_v2.0/images/fate.jpg) no-repeat;
     background-size: 100%;
 }
 
-.yuko-docs .yuko-docs .yuko-carousel-v2-item_d {
+.yuko-docs .yuko-carousel-v2-item_d {
     background: url(../../Carousel_v2.0/images/AngelBeats.jpg) no-repeat;
     background-size: 100%;
 }
 
-.yuko-docs .yuko-docs .yuko-carousel-v2-item_e {
+.yuko-docs .yuko-carousel-v2-item_e {
     background: url(../../Carousel_v2.0/images/yande.re.jpg) no-repeat;
     background-size: 100%;
 }
 
-.yuko-docs .yuko-docs .yuko-carousel-v2-item_f {
+.yuko-docs .yuko-carousel-v2-item_f {
     background: url(../../Carousel_v2.0/images/san.jpg) no-repeat;
     background-size: 100%;
 }
 
-.yuko-docs .yuko-docs .yuko-carousel-v2-item_g {
+.yuko-docs .yuko-carousel-v2-item_g {
     background: url(../../Carousel_v2.0/images/youkuri.jpg) no-repeat;
     background-size: 100%;
 }
 
-.yuko-docs .yuko-docs .yuko-carousel-v2-bar {
+.yuko-docs .yuko-carousel-v2-bar {
     display: none;
     position: absolute;
     bottom: 0;
@@ -460,7 +460,7 @@
     background: rgba(0, 0, 0, 0.5);
 }
 
-.yuko-docs .yuko-docs .yuko-carousel-v2-bar > li {
+.yuko-docs .yuko-carousel-v2-bar > li {
     display: inline-block;
     vertical-align: top;
     cursor: pointer;
@@ -469,7 +469,7 @@
     margin: 0 2px;
 }
 
-.yuko-docs .yuko-docs .yuko-carousel-v2-bar > li > a {
+.yuko-docs .yuko-carousel-v2-bar > li > a {
     display: block;
     width: 10px;
     height: 6px;
@@ -478,7 +478,7 @@
     transition: 0.2s;
 }
 
-.yuko-docs .yuko-docs .yuko-carousel-v2-bar > li.on a, .yuko-docs .yuko-docs .yuko-carousel-v2-bar > li.on:hover a {
+.yuko-docs .yuko-carousel-v2-bar > li.on a, .yuko-docs .yuko-carousel-v2-bar > li.on:hover a {
     width: 30px;
     background-color: #2196F3;
 }
