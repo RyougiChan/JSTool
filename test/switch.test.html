@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Switch.test</title>
+  <style>
+    /* The yuko-switch - the box around the yuko-switch_slider */
+
+    .yuko-switch {
+      position: relative;
+      display: inline-block;
+      width: 40px;
+      height: 15px;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    }
+
+    /* Hide default HTML checkbox */
+
+    .yuko-switch input {
+      display: none;
+    }
+
+    /* The yuko-switch_slider */
+
+    .yuko-switch_slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, .26);
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+
+    .yuko-switch_slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 0px;
+      bottom: -2.5px;
+      background: #3f51b5;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+
+    .yuko-switch input:checked+.yuko-switch_slider {
+      background: rgba(63, 81, 181, .6);
+    }
+
+    .yuko-switch input:focus+.yuko-switch_slider {
+      box-shadow: 0 0 1px rgba(63, 81, 181, .6);
+    }
+
+    .yuko-switch input:checked+.yuko-switch_slider:before {
+      -webkit-transform: translateX(20px);
+      -ms-transform: translateX(20px);
+      transform: translateX(20px);
+    }
+
+    /* Rounded yuko-switch_sliders */
+
+    .yuko-switch_slider.round {
+      border-radius: 34px;
+    }
+
+    .yuko-switch_slider.round:before {
+      border-radius: 50%;
+    }
+
+    .yuko-switch_ripple {
+      position: absolute;
+      z-index: 2;
+      top: -12px;
+      left: 12px;
+      box-sizing: border-box;
+      width: 42px;
+      height: 42px;
+      cursor: pointer;
+      -webkit-mask-image: -webkit-radial-gradient(center, circle cover, rgb(255, 255, 255), rgb(0, 0, 0));
+      border-radius: 50%;
+      overflow: hidden;
+    }
+
+    .yuko-switch_ripple .yuko-ripple {
+      background: rgb(63, 81, 181);
+    }
+
+    .yuko-ripple {
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      opacity: 0;
+      pointer-events: none;
+      border-radius: 50%;
+      overflow: hidden;
+      width: 104px;
+      height: 104px;
+      transform: translate(-50%, -50%) translate(18px, 18px);
+      transition: transform 0.3s cubic-bezier(0, 0, 0.2, 1), width 0.3s cubic-bezier(0, 0, 0.2, 1), height 0.3s cubic-bezier(0, 0, 0.2, 1), opacity 0.6s cubic-bezier(0, 0, 0.2, 1), -webkit-transform 0.3s cubic-bezier(0, 0, 0.2, 1);
+    }
+
+    .yuko-switch:active .yuko-ripple {
+      opacity: .3;
+    }
+
+    .yuko-switch.is-checked .yuko-switch_ripple {
+      left: -12px
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Rectangular yuko-switch -->
+  <label class="yuko-switch">
+    <input type="checkbox">
+    <span class="yuko-switch_slider"></span>
+    <span class="yuko-switch_ripple yuko-js-ripple-effect yuko-ripple--center">
+      <span class="yuko-ripple"></span>
+    </span>
+  </label>
+
+  <!-- Rounded yuko-switch -->
+  <label class="yuko-switch">
+    <input type="checkbox">
+    <span class="yuko-switch_slider round"></span>
+    <span class="yuko-switch_ripple yuko-js-ripple-effect yuko-ripple--center">
+      <span class="yuko-ripple"></span>
+    </span>
+  </label>
+
+  <!-- Rectangular yuko-switch -->
+  <label class="yuko-switch">
+    <input type="checkbox">
+    <span class="yuko-switch_slider"></span>
+
+  </label>
+
+  <!-- Rounded yuko-switch -->
+  <label class="yuko-switch">
+    <input type="checkbox">
+    <span class="yuko-switch_slider round"></span>
+
+  </label>
+
+  <script src="../common/script/Yuko.js"></script>
+
+  <script>
+    function isMobile() {
+      if ((navigator.userAgent.match(/(iPhone|iPod|Android|ios|SymbianOS)/i))) {
+        return true;
+      }
+      return false;
+    }
+
+    var fingerdown, fingermove, fingerup;
+    if (isMobile()) {
+      fingerdown = 'touchstart';
+      fingermove = 'touchmove';
+      fingerup = 'touchend';
+    } else {
+      fingerdown = 'mousedown';
+      fingermove = 'mousemove';
+      fingerup = 'mouseup';
+    }
+    // switch
+    var switchs = document.querySelectorAll('.yuko-switch'),
+      isCancel;
+
+    Yuko.utility.addEvent(document.body, fingerdown, function (evt) {
+      var _target = event.target;
+      if (_target.className.indexOf('yuko-switch') >= 0) {
+        // _this: yuko-switch
+        var _this;
+        if (_target.className.indexOf('yuko-switch_ripple') >= 0 || _target.className.indexOf('yuko-switch_slider') >= 0) {
+          // is a children click
+          _this = _target.parentElement;
+        } else {
+          // yuko-switch itself
+          _this = _target;
+        }
+
+        // Set checked
+        if (_this.className.indexOf('is-checked') < 0) {
+          _this.className += ' is-checked';
+          isCancel = false;
+        } else {
+          isCancel = true;
+        }
+
+      }
+    });
+
+    Yuko.utility.addEvent(document.body, fingerup, function (evt) {
+      var _target = event.target;
+      if (_target.className.indexOf('yuko-switch') >= 0) {
+        var _this;
+        if (_target.className.indexOf('yuko-switch_ripple') >= 0 || _target.className.indexOf('yuko-switch_slider') >= 0) {
+          // is a children click
+          _this = _target.parentElement;
+        } else {
+          // yuko-switch itself
+          _this = _target;
+        }
+        _last = _this.lastElementChild;
+        if (isCancel) {
+          _this.className = _this.className.replace(' is-checked', '');
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>

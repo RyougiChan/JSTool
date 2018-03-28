@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Selectbox.test</title>
+    <link href="../common/style/yuko.css" rel="stylesheet">
+    <style>
+        /*the container must be positioned relative:*/
+
+        .yuko-select {
+            position: relative;
+            width:200px;
+            font-family: Arial;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        .yuko-select select {
+            display: none;
+            /*hide original SELECT element:*/
+        }
+
+        .yuko-select .yuko-select_selected {
+            background-color: #3f51b5;
+        }
+
+        /*style the arrow inside the select element:*/
+
+        .yuko-select .yuko-select_selected:after {
+            position: absolute;
+            content: "";
+            top: 14px;
+            right: 10px;
+            width: 0;
+            height: 0;
+            border: 6px solid transparent;
+            border-color: #fff transparent transparent transparent;
+        }
+
+        /*point the arrow upwards when the select box is open (active):*/
+
+        .yuko-select_selected.yuko-select_arrow-active:after {
+            border-color: transparent transparent #fff transparent;
+            top: 7px;
+        }
+
+        /*style the items (options), including the selected item:*/
+
+        .yuko-select_items div,
+        .yuko-select_selected {
+            position: relative;
+            color: #ffffff;
+            padding: 8px 16px;
+            border: 1px solid transparent;
+            border-color: transparent transparent rgba(255, 255, 255, 0.1) transparent;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        /*style items (options):*/
+
+        .yuko-select_items {
+            position: absolute;
+            background-color: #3f51b5;
+            top: 100%;
+            left: 0;
+            right: 0;
+            z-index: 99;
+        }
+
+        /*hide the items when the select box is closed:*/
+
+        .yuko-select_hide {
+            display: none;
+        }
+
+        .yuko-select_items div:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="yuko-select" style=" float:right">
+        <div class="yuko-select_selected">Mini</div>
+        <div class="yuko-select_items yuko-select_hide">
+            <div>Audi</div>
+            <div>BMW</div>
+            <div>Citroen</div>
+            <div>Ford</div>
+            <div>Honda</div>
+            <div>Jaguar</div>
+            <div>Land Rover</div>
+            <div>Mercedes</div>
+            <div>Mini</div>
+            <div>Nissan</div>
+            <div>Toyota</div>
+            <div>Volvo</div>
+        </div>
+    </div>
+    <div class="yuko-select">
+        <div class="yuko-select_selected">Mini</div>
+        <div class="yuko-select_items yuko-select_hide">
+            <div>Audi</div>
+            <div>BMW</div>
+            <div>Citroen</div>
+            <div>Ford</div>
+            <div>Honda</div>
+            <div>Jaguar</div>
+            <div>Land Rover</div>
+            <div>Mercedes</div>
+            <div>Mini</div>
+            <div>Nissan</div>
+            <div>Toyota</div>
+            <div>Volvo</div>
+        </div>
+    </div>
+</body>
+<script src="../common/script/Yuko.js"></script>
+<script>
+    if (!("classList" in document.documentElement)) {
+        Object.defineProperty(HTMLElement.prototype, 'classList', {
+            get: function () {
+                var self = this;
+                function update(fn) {
+                    return function (value) {
+                        var classes = self.className.split(/\s+/g),
+                            index = classes.indexOf(value);
+
+                        fn(classes, index, value);
+                        self.className = classes.join(" ");
+                    }
+                }
+
+                return {
+                    add: update(function (classes, index, value) {
+                        if (!~index) classes.push(value);
+                    }),
+
+                    remove: update(function (classes, index) {
+                        if (~index) classes.splice(index, 1);
+                    }),
+
+                    toggle: update(function (classes, index, value) {
+                        if (~index)
+                            classes.splice(index, 1);
+                        else
+                            classes.push(value);
+                    }),
+
+                    contains: function (value) {
+                        return !!~self.className.split(/\s+/g).indexOf(value);
+                    },
+
+                    item: function (i) {
+                        return self.className.split(/\s+/g)[i] || null;
+                    }
+                };
+            }
+        });
+    } 
+</script>
+<script>
+
+    function isMobile() {
+        if ((navigator.userAgent.match(/(iPhone|iPod|Android|ios|SymbianOS)/i))) {
+            return true;
+        }
+        return false;
+    }
+
+    var fingerdown, fingermove, fingerup;
+    if (isMobile()) {
+        fingerdown = 'touchstart';
+        fingermove = 'touchmove';
+        fingerup = 'touchend';
+    } else {
+        fingerdown = 'mousedown';
+        fingermove = 'mousemove';
+        fingerup = 'mouseup';
+    }
+    function closeAllSelect(except) {
+        var x,
+            y,
+            i;
+        x = document.getElementsByClassName("yuko-select_items");
+        y = document.getElementsByClassName("yuko-select_selected");
+        except = typeof(except) == 'number' ? x[except] : except;
+
+        for (i = 0; i < x.length; i++) {
+            if (x[i] != except) {
+                x[i].classList.add("yuko-select_hide");
+                y[i].classList.remove("yuko-select_arrow-active");
+            }
+        }
+    }
+
+    function toggleSelect(selected) {
+        var items_list = selected.nextElementSibling;
+        closeAllSelect(items_list);
+        if(items_list.classList.contains('yuko-select_hide')){
+            selected.classList.add('yuko-select_arrow-active');
+            items_list.classList.remove('yuko-select_hide')
+        }else{
+            selected.classList.remove('yuko-select_arrow-active');
+            items_list.classList.add('yuko-select_hide');
+        }
+    }
+
+    Yuko.utility.addEvent(document, fingerdown, function (evt) {
+        // _this: yuko-selectbox
+        var _this,
+            _selected,
+            _items,
+            _target = evt.target;
+        if (_target != document.documentElement) {
+            if (_target.classList.contains('yuko-select_selected')) {
+                _selected = _target;
+                _this = _selected.parentElement;
+            } else if (_target.parentElement.classList.contains('yuko-select_items')) {
+                _items = _target.parentElement;
+                _selected = _items.previousElementSibling;
+                _this = _selected.parentElement;
+            }
+        }
+
+        if(_items != undefined) {
+            var selected_val = _target.innerHTML.trim();
+            // Add ripple effect
+            Yuko.utility.addEvent(_target, fingerdown, Yuko.effect.rippleEffect);
+        }
+
+        // Press down selected box
+        if(_items == undefined && _this) {
+            // Add ripple effect
+            Yuko.utility.addEvent(_selected, fingerdown, Yuko.effect.rippleEffect);
+        }
+
+    });
+
+    Yuko.utility.addEvent(document, fingerup, function (evt) {
+        var _this,
+            _selected,
+            _items,
+            _target = evt.target;
+        if (_target != document.documentElement) {
+            if (_target.classList.contains('yuko-select_selected')) {
+                _selected = _target;
+                _this = _selected.parentElement;
+            } else if (_target.parentElement.classList.contains('yuko-select_items')) {
+                _items = _target.parentElement;
+                _selected = _items.previousElementSibling;
+                _this = _selected.parentElement;
+            }
+        }
+
+        if (_this == undefined) {
+            // press down out of yuko-selectbox
+            closeAllSelect();
+        }
+
+        if(_items != undefined) {
+            var selected_val = _target.innerHTML.trim();
+            // Add ripple effect
+            Yuko.utility.addEvent(_target, fingerdown, Yuko.effect.rippleEffect);
+            // Set selected value
+            _selected.innerHTML = selected_val;
+            closeAllSelect();
+        }
+
+        // Press down selected box
+        if(_items == undefined && _this) {
+            // Add ripple effect
+            // Yuko.utility.addEvent(_selected, fingerdown, Yuko.effect.rippleEffect);
+            toggleSelect(_selected);
+        }
+    });
+
+</script>
+
+</html>

@@ -1018,14 +1018,15 @@
          */
         function rippleEffect(event) {
             event.stopPropagation();
-            // var target = event.target;
-            var rect = this.getBoundingClientRect();
-            var ripple = this.querySelector('.ripple');
+            var _this = event.target;
+            
+            var rect = _this.getBoundingClientRect();
+            var ripple = _this.querySelector('.ripple');
             if (!ripple) {
                 ripple = document.createElement('span');
                 ripple.className = 'ripple';
                 ripple.style.height = ripple.style.width = Math.max(rect.width, rect.height) + 'px';
-                this.appendChild(ripple);
+                _this.appendChild(ripple);
             }
             ripple.classList.remove('show');
             var top = (event instanceof MouseEvent ? event.clientY - rect.top - ripple.offsetHeight / 2 - document.body.scrollTop : event.changedTouches[0].pageY - rect.top - ripple.offsetHeight / 2 - document.body.scrollTop);
