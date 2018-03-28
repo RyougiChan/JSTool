@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>Radio.Test</title>
+  <title>Tooltip.Test</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="../common/style/yuko-reset.css">
@@ -31,7 +31,7 @@
         <input type="radio" class="yuko-radio_input" name="rd">
         <span class="yuko-radio_outer-circle"></span>
         <span class="yuko-radio_inner-circle"></span>
-        <span class="yuko-radio_ripple yuko-js-ripple-effect yuko-ripple--center">
+        <span class="yuko-radio_ripple">
           <span class="yuko-ripple is-animating"></span>
         </span>
       </span>
@@ -104,17 +104,17 @@
           var _this, _last, _input;
             _this = _target.parentElement;
             _last = _this.lastElementChild;
-            _input = _this.firstElementChild;
-          if (_target.className.indexOf('yuko-radio_ripple') >= 0) {
+          _input = _this.firstElementChild;
+          if (_target.classList.contains('yuko-radio_ripple')) {
             // There is a ripple container
             // Set ripple container visible
             var _rc = _last.firstElementChild;
-            if (_rc.className.indexOf('is-visible') < 0) {
+            if (!_rc.classList.contains('is-visible')) {
               _rc.className += ' is-visible';
             }
           }
           // Set checked
-          if (_this.className.indexOf('is-checked') < 0) {
+          if (!_this.classList.contains('is-checked')) {
             var inputName = _this.firstElementChild.name;
             for (var rdi = 0; rdi < radios.length; rdi++) {
               var _thisInput = radios[rdi].firstElementChild;
@@ -136,10 +136,10 @@
             _this = _target.parentElement;
             _last = _this.lastElementChild;
           _input = _this.firstElementChild;
-          if (_target.className.indexOf('yuko-radio_ripple') >= 0) {
+          if (_target.classList.contains('yuko-radio_ripple')) {
             // Set ripple container visible
             var _rc = _last.firstElementChild;
-            if(_rc.className.indexOf('is-visible') >= 0) {
+            if(_rc.classList.contains('is-visible')) {
               _rc.className = _rc.className.replace(' is-visible', '');
             }
           }

@@ -178,7 +178,7 @@
       if (_target.className.indexOf('yuko-switch') >= 0) {
         // _this: yuko-switch
         var _this;
-        if (_target.className.indexOf('yuko-switch_ripple') >= 0 || _target.className.indexOf('yuko-switch_slider') >= 0) {
+        if (_target.classList.contains('yuko-switch_ripple') || _target.classList.contains('yuko-switch_slider')) {
           // is a children click
           _this = _target.parentElement;
         } else {
@@ -187,7 +187,7 @@
         }
 
         // Set checked
-        if (_this.className.indexOf('is-checked') < 0) {
+        if (!_this.classList.contains('is-checked')) {
           _this.className += ' is-checked';
           isCancel = false;
         } else {
@@ -201,7 +201,7 @@
       var _target = event.target;
       if (_target.className.indexOf('yuko-switch') >= 0) {
         var _this;
-        if (_target.className.indexOf('yuko-switch_ripple') >= 0 || _target.className.indexOf('yuko-switch_slider') >= 0) {
+        if (_target.classList.contains('yuko-switch_ripple') || _target.classList.contains('yuko-switch_slider')) {
           // is a children click
           _this = _target.parentElement;
         } else {

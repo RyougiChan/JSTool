@@ -85,14 +85,14 @@
         if (_target.className.indexOf('yuko-checkbox') >= 0) {
           // _this: yuko-checkbox
           var _this, _last, _input;
-          if (_target.className.indexOf('yuko-checkbox_ripple') >= 0) {
+          if (_target.classList.contains('yuko-checkbox_ripple')) {
             // There is a ripple container
             _this = _target.parentElement;
             _last = _this.lastElementChild;
             // Set ripple container visible
             var _rc = _last.firstElementChild;
-            if (_rc.className.indexOf('is-visible') < 0) {
-              _rc.className += ' is-visible';
+            if (!_rc.classList.contains('is-visible')) {
+              _rc.classList.add('is-visible');
             }
           } else if (_target.className.indexOf('yuko-checkbox_tick-outline') >= 0) {
             // There is not a ripple container
@@ -105,7 +105,7 @@
           _input = _this.firstElementChild;
 
           // If is a check-all checkbox
-          if(_this.className.indexOf('yuko-checkbox-all') >= 0) {
+          if(_this.classList.contains('yuko-checkbox-all')) {
             var checkall = _this.firstElementChild; // Check all input
             // If is a check-all checkbox
             for (var cbi = 0; cbi < checkboxs.length; cbi++) {
@@ -114,10 +114,10 @@
               if(cbInput.name == _input.name && cb != _this) {
                 // Same-named input
                 if(!checkall.hasAttribute('checked')) {
-                  cb.className += ' is-checked';
+                  cb.classList.add('is-checked');
                   cbInput.setAttribute('check','');
                 } else {
-                  cb.className = cb.className.replace(/ is-checked/ig,'');
+                  cb.classList.remove('is-checked');
                   cbInput.removeAttribute('check');
                 }
               }
@@ -125,8 +125,8 @@
           }
 
           // Set checked
-          if (_this.className.indexOf('is-checked') < 0) {
-            _this.className += ' is-checked';
+          if (!_this.classList.contains('is-checked')) {
+            _this.classList.add('is-checked');
             _input.setAttribute('checked', '');
             isCancel = false;
           } else {
@@ -140,15 +140,15 @@
       var _target = event.target;
       if(_target.className.indexOf('yuko-checkbox') >= 0) {
         var _this, _last, _input;
-          if (_target.className.indexOf('yuko-checkbox_ripple') >= 0) {
+          if (_target.classList.contains('yuko-checkbox_ripple')) {
             // Set ripple container visible
             _this = _target.parentElement;
             _last = _this.lastElementChild;
             var _rc = _last.firstElementChild;
-            if(_rc.className.indexOf('is-visible') >= 0) {
-              _rc.className = _rc.className.replace(' is-visible', '');
+            if(_rc.classList.contains('is-visible')) {
+              _rc.classList.remove('is-visible');
             }
-          } else if (_target.className.indexOf('yuko-checkbox_tick-outline') >= 0) {
+          } else if (_target.classList.contains('yuko-checkbox_tick-outline')) {
             // There is not a ripple container
             _this = _target.parentElement.parentElement;
           } else {
@@ -158,7 +158,7 @@
           _last = _this.lastElementChild;
           _input = _this.firstElementChild;
           if(isCancel){
-            _this.className = _this.className.replace(' is-checked', '');
+            _this.classList.remove('is-checked');
             if(_input.type == 'checkbox') {
               _input.removeAttribute('checked');
             }
