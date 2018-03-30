@@ -2,67 +2,407 @@
 <html lang="en">
 
 <head>
-  <title>pagination.Test</title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="../common/style/yuko-reset.css">
-  <link rel="stylesheet" href="../common/style/yuko.css">
-  <link rel="stylesheet" href="../common/style/material-icons.css">
-  <link rel="stylesheet" href="../common/style/yuko.component.css">
-  <style>
-  body.yuko-docs .yuko-pagination { overflow: hidden; text-align: center; padding: 1em }
-  body.yuko-docs .yuko-pagination_list { display: inline-block; }
-  body.yuko-docs .yuko-pagination_list li { display: inline; text-align: center; user-select: none; cursor: pointer; }
-  body.yuko-docs .yuko-pagination_list li a,
-  body.yuko-docs .yuko-pagination_list li span { float: left; margin-right: 10px; padding: 12px; min-width: 16px; height: 16px; border: 1px solid #4285f4; color: #4285f4; }
-  body.yuko-docs .yuko-pagination_list li a:hover,
-  body.yuko-docs .yuko-pagination_list li span:hover,
-  body.yuko-docs .yuko-pagination_list li.active a,
-  body.yuko-docs .yuko-pagination_list li.active span { background: #4285f4; color: #ffffff }
-  body.yuko-docs .yuko-pagination_list li:last-child a { margin-right: 0 }
-
-  </style>
+    <title>pagination.Test</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../common/style/yuko-reset.css">
+    <link rel="stylesheet" href="../common/style/yuko.css">
+    <link rel="stylesheet" href="../common/style/material-icons.css">
+    <link rel="stylesheet" href="../common/style/yuko.component.css">
+    <style>
+        body.yuko-docs .yuko-pagination { overflow: hidden; text-align: center; padding: 1em; -webkit-tap-highlight-color: transparent; -webkit-tap-highlight-color: rgba(0,0,0,0); user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; }
+        body.yuko-docs .yuko-pagination_list { display: inline-block; }
+        body.yuko-docs .yuko-pagination_func,
+        body.yuko-docs .yuko-pagination_item { display: inline-block; text-align: center; user-select: none; cursor: pointer; }
+        body.yuko-docs .yuko-pagination_func.hided { display: none; }
+        body.yuko-docs .yuko-pagination_func a,
+        body.yuko-docs .yuko-pagination_item a { display: block; margin: 10px 10px 0 0; width: 28px; height: 28px; line-height: 28px; border: 1px solid #4285f4; border-radius: 5px; color: #4285f4; transition: background .28s cubic-bezier(.4,0,.2,1) }
+        body.yuko-docs .yuko-pagination.yuko-pagination__round .yuko-pagination_func a,
+        body.yuko-docs .yuko-pagination.yuko-pagination__round .yuko-pagination_item a { border-radius: 50%; }
+        body.yuko-docs .yuko-pagination_func a:hover,
+        body.yuko-docs .yuko-pagination_func.active a,
+        body.yuko-docs .yuko-pagination_item a:hover,
+        body.yuko-docs .yuko-pagination_item.active a { background: #4285f4; color: #ffffff; }
+        /* body.yuko-docs .yuko-pagination_item:last-child a { margin-right: 0 } */
+    </style>
 </head>
 
 <body class="yuko-docs">
-  <div class="yuko-pagination">
-    <ul class="yuko-pagination_list">
-        <li><a>&lt;</a></li>
-        <li><a>1</a></li>
-        <li class="hided"><span>...</span></li>
-        <li class="active"><a>7</a></li>
-        <li><a>8</a></li>
-        <li><a>9</a></li>
-        <li><a>10</a></li>
-        <li><a>11</a></li>
-        <li><a>12</a></li>
-        <li class="hided"><span>...</span></li>
-        <li><a>100</a></li>
-        <li><a>&gt;</a></li>
-    </ul>
-  </div>
-  <script src="../common/script/Yuko.js"></script>
-  <script>
-    function pagingHandler (selector){
-        var paginations = document.querySelectorAll(selector),
-            actived = document.querySelector(selector + '.active');
-        for (var i = 0; i < paginations.length; i++) {
-            // Add click event
-            var _this = paginations[i];
-            Yuko.utility.addEvent(_this, 'click', (function(i){
-                var __this = paginations[i];
-                return function(){
-                    if (i !== 0 && i !== paginations.length - 1 && !__this.classList.contains('hided')) {
-                        if (!__this.classList.contains('active')) __this.classList.add('active');
-                        actived.classList.remove('active');
-                        actived = __this;
+    <div class="yuko-pagination yuko-pagination__round yuko-pagination__async">
+        <span class="yuko-pagination_func backward">
+            <a>&lt;</a>
+        </span>
+        <span class="yuko-pagination_func first">
+            <a>F</a>
+        </span>
+        <span class="yuko-pagination_func hided">
+            <a>...</a>
+        </span>
+        <ul class="yuko-pagination_list">
+            <li class="yuko-pagination_item active">
+                <a>7</a>
+            </li>
+            <li class="yuko-pagination_item">
+                <a>8</a>
+            </li>
+            <li class="yuko-pagination_item">
+                <a>9</a>
+            </li>
+            <li class="yuko-pagination_item">
+                <a>10</a>
+            </li>
+            <li class="yuko-pagination_item">
+                <a>11</a>
+            </li>
+            <li class="yuko-pagination_item">
+                <a>12</a>
+            </li>
+        </ul>
+        <span class="yuko-pagination_func hided">
+            <a>...</a>
+        </span>
+        <span class="yuko-pagination_func last">
+            <a>L</a>
+        </span>
+        <span class="yuko-pagination_func forward">
+            <a>&gt;</a>
+        </span>
+    </div>
+    <script src="../common/script/Yuko.js"></script>
+    <script>
+        function isMobile() {
+            if ((navigator.userAgent.match(/(iPhone|iPod|Android|ios|SymbianOS)/i))) {
+                return true;
+            }
+            return false;
+        }
+
+        var fingerdown, fingermove, fingerup;
+        if (isMobile()) {
+            fingerdown = 'touchstart';
+            fingermove = 'touchmove';
+            fingerup = 'touchend';
+        } else {
+            fingerdown = 'mousedown';
+            fingermove = 'mousemove';
+            fingerup = 'mouseup';
+        }
+        // Init for paginations.
+        var paginations = document.querySelectorAll('.yuko-pagination'),
+            totalCount = 30,
+            // All paginations visible items in Array.
+            visibles = [],
+            visibleCount = 6,
+            hasHidedIcon = true,
+            hasFirstLast = true,
+            hasPreNext = true;
+        
+        var refreshPagination = function (pagination) {
+            if(pagination) {
+                // refresh pagination
+                var index,
+                    items = pagination.querySelectorAll('.yuko-pagination_item');
+                for (var o = 0; o < paginations.length; o++) {
+                   if(paginations[o] == pagination) {
+                       index = o;
+                   }
+                }
+                for (var i = 0; i < visibles[index].length; i++) {
+                    // Change content of items
+                    items[i].innerHTML = "<a>" + (visibles[index][i]+1) + "</a>";
+                }
+            } else {
+                // refresh all
+                for (var i = 0; i < visibles.length; i++) {
+                    var vis = visibles[i],
+                        paging = paginations[i],
+                        items = paging.querySelectorAll('.yuko-pagination_item');
+                    for (var j = 0; j < vis.length; j++) {
+                        // Change content of items
+                        items[j].innerHTML = "<a>" + (vis[j]+1) + "</a>";
                     }
                 }
-            })(i));
+            }
         }
-    }
-    pagingHandler('.yuko-pagination .yuko-pagination_list li');
-  </script>
+
+        for (var i = 0; i < paginations.length; i++) {
+            // yuko-pagination.
+            var p = paginations[i],
+                // visible items index.
+                visible = [];
+            if(totalCount <= visibleCount) {
+                for (var k = 0; k < totalCount; k++) {
+                    visible.push(k);
+                }
+            } else {
+                for (var k = 0; k < visibleCount; k++) {
+                    visible.push(k);
+                }
+            }
+            visibles.push(visible);
+            refreshPagination();
+        }
+
+        if (hasHidedIcon) {
+            for (var i = 0; i < visibles.length; i++) {
+                var vis = visibles[i],
+                    _paging = paginations[i];
+                if(totalCount > vis.length) {
+                    var hided_right = _paging.querySelectorAll('.hided')[1];
+                    if(hided_right)
+                        hided_right.style.display = 'inline-block';
+                }
+            }
+        }
+
+        var paginationHandler = function (evt) {
+            var _target = evt.target,
+                // The active item.
+                _active,
+                // Index of active item in yuko-pagination_item list.
+                a_index,
+                // _this: yuko-pagination_item.
+                _this,
+                // Index of _this in yuko-pagination_item list.
+                _this_index,
+                // _paging: yuko-pagination.
+                _paging,
+                // visible: current pagination visible items.
+                visible,
+                // hided_left: Hided-left icon.
+                hided_left,
+                // hided_right: Hided-right icon.
+                hided_right,
+                // middel_item: middle yuko-pagination_item.
+                middle_item,
+                middle_index
+                ;
+
+            if(_target.parentElement.classList.contains('yuko-pagination_func')){
+                // press on a function btn
+                _this = _target.parentElement;
+                _paging = _this.parentElement;
+                var paging_list = _paging.querySelectorAll('.yuko-pagination_item');
+                hided_left = _paging.querySelectorAll('.yuko-pagination_func.hided')[0];
+                hided_right = _paging.querySelectorAll('.yuko-pagination_func.hided')[1];
+                middle_index = Math.floor(visibleCount / 2);
+                var p_index; // Index of current pagination in paginations list.
+                for (var o = 0; o < paginations.length; o++) {
+                    if (paginations[o] == _paging) {
+                        p_index = o;
+                    }
+                }
+                if(!_active){
+                    for (var i = 0; i < paging_list.length; i++) {
+                        var item = paging_list[i];
+                        if (item.classList.contains('active')) {
+                            _active = item;
+                            a_index = i;
+                        }
+                        if (item == _this) {
+                            _this_index = i;
+                        }
+                    }
+                }
+
+                var vis = visibles[p_index];            
+                if (_this.classList.contains('forward')) {
+                    // press on forward.
+                    if (vis[vis.length - 1] != totalCount - 1) {
+                        if(a_index < middle_index) {
+                            if(_active.classList.contains('active'))
+                                _active.classList.remove('active');
+                            a_index++;
+                            _active = paging_list[a_index];
+                            if(!_active.classList.contains('active'))
+                                _active.classList.add('active');
+                            refreshPagination(_paging);
+                        }else {
+                            for (var i = 0; i < vis.length; i++) {
+                                vis[i]++;
+                            }
+                            if(vis[vis.length-1] == totalCount-1) {
+                                hided_right.style.display = 'none';
+                            }
+                            refreshPagination(_paging);
+                        }
+                    } else {
+                        if (a_index != visibleCount-1) {
+                            if(_active.classList.contains('active'))
+                                _active.classList.remove('active');
+                            a_index++;
+                            _active = paging_list[a_index];
+                            if(!_active.classList.contains('active'))
+                                _active.classList.add('active');
+                            refreshPagination(_paging);
+                        }
+                    }
+                }
+
+                if (_this.classList.contains('backward')) {
+                    // press on backward.
+                    if (vis[0] != 0) {
+                        if(a_index > middle_index) {
+                            if(_active.classList.contains('active'))
+                                _active.classList.remove('active');
+                            a_index--;
+                            _active = paging_list[a_index];
+                            if(!_active.classList.contains('active'))
+                                _active.classList.add('active');
+                            refreshPagination(_paging);
+                        }else{
+                            for (var i = 0; i < vis.length; i++) {
+                                vis[i]--;
+                            }
+                            if(vis[0] == 0) {
+                                hided_left.style.display = 'none';
+                            }
+                            refreshPagination(_paging);
+                        }
+                    } else {
+                        if (a_index != 0) {
+                            if(_active.classList.contains('active'))
+                                _active.classList.remove('active');
+                            a_index--;
+                            _active = paging_list[a_index];
+                            if(!_active.classList.contains('active'))
+                                _active.classList.add('active');
+                            refreshPagination(_paging);
+                        }
+                    }
+                }
+
+                if (_this.classList.contains('first')) {
+                    for (var i = 0; i < vis.length; i++) {
+                        vis[i] = i;                        
+                    }
+                    if (_active.classList.contains('active'))
+                        _active.classList.remove('active');
+                    a_index = 0;
+                    _active = paging_list[a_index];
+                    if (!_active.classList.contains('active'))
+                        _active.classList.add('active');
+                    refreshPagination(_paging);
+                }
+                
+                if (_this.classList.contains('last')) {
+                    for (var i = 0; i < vis.length; i++) {
+                        vis[i] = totalCount - visibleCount + i;
+                    }
+                    if (_active.classList.contains('active'))
+                        _active.classList.remove('active');
+                    a_index = visibleCount - 1;
+                    _active = paging_list[a_index];
+                    if (!_active.classList.contains('active'))
+                        _active.classList.add('active');
+                    refreshPagination(_paging);
+                }
+
+                if (vis[0] == 0 && hided_left) {
+                    // hided Hided-left icon.
+                    hided_left.style.display = 'none';
+                    if(totalCount > visibleCount) {
+                        hided_right.style.display = 'inline-block';                        
+                    }
+                } else if (vis[visibleCount - 1] == totalCount - 1 && hided_right) {
+                    hided_right.style.display = 'none';
+                    if(totalCount > visibleCount) {
+                        hided_left.style.display = 'inline-block';                        
+                    }
+                } else {
+                    hided_left.style.display = 'inline-block';
+                    hided_right.style.display = 'inline-block';
+                }
+
+            }
+
+            if (_target.parentElement.classList.contains('yuko-pagination_item')) {
+                // press on a pagination item.
+                _this = _target.parentElement;
+                _paging = _this.parentElement.parentElement;
+                hided_left = _paging.querySelectorAll('.yuko-pagination_func.hided')[0];
+                hided_right = _paging.querySelectorAll('.yuko-pagination_func.hided')[1];
+                middle_index = Math.floor(visibleCount / 2);
+                middle_item = _paging.querySelectorAll('.yuko-pagination_item')[middle_index];
+                
+                if(!_active) {
+                    for (var i = 0; i < _this.parentElement.children.length; i++) {
+                        var item = _this.parentElement.children[i];
+                        if (item.classList.contains('active')) {
+                            _active = item;
+                            a_index = i;
+                        }
+                        if (item == _this) {
+                            _this_index = i;
+                        }
+                    }
+                }
+                if (_this != _active) {
+                    // Get visible item list.
+                    var p_index; // Index of current pagination in paginations list.
+                    for (var o = 0; o < paginations.length; o++) {
+                        if (paginations[o] == _paging) {
+                            p_index = o;
+                        }
+                    }
+
+                    var vis = visibles[p_index];
+                    var step = Math.floor(_this_index - middle_index),
+                        overflow = false;
+                    // Change visible item list.
+                    if(step > 0) {
+                        if(vis[vis.length-1]+step > totalCount-1) {
+                            step = totalCount - vis[vis.length-1]-1;
+                            overflow = true;
+                        }
+                        
+                    }
+                    else if(step < 0) {
+                        if(vis[0]+step < 0) {
+                            step = -vis[0];
+                            overflow = true;
+                        }
+                    }
+                    
+                    // Set active item.
+                    if(_active.classList.contains('active'))
+                        _active.classList.remove('active');
+                    if(step != 0) {
+                        for (var i = 0; i < vis.length; i++) {
+                            vis[i] += step;
+                        }
+                        refreshPagination(_paging);
+                        // Set style of hided icon if exist.
+                        if(vis[0] == 0 && hided_left) {
+                            // hided Hided-left icon.
+                            hided_left.style.display = 'none';
+                        } else if(vis[visibleCount-1] == totalCount-1 && hided_right){
+                            hided_right.style.display = 'none';
+                        } else {
+                            hided_left.style.display = 'inline-block';
+                            hided_right.style.display = 'inline-block';
+                        }
+                        // Set active item.
+                        if(overflow) {
+                            _active = _paging.querySelectorAll('.yuko-pagination_item')[middle_index+step+1];
+                        } else {
+                            _active = middle_item;
+                        }
+                    } else {
+                        if(vis[0] == 0 && hided_left) {
+                            // hided Hided-left icon.
+                            hided_left.style.display = 'none';
+                        }
+                        _active = _this;
+                    }
+                    if(!_active.classList.contains('active'))
+                        _active.classList.add('active');
+                }
+
+            }
+        }
+        Yuko.utility.addEvent(document, fingerdown, paginationHandler);
+    </script>
 </body>
 
 </html>

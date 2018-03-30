@@ -14,12 +14,17 @@
       margin: 0 auto;
       top: 200px;
     }
+
+    .yuko-snackbar_container {
+      -webkit-tap-highlight-color: transparent;
+      -webkit-tap-highlight-color: rgba(0,0,0,0);
+    }
   </style>
 </head>
 
 <body>
   <div class="yuko-snackbar_container">
-    <div class="yuko-button yuko-button_raised yuko-button_colored yuko-button_bordered yuko-button_ripple">
+    <div class="yuko-snackbar_trigger yuko-button yuko-button_raised yuko-button_colored yuko-button_bordered yuko-button_ripple">
       <i class="material-icons">share</i>
     </div>
     <div class="yuko-snackbar">
@@ -29,22 +34,67 @@
   </div>
   <script src="../common/script/Yuko.js"></script>
   <script>
-    var snackbarIcons = document.querySelectorAll('.yuko-snackbar_container .yuko-button');
-    for (var i = 0; i < snackbarIcons.length; i++) {
-      Yuko.utility.addEvent(snackbarIcons[i], 'click', function (evt) {
-        var snackbar = this.nextElementSibling,
-          iconBound = this.getBoundingClientRect(),
-          snackbarBound = snackbar.getBoundingClientRect();
-        if (snackbar.className.indexOf('is-active') == -1) {
-          snackbar.className += ' is-active';
+    
+    function isMobile() {
+      if ((navigator.userAgent.match(/(iPhone|iPod|Android|ios|SymbianOS)/i))) {
+        return true;
+      }
+      return false;
+    }
+
+    var fingerdown, fingermove, fingerup;
+    if(isMobile()) {
+      fingerdown = 'touchstart';
+      fingermove = 'touchmove';
+      fingerup = 'touchend';
+    }else{
+      fingerdown = 'mousedown';
+      fingermove = 'mousemove';
+      fingerup = 'mouseup';
+    }
+
+    var snackbar_trigger = document.querySelectorAll('.yuko-snackbar_trigger');
+    // for (var i = 0; i < snackbar_trigger.length; i++) {
+    //   Yuko.utility.addEvent(snackbar_trigger[i], 'click', function (evt) {
+    //     var snackbar = this.nextElementSibling,
+    //       iconBound = this.getBoundingClientRect(),
+    //       snackbarBound = snackbar.getBoundingClientRect();
+    //     if (!snackbar.classList.contains('is-active')) {
+    //       snackbar.classList.add('is-active');
+    //     }
+    //     setTimeout(function () {
+    //       if (snackbar.classList.contains('is-active')) {
+    //         snackbar.classList.remove('is-active');
+    //       }
+    //     }, 4000);
+    //   });
+    // }
+    var snackbarHandler = function (evt) {
+      // snackbar: snackbar
+      var _target = evt.target,
+      snackbar,
+      snackbarBound;
+
+      if(_target.classList.contains('yuko-snackbar_trigger')) {
+        snackbar = _target.nextElementSibling;
+      }
+      if(_target.parentElement.classList.contains('yuko-snackbar_trigger')) {
+        snackbar = _target.parentElement.nextElementSibling;
+      }
+      if(snackbar != undefined) {
+        snackbarBound = snackbar.getBoundingClientRect();
+        if (!snackbar.classList.contains('is-active')) {
+          snackbar.classList.add('is-active');
         }
         setTimeout(function () {
-          if (snackbar.className.indexOf('is-active') > -1) {
-            snackbar.className = snackbar.className.replace(' is-active', '');
+          if (snackbar.classList.contains('is-active')) {
+            snackbar.classList.remove('is-active');
           }
         }, 4000);
-      });
+      }
+
     }
+    Yuko.utility.addEvent(document, fingerdown, snackbarHandler);
   </script>
 </body>
 

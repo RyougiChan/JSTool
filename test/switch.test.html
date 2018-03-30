@@ -210,7 +210,7 @@
         }
         _last = _this.lastElementChild;
         if (isCancel) {
-          _this.className = _this.className.replace(' is-checked', '');
+          _this.classList.remove('is-checked');
         }
       }
     });
