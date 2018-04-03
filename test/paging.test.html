@@ -170,10 +170,8 @@
         }
 
         for (var i = 0; i < paginations.length; i++) {
-            // yuko-pagination.
-            var p = paginations[i],
-                // visible items index.
-                visible = [];
+            // visible items index.
+            var visible = [];
             if(totalCount <= visibleCount) {
                 for (var k = 0; k < totalCount; k++) {
                     visible.push(k);

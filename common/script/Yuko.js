@@ -30,6 +30,13 @@
         global.Yuko = global.YUKO = global.yuko = Object();
     }
 
+    Yuko.fields = (function () {
+        var pagination_visible_arr = [];
+        return {
+            pagination_visible_arr: pagination_visible_arr
+        };
+    })();
+
     Yuko.polyfill = (function () {
         // String.prototype.endsWith polyfill
         /*! http://mths.be/endswith v0.2.0 by @mathias */
@@ -123,6 +130,49 @@
                 return A;
             };
         }
+
+        // classList Polyfill
+        if (!("classList" in document.documentElement)) {
+            Object.defineProperty(HTMLElement.prototype, 'classList', {
+                get: function () {
+                    var self = this;
+                    function update(fn) {
+                        return function (value) {
+                            var classes = self.className.split(/\s+/g),
+                                index = classes.indexOf(value);
+
+                            fn(classes, index, value);
+                            self.className = classes.join(" ");
+                        }
+                    }
+
+                    return {
+                        add: update(function (classes, index, value) {
+                            if (!~index) classes.push(value);
+                        }),
+
+                        remove: update(function (classes, index) {
+                            if (~index) classes.splice(index, 1);
+                        }),
+
+                        toggle: update(function (classes, index, value) {
+                            if (~index)
+                                classes.splice(index, 1);
+                            else
+                                classes.push(value);
+                        }),
+
+                        contains: function (value) {
+                            return !!~self.className.split(/\s+/g).indexOf(value);
+                        },
+
+                        item: function (i) {
+                            return self.className.split(/\s+/g)[i] || null;
+                        }
+                    };
+                }
+            });
+        }
     })();
 
     Yuko.utility = (function () {
@@ -176,7 +226,7 @@
                 var d = true,
                     n = A.length,
                     idx = new Array(n), // Output vector with row permutations from partial pivoting
-                    vv = new Array(n);  // Scaling information
+                    vv = new Array(n); // Scaling information
 
                 for (var i = 0; i < n; i++) {
                     var max = 0;
@@ -295,16 +345,16 @@
          * @param {string} bp Cubic bezier adjust point format in 'cubic-bezier(.17,.67,.78,.31)' or 'cubic-bezier(.17,.67,.78,.31,.17,.67,.78,.31)'
          * @param {number} x Progress
          * @property obsolete
-         *///TOFIX: ERROR calculation result is wrong
+         */ //TOFIX: ERROR calculation result is wrong
         function cubicBezierFunction(bp, x) {
             var calcFp = function (ps, t) {
                 return parseFloat((Math.pow(1 - t, 3) * ps[0] + 3 * t * Math.pow(1 - t, 2) * ps[1] + 3 * (1 - t) * Math.pow(t, 2) * ps[2] + Math.pow(t, 3) * ps[3]).toLocaleString());
             }
             var bpInArray = bp.substring(bp.indexOf('(') + 1, bp.indexOf(')')).split(',').map(function (i) { return parseFloat(i) }),
                 // Cubic Bézier curves points
-                ps = bpInArray.length < 4 ? [0, 0, 0, 0, 1, 1, 1, 1]
-                    : bpInArray.length >= 4 && bpInArray.length < 8 ? [].concat([0, 0], bpInArray.slice(0, 4), [1.0, 1.0])
-                        : bpInArray.length > 8 ? bpInArray.slice(0, 8) : bpInArray,
+                ps = bpInArray.length < 4 ? [0, 0, 0, 0, 1, 1, 1, 1] :
+                    bpInArray.length >= 4 && bpInArray.length < 8 ? [].concat([0, 0], bpInArray.slice(0, 4), [1.0, 1.0]) :
+                        bpInArray.length > 8 ? bpInArray.slice(0, 8) : bpInArray,
                 // parameters to calculate a, b, c, d
                 ft1 = 0.1,
                 ft2 = 0.8,
@@ -321,12 +371,13 @@
                     [Math.pow(fpx2, 3), Math.pow(fpx2, 2), fpx2, 1],
                     [1, 1, 1, 1]
                 ], [0, fpy1, fpy2, 1]),
-                a = cs[0], b = cs[1], c = cs[2], d = cs[3];
+                a = cs[0],
+                b = cs[1],
+                c = cs[2],
+                d = cs[3];
 
             return parseFloat((a * Math.pow(x, 3) + b * Math.pow(x, 2) + c * x + d).toLocaleString());
         }
-
-
 
         /**
          * Elements must implement biggerThan() or greaterThan(), or otherwise can be compared via 'greater than' sign
@@ -578,7 +629,6 @@
             } else {
                 target['on' + type] = listener;
             }
-            return listener;
         }
 
         /**
@@ -587,7 +637,7 @@
          * @param {Element} target target The element to attach listener.
          * @param {string} type The type name of the event.
          */
-        function removeEvent(target, type, listener) {
+        function removeEvent(target, type) {
             if (!target || !type || !listener) return;
             if (target.removeEventListener) {
                 target.removeEventListener(type, listener);
@@ -632,7 +682,7 @@
             }
         }
 
-       /**
+        /**
          * Create a specific animaion
          * 
          * @param {Element} ele The element to execute animation.
@@ -654,7 +704,7 @@
                 easing = options.easing || 'linear',
                 easings = options.easings || [],
                 start = options.start || function () { },
-                process = options.process || function() { },
+                process = options.process || function () { },
                 complete = options.complete || function () { },
                 cycle = options.cycle || false;
 
@@ -662,11 +712,65 @@
 
             var mainEntry = (function () {
                 // Initial parameters
-                var count = 0, progressNum = 0, tsNum = 0, t = 0, timespan = 0, index = 0, time = 0,
-                    zeroGapIndex = [], origin = [], target = [], keyframes = [], x = [], xs = [], y = [], ys = [], animTypes = [], psList = [], propInArray = [],trueTimeframes = [], trueKeyFrames = [], indexs = [],
+                var count = 0,
+                    progressNum = 0,
+                    tsNum = 0,
+                    t = 0,
+                    timespan = 0,
+                    index = 0,
+                    time = 0,
+                    zeroGapIndex = [],
+                    origin = [],
+                    target = [],
+                    keyframes = [],
+                    x = [],
+                    xs = [],
+                    y = [],
+                    ys = [],
+                    animTypes = [],
+                    psList = [],
+                    propInArray = [],
+                    trueTimeframes = [],
+                    trueKeyFrames = [],
+                    indexs = [],
                     animType, style, bpInArray, ps,
                     supportProps = {
-                        backgroundPosition: 'backgroundPosition', borderWidth: 'borderWidth', borderBottomWidth: 'borderBottomWidth', borderLeftWidth: 'borderLeftWidth', borderRightWidth: 'borderRightWidth', borderTopWidth: 'borderTopWidth', borderSpacing: 'borderSpacing', margin: 'margin', marginBottom: 'marginBottom', marginLeft: 'marginLeft', marginRight: 'marginRight', marginTop: 'marginTop', outlineWidth: 'outlineWidth', padding: 'padding', paddingBottom: 'paddingBottom', paddingLeft: 'paddingLeft', paddingRight: 'paddingRight', paddingTop: 'paddingTop', height: 'height', width: 'width', maxHeight: 'maxHeight', maxWidth: 'maxWidth', minHeight: 'minHeight', minWidth: 'minWidth', font: 'font', fontSize: 'fontSize', bottom: 'bottom', left: 'left', right: 'right', top: 'top', letterSpacing: 'letterSpacing', wordSpacing: 'wordSpacing', lineHeight: 'lineHeight', textIndent: 'textIndent', opacity: 'opacity', clip: 'clip'
+                        backgroundPosition: 'backgroundPosition',
+                        borderWidth: 'borderWidth',
+                        borderBottomWidth: 'borderBottomWidth',
+                        borderLeftWidth: 'borderLeftWidth',
+                        borderRightWidth: 'borderRightWidth',
+                        borderTopWidth: 'borderTopWidth',
+                        borderSpacing: 'borderSpacing',
+                        margin: 'margin',
+                        marginBottom: 'marginBottom',
+                        marginLeft: 'marginLeft',
+                        marginRight: 'marginRight',
+                        marginTop: 'marginTop',
+                        outlineWidth: 'outlineWidth',
+                        padding: 'padding',
+                        paddingBottom: 'paddingBottom',
+                        paddingLeft: 'paddingLeft',
+                        paddingRight: 'paddingRight',
+                        paddingTop: 'paddingTop',
+                        height: 'height',
+                        width: 'width',
+                        maxHeight: 'maxHeight',
+                        maxWidth: 'maxWidth',
+                        minHeight: 'minHeight',
+                        minWidth: 'minWidth',
+                        font: 'font',
+                        fontSize: 'fontSize',
+                        bottom: 'bottom',
+                        left: 'left',
+                        right: 'right',
+                        top: 'top',
+                        letterSpacing: 'letterSpacing',
+                        wordSpacing: 'wordSpacing',
+                        lineHeight: 'lineHeight',
+                        textIndent: 'textIndent',
+                        opacity: 'opacity',
+                        clip: 'clip'
                     },
                     anim = {
                         'ease': 'cubic-bezier(.25,.1,.25,1)',
@@ -762,13 +866,13 @@
                     for (var i = 0; i < animTypes.length; i++) {
                         bpInArray = animTypes[i].substring(animTypes[i].indexOf('(') + 1, animTypes[i].indexOf(')')).split(',').map(function (i) { return parseFloat(i) });
                         // Cubic Bézier curves points
-                        ps = bpInArray.length < 4 ? [0, 0, 0, 0, 1, 1, 1, 1]
-                            : bpInArray.length >= 4 && bpInArray.length < 8 ? [].concat([0, 0], bpInArray.slice(0, 4), [1.0, 1.0]) : bpInArray.length > 8 ? bpInArray.slice(0, 8) : bpInArray;
+                        ps = bpInArray.length < 4 ? [0, 0, 0, 0, 1, 1, 1, 1] :
+                            bpInArray.length >= 4 && bpInArray.length < 8 ? [].concat([0, 0], bpInArray.slice(0, 4), [1.0, 1.0]) : bpInArray.length > 8 ? bpInArray.slice(0, 8) : bpInArray;
                         if (propInArray[i] == 'margin' || propInArray[i] == 'padding' || propInArray[i] == 'clip') {
                             var x = 0;
                             while (x < 4) {
                                 psList.push(ps);
-                            x++;
+                                x++;
                             }
                         } else {
                             psList.push(ps);
@@ -776,7 +880,9 @@
                     }
 
                     for (var k = 0; k < count; k++) {
-                        t = 0; x = []; y = [];
+                        t = 0;
+                        x = [];
+                        y = [];
                         for (var i = 0; i < tsNum; i++) {
                             if (psList[k]) {
                                 x.push(calccubicBezierPoint([psList[k][0], psList[k][2], psList[k][4], psList[k][6]], t));
@@ -794,7 +900,10 @@
 
                 // Calculation of linear time keyframe.
                 for (var i = 0; i < count; i++) {
-                    var tempKeyFrames = [], tempKeyFrame = origin[i], per = 0, gap = target[i] - origin[i];
+                    var tempKeyFrames = [],
+                        tempKeyFrame = origin[i],
+                        per = 0,
+                        gap = target[i] - origin[i];
                     for (var j = 0; j < tsNum; j++) {
                         tempKeyFrames.push(tempKeyFrame);
                         // cubic-bezier curve's x is not in linear state. so the calculation result of tempKeyFrame cannot be used immediately.
@@ -863,7 +972,8 @@
                 })();
 
                 var go = function () {
-                    var pi = 0, ti = 0;
+                    var pi = 0,
+                        ti = 0;
                     for (var prop in props) {
                         ti = indexs[pi][index];
                         if (prop === 'clip') {
@@ -895,6 +1005,43 @@
             })();
         }
 
+
+        /**
+         * function for adding vendor prefixes for css property
+         * @param {string} property CSS property
+         * @param {string} value CSS property value
+         * @param {string} prefix CSS property polyfill prefix
+         */
+        function crossBrowser(property, value, prefix) {
+
+            function ucase(string) {
+                return string.charAt(0).toUpperCase() + string.slice(1);
+            }
+
+            var vendor = ['webkit', 'moz', 'ms', 'o'],
+                properties = {};
+
+            for (var i = 0; i < vendor.length; i++) {
+                if (prefix) {
+                    value = value.replace(prefix, '-' + vendor[i] + '-' + prefix);
+                }
+                properties[ucase(vendor[i]) + ucase(property)] = value;
+            }
+            properties[property] = value;
+
+            return properties;
+        }
+
+        /**
+         * Check if current device is a mobile device.
+         */
+        function isMobile() {
+            if ((navigator.userAgent.match(/(iPhone|iPod|Android|ios|SymbianOS)/i))) {
+                return true;
+            }
+            return false;
+        }
+
         return {
             calcCubicEquation: calcCubicEquation,
             calcQuadraticEquation: calcQuadraticEquation,
@@ -905,14 +1052,15 @@
             setBoundingRectangle: setBoundingRectangle,
             roundTo: roundTo,
             addEvent: addEvent,
-            removeEvent: removeEvent,
             cloneObject: cloneObject,
             isBrowserSupportProp: isBrowserSupportProp,
             requestAnimFrame: requestAnimFrame,
             cubicBezierFunction: cubicBezierFunction,
             gaussianElimination: gaussianElimination,
             getBrowserType: getBrowserType,
-            animate: animate
+            animate: animate,
+            crossBrowser: crossBrowser,
+            isMobile: isMobile
         }
     })();
 
@@ -923,16 +1071,27 @@
             // Document element
             var header = document.getElementsByTagName('header').item(0);
             var footer = document.getElementsByTagName('footer').item(0);
-            var main = document.getElementsByTagName('main').item(0);
+            var mains = document.getElementsByTagName('main');
             var firstYukoContent = document.querySelectorAll('.yuko-content').item(0);
             // Element property
             var headerHeight = Yuko.utility.getComputedSizeInPx(header, 'height');
             var firstPageHeight = Yuko.utility.getComputedSizeInPx(firstYukoContent, 'height');
 
             // Default footer style
-            if (footer) footer.style.top = (firstPageHeight < document.body.clientHeight - headerHeight ? document.body.clientHeight - headerHeight : firstPageHeight + headerHeight).toString() + 'px';
+            // if (footer) footer.style.top = (firstPageHeight < document.body.clientHeight - headerHeight ? document.body.clientHeight - headerHeight : firstPageHeight + headerHeight).toString() + 'px';
             // Default main style
-            if (main) main.style.height = (document.body.clientHeight - 112) + 'px';
+            for (var i = 0; i < mains.length; i++) {
+                if (mains[i] && mains[i].parentNode.classList.contains('yuko-tab_container')) {
+                    mains[i].style.height = mains[i].children[0].offsetHeight + 'px';
+                }
+                else {
+                    window.onload = (function (i) {
+                        return function () {
+                            mains[i].style.height = mains[i].children[0].offsetHeight + 'px';
+                        }
+                    })(i);
+                }
+            }
         }
 
         // Initial Carousel Style
@@ -976,26 +1135,46 @@
          * @param {Function} drawerContainer Yuko.widget.navigationDrawer(drawer, hamburger, options) function
          * @param {Function} pageContainer Yuko.widget.pageContainer(container, option, onPageContainerReady, onAnimationComplete) function
          */
-        function bindDrawerNavItemToPage(drawer, drawerContainer, pageContainer) {
+        function bindDrawerNavItemToPage(drawer, page, drawerContainer, pageContainer) {
             var drawerList = document.querySelectorAll('#' + drawer.id + ' li');
             for (var i = 0; i < drawerList.length; i++) {
                 drawerList[i].addEventListener('touchend', (function (i) {
                     return function () {
                         // Switch main page to show
                         pageContainer.slideTo(i);
+                        // Set Nav Title
+                        var title = document.querySelector('.yuko-nav-title'),
+                            main = document.querySelector('#main-container_m > #yuko-main-container > .yuko-main-content.yuko-page-container'),
+                            tabMain = document.querySelectorAll('.yuko-tab_container > .yuko-main-content.yuko-page-container');
+                        title.innerHTML = this.innerHTML;
+                        main.classList.remove('fullscreen');
+                        // Reset main's height
+                        main.style.height = main.children[i].offsetHeight + 'px';
+
+                        for (var k = 0; k < tabMain.length; k++) {
+                            tabMain[k].classList.remove('fullscreen');
+                        }
+                        for (var h = 0; h < page.children.length; h++) {
+                            page.children[h].scroll(0, 0);
+                        }
+                        document.documentElement.scroll(0, 0);
                     }
                 })(i));
             }
         }
 
-        function bindListItemToPage(list, pageContainer) {
+        function bindListItemToPage(list, content, pageContainer) {
             var listItems = list.children;
             for (var i = 0; i < listItems.length; i++) {
-                if(!listItems[i].getAttribute('data-disabled')) {
+                if (!listItems[i].getAttribute('data-disabled')) {
                     Yuko.utility.addEvent(listItems[i], 'click', (function (i) {
                         return function () {
                             // Switch main page to show
                             pageContainer.slideTo(i);
+                            for (var k = 0; k < content.children.length; k++) {
+                                content.children[k].scroll(0, 0);
+                                document.documentElement.scroll(0, 0);
+                            }
                         };
                     })(i));
                 }
@@ -1018,15 +1197,14 @@
          */
         function rippleEffect(event) {
             event.stopPropagation();
-            var _this = event.target;
-            
-            var rect = _this.getBoundingClientRect();
-            var ripple = _this.querySelector('.ripple');
+            // var target = event.target;
+            var rect = this.getBoundingClientRect();
+            var ripple = this.querySelector('.ripple');
             if (!ripple) {
                 ripple = document.createElement('span');
                 ripple.className = 'ripple';
                 ripple.style.height = ripple.style.width = Math.max(rect.width, rect.height) + 'px';
-                _this.appendChild(ripple);
+                this.appendChild(ripple);
             }
             ripple.classList.remove('show');
             var top = (event instanceof MouseEvent ? event.clientY - rect.top - ripple.offsetHeight / 2 - document.body.scrollTop : event.changedTouches[0].pageY - rect.top - ripple.offsetHeight / 2 - document.body.scrollTop);
@@ -1174,6 +1352,9 @@
             var onWindowTouchStart = function (e) {
                 startPoint = e.changedTouches[0];
                 startTime = new Date().getTime();
+                if (startPoint.clientX < 16) {
+                    drawer.parentNode.style.position = 'fixed';
+                }
             };
 
             var onWindowTouchMove = function (e) {
@@ -1211,11 +1392,15 @@
                     showMenu(Yuko.utility.getComputedSizeInPx(drawer, 'left') > ((menuDisplayed ? -0.382 : -0.618) * width));
                 }
                 thereShouldBeAnAnimation = false;
+                if (drawer.offsetLeft === -drawer.offsetWidth) {
+                    drawer.parentNode.style.position = '';
+                }
             };
 
             var onHamburgerTouchEnd = function (e) {
                 endPoint = e.changedTouches[0];
                 // Show menu and stopImmediatePropagation if hamburger button is clicked
+                drawer.parentNode.style.position = 'fixed';
                 if (endPoint.clientX <= hamburgerRight && endPoint.clientX >= hamburgerLeft && endPoint.clientY <= hamburgerBottom && endPoint.clientY >= hamburgerTop) {
                     showMenu(true);
                     e.stopImmediatePropagation();
@@ -1256,8 +1441,13 @@
                         drawerList[i].className = 'yuko-nav-item item-selected'
                         // Adjust position of footer
                         footer.style.top = (pageList[i].offsetHeight < document.body.clientHeight - 56 ? document.body.clientHeight - 56 : pageList[i].offsetHeight + 56) + 'px';
-                        // Adjust height of main
-                        document.getElementsByTagName('main').item(0).style.height = pageList[i].offsetHeight + 'px';
+                        // Adjust overflow of main
+                        // if (Yuko.utility.getComputedSizeInPx(document.querySelectorAll('main > div').item(i), 'height') > document.body.clientHeight - 56) {
+                        //     document.getElementsByTagName('main').item(0).style.overflowY = 'scroll';
+                        // } else {
+                        //     document.getElementsByTagName('main').item(0).style.overflowY = 'hidden';                           
+                        // }
+                        document.querySelector('#yuko-main-container > .yuko-main-content').scrollTop = 0;
                         showMenu(false);
                     }
                 })(i));
@@ -1348,7 +1538,7 @@
         function pageContainer(container, option, onPageContainerReady, onAnimationComplete) {
             container.classList.add('yuko-page-container');
             var width = win.document.body.offsetWidth;
-            container.style.width = width + 'px';
+            //container.style.width = width + 'px';
             var allowSwipe = option.allowSwipe ? true : false;
             var timeSpan = option.timeSpan ? option.timeSpan : 300;
             var animationType = option.animationType ? option.animationType : 'linear';
@@ -1434,8 +1624,7 @@
                         for (var i = 0; i < pageCount; i++) {
                             pageList[i].style.left = lastLeft + width * i + 'px';
                         }
-                    } else {
-                    }
+                    } else { }
                 }
             };
 
@@ -1622,7 +1811,7 @@
          * @param {NodeList|HTMLCollection} carouselList Carousel items' collection
          * @param {Element} preButton A button to switch to Carousel's previous display order
          * @param {Element} nextButton A button to switch to Carousel's next display order
-         * @param {{positions : ([number]|undefined), duration : number}=} options Parameters to initial Carousel
+         * @param {{positions : ([number]|undefined), duration : number|string, autoplay : boolean, autoplayDuration : number|string}=} options Parameters to initial Carousel
          *          positions=: The position list of carousel items.
          *                      If the number of carousel items are a even number, there should be four Array items in positions,
          *                          for example --- [['100%', '100%', '0', '0'], 
@@ -1635,18 +1824,35 @@
          *                                          ['60%', '60%', '20%', '12.5%'],
          *                                          ['60%', '60%', '20%', '32.5%'], 
          *                                          ['80%', '80%', '10%', '32.5%']] --- 
-         *          duration=: Animation excution time in second.
+         *          duration=: Animation excution time in second. Default: .3s.
+         *          autoplay=: Is Animation autoplay. Default: false.
+         *          autoplayDuration=: Duration for autoplay in milisecond. Default: 3000.
          * @return Return null if carouselList is undefined or carouselList's length is less than 2
          */
         function carousel(carouselList, preButton, nextButton, options) {
 
             if (!carouselList || carouselList.length < 2) return;
 
-            var len = carouselList.length, duration = options.duration || .3;
-            var nextItemList = [], positionValues = [];
-            // Item position span
-            var positionProgress = [];
-            var prePositionSpan = null, nextPositionSpan = null, positionProgressCopy = null, tempPositionSpan = null;
+            var len = carouselList.length,
+                duration = .3,
+                autoplay = false,
+                autoplayDuration = 3000,
+                nextItemList = [],
+                positionValues = [],
+                // Item position span
+                positionProgress = [],
+                prePositionSpan = null,
+                nextPositionSpan = null,
+                positionProgressCopy = null,
+                tempPositionSpan = null;
+
+            // Initialze options
+            if (options) {
+                if (options.duration) duration = parseInt(options.duration);
+                if (options.autoplay) autoplay = options.autoplay;
+                if (options.autoplayDuration) autoplayDuration = parseInt(options.autoplayDuration);
+            }
+
             for (var i = 0; i < carouselList.length; i++) {
                 positionProgress.push([]);
             }
@@ -1681,8 +1887,7 @@
                 }
                 if (carousel.length % 2 === 0) {
                     if (options.positions.length !== 4) return false;
-                }
-                else {
+                } else {
                     if (options.positions.length !== 5) return false;
                 }
                 return true;
@@ -1725,7 +1930,10 @@
                 var positionCopy = Yuko.utility.cloneObject(position);
 
                 var refreshTime = duration * 60;
-                var pos = null, posCopy = null, posCopyTemp = null, dataZero = null;
+                var pos = null,
+                    posCopy = null,
+                    posCopyTemp = null,
+                    dataZero = null;
                 var next = 0;
                 /**
                  * Load data for every progress
@@ -1956,8 +2164,7 @@
                     if (Yuko.utility.isBrowserSupportProp('transition')) {
                         // console.log(positionValues[i]);
                         Yuko.utility.setBoundingRectangle(nextItemList[i], positionValues[i]);
-                    }
-                    else {
+                    } else {
                         //CSS transition is not support
                         (function (i) {
                             var flag = 0;
@@ -1979,7 +2186,12 @@
                 document.querySelector('#yuko-carousel-list > ul').setAttribute('data-page-index', visualPageIndex + '');
             }
 
-            // cssTransitionPolyfill(position.oddNumberItem, {}, .1);
+            if (autoplay) {
+                setInterval(function () {
+                    nextButton.click();
+                }
+                    , autoplayDuration);
+            }
         }
 
         /**
@@ -1994,7 +2206,7 @@
          *          hasBottomBar=: If there should be a bottom navigation bar.
          *          duration=: Duration to switch carousel item.
          * @return Return null if carouselList is undefined or carouselList's length is less than 2
-         */// TODO: Add isAuto; Using Yuko.util.animate rather than CSS3 transition.
+         */ // TODO: Add isAuto; Using Yuko.util.animate rather than CSS3 transition.
         function carouselV2(carouselList, type, options) {
             if (!carouselList || carouselList.length < 2) return;
             // Public parameter
@@ -2003,8 +2215,10 @@
                 docHeight = document.documentElement.clientHeight,
                 carouselContainer = document.querySelector('.yuko-carousel-v2-container'),
                 carousel = document.querySelector('.yuko-carousel-v2'),
-                width = carouselContainer.offsetWidth, height = carouselContainer.offsetHeight,
-                duration, iconList, preButton, nextButton, isResizable = false, isAuto;
+                width = carouselContainer.offsetWidth,
+                height = carouselContainer.offsetHeight,
+                duration, iconList, preButton, nextButton, isResizable = false,
+                isAuto;
 
             if (options) {
                 if (options.duration) duration = options.duration;
@@ -2106,8 +2320,7 @@
                     }
                     if (curIndex != carouselList.length - 1) {
                         ChangeSliderAuto();
-                    }
-                    else {
+                    } else {
                         carousel.style.marginLeft = '0%';
                         if (iconList) {
                             iconList[iconList.length - 1].classList.remove('on');
@@ -2122,17 +2335,504 @@
             }
 
             switch (type) {
-                default:
-                    carouselType['default']();
+                default: carouselType['default']();
                     break;
             }
+        }
+
+        /**
+         * Make an Element to be a scalable element.
+         * 
+         * @param {string} openBtn Selector of element to trigger scale spread.
+         * @param {string} closeBtn Selector of element to trigger scale shrink.
+         * @param {string} scaleContainer Selector of element to be made as a scalabe element.
+         * @param {string} page Selector of the only element in scaleContainer(
+         *  its width is document's width, and height is document's height.
+         *  In other words, in most cases, it will be a full screen element
+         *  that always be set to visable in screen).
+         * @param {{radius?:(number|string), pageSize?:({width?:(string|number), height?:(string|number)}), duration:(number)}=} props 
+         * Parameters to initialize elements and effect.
+         * radius=: Radius of scaleContainer. Default: document.documentElement.offsetHeight.
+         * pageSize=: An object to define page 's size, including width and height. 
+         *            default: {width:document.documentElement.offsetWidth, height:document.documentElement.offsetHeight}.
+         * duration=: Time for scale effect.
+         * @example Yuko.widget.scaleContainer('.open', '.close', '.scale', '.page', {duration:200});
+         */
+        function scaleContainer(openBtn, closeBtn, scaleContainer, page, props) {
+            var close = document.querySelector(closeBtn),
+                open = document.querySelector(openBtn),
+                scale = document.querySelector(scaleContainer),
+                page = document.querySelector(page),
+                size = props.pageSize || { width: document.documentElement.offsetWidth, height: document.documentElement.offsetHeight },
+                duration = props.duration || 400,
+                radius = parseFloat(props.radius) || document.documentElement.offsetHeight;
+
+            page.style.width = (size.width ? size.width : document.documentElement.offsetWidth) + 'px';
+            page.style.height = (size.height ? size.height : document.documentElement.offsetHeight) + 'px';
+            scale.style.radius = '100%';
+            var onOpenClick = function (event) {
+                Yuko.utility.animate(scale, {
+                    properties: {
+                        width: radius * 4 + 'px',
+                        height: radius * 4 + 'px',
+                        opacity: 1
+                    },
+                    process: function () {
+                        scale.style.top = event.clientY + document.body.scrollTop - scale.offsetHeight / 2 + 'px';
+                        scale.style.left = event.clientX + document.body.scrollLeft - scale.offsetHeight / 2 + 'px';
+                        page.style.top = -scale.offsetTop + 'px';
+                        page.style.left = page.offsetTop * scale.offsetLeft / scale.offsetTop + 'px';
+                    },
+                    duration: duration
+                });
+            },
+                onCloseClick = function (event) {
+                    Yuko.utility.animate(scale, {
+                        properties: {
+                            width: 0,
+                            height: 0,
+                            opacity: 0
+                        },
+                        process: function () {
+                            scale.style.top = event.clientY + document.body.scrollTop - scale.offsetHeight / 2 + 'px';
+                            scale.style.left = event.clientX + document.body.scrollLeft - scale.offsetHeight / 2 + 'px';
+                            page.style.top = -scale.offsetTop + 'px';
+                            page.style.left = page.offsetTop * scale.offsetLeft / scale.offsetTop + 'px';
+                        },
+                        duration: duration
+                    });
+                };
+
+            Yuko.utility.addEvent(open, 'click', onOpenClick);
+            Yuko.utility.addEvent(close, 'click', onCloseClick);
+        }
+
+        /**
+         * Make an Element to be a pagination element.
+         * 
+         * @param {Element} pagination The pagination itself.
+         * @param {number} totalCount Number of all pagination items.
+         * @param {number} visibleCount Number of visible pagination items.
+         * @param {boolean} hasPreNextIcons Whether there are previous/next icons or not.
+         * @param {boolean} hasFirstLastIcons Whether there are first/last icons or not.
+         * @param {boolean} hasHidedIcons Whether there are hided icons or not.
+         * @example var p = document.querySelector('.yuko-pagination');
+                    Yuko.widget.pagination(p,30,5,true,true,true);
+         */
+        function pagination(pagination, totalCount, visibleCount, hasPreNextIcons, hasFirstLastIcons, hasHidedIcons) {
+
+            if (!pagination) {
+                console.log('error-param: Pagination required or parameter in invalid format.');
+                return;
+            }
+            if (!totalCount || totalCount < 0) {
+                console.log('error-param: Total count of pagination items required or parameter in invalid format.');
+                return;
+            }
+            if (!visibleCount || visibleCount < 0) {
+                console.log('error-param: Number of visible pagination items required or parameter in invalid format.');
+                return;
+            }
+            var hasFirstLast,hasHidedIcon,hasPreNext;
+            hasFirstLast = hasFirstLastIcons === undefined ? true : hasFirstLastIcons;
+            hasHidedIcon = hasHidedIcons === undefined ? true : hasHidedIcons;
+            hasPreNext = hasPreNextIcons === undefined ? true : hasPreNextIcons;
+
+            if(!hasFirstLast) {
+                var first_icon = pagination.querySelector('.first'),
+                    last_icon = pagination.querySelector('.last');
+                if(first_icon) first_icon.style.display = 'none';
+                if(last_icon) last_icon.style.display = 'none';
+            }
+            if(!hasHidedIcon) {
+                var hide_icons = pagination.querySelectorAll('.hide');
+                if(hide_icons){
+                    for (var i = 0; i < hide_icons.length; i++) {
+                        hide_icons[i].style.display = 'none';
+                    }
+                }
+            }
+            if(!hasPreNext) {
+                var pre_icon = pagination.querySelector('.forward'),
+                    next_icon = pagination.querySelector('.backward');
+                if(pre_icon) pre_icon.style.display = 'none';
+                if(next_icon) next_icon.style.display = 'none';
+            }
+
+            if (totalCount < visibleCount) {
+                visibleCount = totalCount;
+            }
+
+            var paginations = document.querySelectorAll('.yuko-pagination'),
+                pagination_items = pagination.querySelectorAll('.yuko-pagination_item'),
+                visibles = Yuko.fields.pagination_visible_arr,
+                visible = [];
+            // Refresh [all] pagination.
+            var refreshPagination = function (pagination) {
+                if (pagination) {
+                    // refresh pagination
+                    var index,
+                        items = pagination.querySelectorAll('.yuko-pagination_item');
+                    for (var o = 0; o < paginations.length; o++) {
+                        if (paginations[o] == pagination) {
+                            index = o;
+                        }
+                    }
+                    for (var i = 0; i < visibles[index].length; i++) {
+                        // Change content of items
+                        items[i].innerHTML = "<a>" + (visibles[index][i] + 1) + "</a>";
+                    }
+                } else {
+                    // refresh all
+                    for (var i = 0; i < visibles.length; i++) {
+                        var vis = visibles[i],
+                            paging = paginations[i],
+                            items = paging.querySelectorAll('.yuko-pagination_item');
+                        for (var j = 0; j < vis.length; j++) {
+                            // Change content of items
+                            items[j].innerHTML = "<a>" + (vis[j] + 1) + "</a>";
+                        }
+                    }
+                }
+            }
+
+            if (totalCount <= visibleCount) {
+                for (var k = 0; k < totalCount; k++) {
+                    visible.push(k);
+                }
+            } else {
+                for (var k = 0; k < visibleCount; k++) {
+                    visible.push(k);
+                }
+            }
+            // Hide unnecessary items
+            if (pagination_items.length > visibleCount) {
+                for (var i = visibleCount; i < pagination_items.length; i++) {
+                    pagination_items[i].style.display = 'none';
+                }
+            }
+            visibles.push(visible);
+            refreshPagination();
+
+            if (hasHidedIcon) {
+                var _paging = pagination;
+                if (totalCount > visible.length) {
+                    var hided_right = _paging.querySelectorAll('.hided')[1];
+                    if (hided_right)
+                        hided_right.style.display = 'inline-block';
+                }
+            }
+
+            // Pagination Event Handler
+            var fingerdown, fingermove, fingerup;
+            if (Yuko.utility.isMobile()) {
+                fingerdown = 'touchstart';
+                fingermove = 'touchmove';
+                fingerup = 'touchend';
+            } else {
+                fingerdown = 'mousedown';
+                fingermove = 'mousemove';
+                fingerup = 'mouseup';
+            }
+
+            var paginationHandler = function (evt) {
+                var _target = evt.target,
+                    // The active item.
+                    _active,
+                    // Index of active item in yuko-pagination_item list.
+                    a_index,
+                    // _this: yuko-pagination_item.
+                    _this,
+                    // Index of _this in yuko-pagination_item list.
+                    _this_index,
+                    // _paging: yuko-pagination.
+                    _paging,
+                    // visible: current pagination visible items.
+                    visible,
+                    // hided_left: Hided-left icon.
+                    hided_left,
+                    // hided_right: Hided-right icon.
+                    hided_right,
+                    // middel_item: middle yuko-pagination_item.
+                    middle_item,
+                    // middle_index: Index of middle-item
+                    middle_index;
+
+                if (_target == document.firstElementChild || !_target.parentElement) {
+                    // If press on a blank area.
+                    return;
+                }
+
+                // CASE-1: press on a function btn.
+                if (_target.parentElement.classList.contains('yuko-pagination_func')) {
+                    _this = _target.parentElement;
+                    _paging = _this.parentElement;
+
+                    if (_paging != pagination) return;
+
+                    var paging_list = _paging.querySelectorAll('.yuko-pagination_item');
+                    hided_left = _paging.querySelectorAll('.yuko-pagination_func.hided')[0];
+                    hided_right = _paging.querySelectorAll('.yuko-pagination_func.hided')[1];
+                    middle_index = Math.floor(visibleCount / 2);
+                    p_index; // Index of current pagination in paginations list.
+
+                    // Init p_index.
+                    for (var o = 0; o < paginations.length; o++) {
+                        if (paginations[o] == _paging) {
+                            p_index = o;
+                        }
+                    }
+                    // Init _active, a_index, _this_index.
+                    if (!_active) {
+                        for (var i = 0; i < paging_list.length; i++) {
+                            var item = paging_list[i];
+                            if (item.classList.contains('active')) {
+                                _active = item;
+                                a_index = i;
+                            }
+                            if (item == _this) {
+                                _this_index = i;
+                            }
+                        }
+                    }
+
+                    var vis = visibles[p_index];
+                    // CASE-1.1: press on forward btn.           
+                    if (_this.classList.contains('forward')) {
+                        if (vis[vis.length - 1] != totalCount - 1) {
+                            // This pagination visible list's last value hasn't reached the limited index.
+                            if (a_index < middle_index) {
+                                if (_active.classList.contains('active'))
+                                    _active.classList.remove('active');
+                                a_index++;
+                                _active = paging_list[a_index];
+                                if (!_active.classList.contains('active'))
+                                    _active.classList.add('active');
+                            } else {
+                                // Change visible item.
+                                for (var i = 0; i < vis.length; i++) {
+                                    vis[i]++;
+                                }
+                                // If has no right more, hide hided btn.
+                                if (vis[vis.length - 1] == totalCount - 1) {
+                                    hided_right.style.display = 'none';
+                                }
+                            }
+                            refreshPagination(_paging);
+                        } else {
+                            // This pagination has reached the limited index.
+                            // Just change the active item.
+                            if (a_index != visibleCount - 1) {
+                                if (_active.classList.contains('active'))
+                                    _active.classList.remove('active');
+                                a_index++;
+                                _active = paging_list[a_index];
+                                if (!_active.classList.contains('active'))
+                                    _active.classList.add('active');
+                                refreshPagination(_paging);
+                            }
+                        }
+                    }
+
+                    // CASE-1.2: press on backward btn.
+                    if (_this.classList.contains('backward')) {
+                        if (vis[0] != 0) {
+                            // This pagination visible list's first value hasn't reached the limited origin index.
+                            if (a_index > middle_index) {
+                                if (_active.classList.contains('active'))
+                                    _active.classList.remove('active');
+                                a_index--;
+                                _active = paging_list[a_index];
+                                if (!_active.classList.contains('active'))
+                                    _active.classList.add('active');
+                                refreshPagination(_paging);
+                            } else {
+                                // Change visible item.
+                                for (var i = 0; i < vis.length; i++) {
+                                    vis[i]--;
+                                }
+                                // If has no left more, hide hided btn.
+                                if (vis[0] == 0) {
+                                    hided_left.style.display = 'none';
+                                }
+                                refreshPagination(_paging);
+                            }
+                        } else {
+                            // This pagination has reached the limited index.
+                            // Just change the active item.
+                            if (a_index != 0) {
+                                if (_active.classList.contains('active'))
+                                    _active.classList.remove('active');
+                                a_index--;
+                                _active = paging_list[a_index];
+                                if (!_active.classList.contains('active'))
+                                    _active.classList.add('active');
+                                refreshPagination(_paging);
+                            }
+                        }
+                    }
+
+                    // CASE-1.3: press on to-the-first btn.
+                    if (_this.classList.contains('first')) {
+                        // Change visible item.
+                        for (var i = 0; i < vis.length; i++) {
+                            vis[i] = i;
+                        }
+                        // Change active item.
+                        if (_active.classList.contains('active'))
+                            _active.classList.remove('active');
+                        a_index = 0;
+                        _active = paging_list[a_index];
+                        if (!_active.classList.contains('active'))
+                            _active.classList.add('active');
+                        refreshPagination(_paging);
+                    }
+
+                    // CASE-1.4: press on to-the-last btn.
+                    if (_this.classList.contains('last')) {
+                        // Change visible item.
+                        for (var i = 0; i < vis.length; i++) {
+                            vis[i] = totalCount - visibleCount + i;
+                        }
+                        // Change active item.
+                        if (_active.classList.contains('active'))
+                            _active.classList.remove('active');
+                        a_index = visibleCount - 1;
+                        _active = paging_list[a_index];
+                        if (!_active.classList.contains('active'))
+                            _active.classList.add('active');
+                        refreshPagination(_paging);
+                    }
+
+                    if (vis[0] == 0 && hided_left) {
+                        // hided Hided-left icon.
+                        hided_left.style.display = 'none';
+                        if (totalCount > visibleCount) {
+                            hided_right.style.display = 'inline-block';
+                        }
+                    } else if (vis[visibleCount - 1] == totalCount - 1 && hided_right) {
+                        // hided Hided-right icon.
+                        hided_right.style.display = 'none';
+                        if (totalCount > visibleCount) {
+                            hided_left.style.display = 'inline-block';
+                        }
+                    } else {
+                        // display hided icon.
+                        hided_left.style.display = 'inline-block';
+                        hided_right.style.display = 'inline-block';
+                    }
+
+                }
+
+                // CASE-2: press on a pagination item.
+                if (_target.parentElement.classList.contains('yuko-pagination_item')) {
+                    _this = _target.parentElement;
+                    _paging = _this.parentElement.parentElement;
+
+                    if (_paging != pagination) return;
+
+                    hided_left = _paging.querySelectorAll('.yuko-pagination_func.hided')[0];
+                    hided_right = _paging.querySelectorAll('.yuko-pagination_func.hided')[1];
+                    middle_index = Math.floor(visibleCount / 2);
+                    middle_item = _paging.querySelectorAll('.yuko-pagination_item')[middle_index];
+
+                    // Init _active, a_index, _this_index.
+                    if (!_active) {
+                        for (var i = 0; i < _this.parentElement.children.length; i++) {
+                            var item = _this.parentElement.children[i];
+                            if (item.classList.contains('active')) {
+                                _active = item;
+                                a_index = i;
+                            }
+                            if (item == _this) {
+                                _this_index = i;
+                            }
+                        }
+                    }
+
+                    if (_this != _active) {
+                        // Get visible item list.
+                        var p_index; // Index of current pagination in paginations list.
+                        for (var o = 0; o < paginations.length; o++) {
+                            if (paginations[o] == _paging) {
+                                p_index = o;
+                            }
+                        }
+                        var vis = visibles[p_index],
+                            // step: Length of _this to middle item.
+                            step = Math.floor(_this_index - middle_index),
+                            // overflow: Is reach the limited index or not.
+                            overflow = false;
+                        // Change visible item list.
+                        if (step > 0) {
+                            if (vis[vis.length - 1] + step > totalCount - 1) {
+                                step = totalCount - vis[vis.length - 1] - 1;
+                                overflow = true;
+                            }
+
+                        }
+                        else if (step < 0) {
+                            if (vis[0] + step < 0) {
+                                step = -vis[0];
+                                overflow = true;
+                            }
+                        }
+
+                        // Set active item.
+                        if (_active.classList.contains('active'))
+                            _active.classList.remove('active');
+                        if (step != 0) {
+                            for (var i = 0; i < vis.length; i++) {
+                                vis[i] += step;
+                            }
+                            refreshPagination(_paging);
+                            // Set active item.
+                            if (overflow) {
+                                a_index = middle_index + step;
+                                _active = _paging.querySelectorAll('.yuko-pagination_item')[a_index];
+                            } else {
+                                a_index = middle_index;
+                                _active = middle_item;
+                            }
+                        } else {
+                            a_index = _this_index;
+                            _active = _this;
+                        }
+                        if (!_active.classList.contains('active'))
+                            _active.classList.add('active');
+
+                        // Set style of hided icon if exist.
+                        if (vis[0] == 0 && hided_left) {
+                            // hided Hided-left icon.
+                            hided_left.style.display = 'none';
+                            if (totalCount > visibleCount) {
+                                hided_right.style.display = 'inline-block';
+                            }
+                        } else if (vis[visibleCount - 1] == totalCount - 1 && hided_right) {
+                            // hided Hided-right icon.
+                            hided_right.style.display = 'none';
+                            if (totalCount > visibleCount) {
+                                hided_left.style.display = 'inline-block';
+                            }
+                        } else {
+                            hided_left.style.display = 'inline-block';
+                            hided_right.style.display = 'inline-block';
+                        }
+                    }
+
+                }
+            }
+            Yuko.utility.addEvent(document, fingerdown, paginationHandler);
+
         }
 
         return {
             navigationDrawer: navigationDrawer,
             pageContainer: pageContainer,
             carousel: carousel,
-            carouselV2: carouselV2
+            carouselV2: carouselV2,
+            scaleContainer: scaleContainer,
+            pagination: pagination
         };
 
     })();

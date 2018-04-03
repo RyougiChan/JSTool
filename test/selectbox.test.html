@@ -10,84 +10,20 @@
     <style>
         /*the container must be positioned relative:*/
 
-        .yuko-select {
-            position: relative;
-            width:200px;
-            font-family: Arial;
-            -webkit-tap-highlight-color: transparent;
-            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-            user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-        }
+        body.yuko-docs .yuko-select {position: relative; width:200px; font-family: Arial; -webkit-tap-highlight-color: transparent; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; }
+body.yuko-docs .yuko-select select {display: none;}
+body.yuko-docs .yuko-select .yuko-select_selected {background-color: #3f51b5; }
+body.yuko-docs .yuko-select .yuko-select_selected:after {position: absolute; content: ""; top: 14px; right: 10px; width: 0; height: 0; border: 6px solid transparent; border-color: #fff transparent transparent transparent; }
+body.yuko-docs .yuko-select_selected.yuko-select_arrow-active:after {border-color: transparent transparent #fff transparent; top: 7px; }
+body.yuko-docs .yuko-select_items div,.yuko-select_selected {position: relative; color: #ffffff; padding: 8px 16px; border: 1px solid transparent; border-color: transparent transparent rgba(255, 255, 255, 0.1) transparent; cursor: pointer; overflow: hidden; }
+body.yuko-docs .yuko-select_items {position: absolute; background-color: #3f51b5; top: 100%; left: 0; right: 0; z-index: 99; }
+body.yuko-docs .yuko-select_hide {display: none; }
+body.yuko-docs .yuko-select_items div:hover {background-color: rgba(0, 0, 0, 0.1); }
 
-        .yuko-select select {
-            display: none;
-            /*hide original SELECT element:*/
-        }
-
-        .yuko-select .yuko-select_selected {
-            background-color: #3f51b5;
-        }
-
-        /*style the arrow inside the select element:*/
-
-        .yuko-select .yuko-select_selected:after {
-            position: absolute;
-            content: "";
-            top: 14px;
-            right: 10px;
-            width: 0;
-            height: 0;
-            border: 6px solid transparent;
-            border-color: #fff transparent transparent transparent;
-        }
-
-        /*point the arrow upwards when the select box is open (active):*/
-
-        .yuko-select_selected.yuko-select_arrow-active:after {
-            border-color: transparent transparent #fff transparent;
-            top: 7px;
-        }
-
-        /*style the items (options), including the selected item:*/
-
-        .yuko-select_items div,
-        .yuko-select_selected {
-            position: relative;
-            color: #ffffff;
-            padding: 8px 16px;
-            border: 1px solid transparent;
-            border-color: transparent transparent rgba(255, 255, 255, 0.1) transparent;
-            cursor: pointer;
-            overflow: hidden;
-        }
-
-        /*style items (options):*/
-
-        .yuko-select_items {
-            position: absolute;
-            background-color: #3f51b5;
-            top: 100%;
-            left: 0;
-            right: 0;
-            z-index: 99;
-        }
-
-        /*hide the items when the select box is closed:*/
-
-        .yuko-select_hide {
-            display: none;
-        }
-
-        .yuko-select_items div:hover {
-            background-color: rgba(0, 0, 0, 0.1);
-        }
     </style>
 </head>
 
-<body>
+<body class="yuko-docs">
     <div class="yuko-select" style=" float:right">
         <div class="yuko-select_selected">Mini</div>
         <div class="yuko-select_items yuko-select_hide">
