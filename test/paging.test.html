@@ -68,6 +68,47 @@
             <a>&gt;</a>
         </span>
     </div>
+    <div class="yuko-pagination yuko-pagination__async">
+        <span class="yuko-pagination_func backward">
+            <a>&lt;</a>
+        </span>
+        <span class="yuko-pagination_func first">
+            <a>F</a>
+        </span>
+        <span class="yuko-pagination_func hided">
+            <a>...</a>
+        </span>
+        <ul class="yuko-pagination_list">
+            <li class="yuko-pagination_item active">
+                <a>7</a>
+            </li>
+            <li class="yuko-pagination_item">
+                <a>8</a>
+            </li>
+            <li class="yuko-pagination_item">
+                <a>9</a>
+            </li>
+            <li class="yuko-pagination_item">
+                <a>10</a>
+            </li>
+            <li class="yuko-pagination_item">
+                <a>11</a>
+            </li>
+            <li class="yuko-pagination_item">
+                <a>12</a>
+            </li>
+        </ul>
+        <span class="yuko-pagination_func hided">
+            <a>...</a>
+        </span>
+        <span class="yuko-pagination_func last">
+            <a>L</a>
+        </span>
+        <span class="yuko-pagination_func forward">
+            <a>&gt;</a>
+        </span>
+    </div>
+    
     <script src="../common/script/Yuko.js"></script>
     <script>
         function isMobile() {
@@ -89,7 +130,7 @@
         }
         // Init for paginations.
         var paginations = document.querySelectorAll('.yuko-pagination'),
-            totalCount = 30,
+            totalCount = 7,
             // All paginations visible items in Array.
             visibles = [],
             visibleCount = 6,
@@ -123,6 +164,9 @@
                     }
                 }
             }
+        }
+        if(totalCount < visibleCount) {
+            visibleCount = totalCount;
         }
 
         for (var i = 0; i < paginations.length; i++) {
@@ -175,23 +219,27 @@
                 hided_right,
                 // middel_item: middle yuko-pagination_item.
                 middle_item,
-                middle_index
-                ;
-
+                // middle_index: Index of middle-item
+                middle_index;
+            
+            // CASE-1: press on a function btn.
             if(_target.parentElement.classList.contains('yuko-pagination_func')){
-                // press on a function btn
                 _this = _target.parentElement;
                 _paging = _this.parentElement;
-                var paging_list = _paging.querySelectorAll('.yuko-pagination_item');
-                hided_left = _paging.querySelectorAll('.yuko-pagination_func.hided')[0];
-                hided_right = _paging.querySelectorAll('.yuko-pagination_func.hided')[1];
-                middle_index = Math.floor(visibleCount / 2);
-                var p_index; // Index of current pagination in paginations list.
+
+                var paging_list = _paging.querySelectorAll('.yuko-pagination_item'),
+                hided_left = _paging.querySelectorAll('.yuko-pagination_func.hided')[0],
+                hided_right = _paging.querySelectorAll('.yuko-pagination_func.hided')[1],
+                middle_index = Math.floor(visibleCount / 2),
+                p_index; // Index of current pagination in paginations list.
+
+                // Init p_index.
                 for (var o = 0; o < paginations.length; o++) {
                     if (paginations[o] == _paging) {
                         p_index = o;
                     }
                 }
+                // Init _active, a_index, _this_index.
                 if(!_active){
                     for (var i = 0; i < paging_list.length; i++) {
                         var item = paging_list[i];
@@ -205,10 +253,11 @@
                     }
                 }
 
-                var vis = visibles[p_index];            
+                var vis = visibles[p_index]; 
+                // CASE-1.1: press on forward btn.           
                 if (_this.classList.contains('forward')) {
-                    // press on forward.
                     if (vis[vis.length - 1] != totalCount - 1) {
+                        // This pagination visible list's last value hasn't reached the limited index.
                         if(a_index < middle_index) {
                             if(_active.classList.contains('active'))
                                 _active.classList.remove('active');
@@ -216,17 +265,20 @@
                             _active = paging_list[a_index];
                             if(!_active.classList.contains('active'))
                                 _active.classList.add('active');
-                            refreshPagination(_paging);
                         }else {
+                            // Change visible item.
                             for (var i = 0; i < vis.length; i++) {
                                 vis[i]++;
                             }
+                            // If has no right more, hide hided btn.
                             if(vis[vis.length-1] == totalCount-1) {
                                 hided_right.style.display = 'none';
                             }
-                            refreshPagination(_paging);
                         }
+                        refreshPagination(_paging);
                     } else {
+                        // This pagination has reached the limited index.
+                        // Just change the active item.
                         if (a_index != visibleCount-1) {
                             if(_active.classList.contains('active'))
                                 _active.classList.remove('active');
@@ -239,9 +291,10 @@
                     }
                 }
 
+                // CASE-1.2: press on backward btn.
                 if (_this.classList.contains('backward')) {
-                    // press on backward.
                     if (vis[0] != 0) {
+                        // This pagination visible list's first value hasn't reached the limited origin index.
                         if(a_index > middle_index) {
                             if(_active.classList.contains('active'))
                                 _active.classList.remove('active');
@@ -251,15 +304,19 @@
                                 _active.classList.add('active');
                             refreshPagination(_paging);
                         }else{
+                            // Change visible item.
                             for (var i = 0; i < vis.length; i++) {
                                 vis[i]--;
                             }
+                            // If has no left more, hide hided btn.
                             if(vis[0] == 0) {
                                 hided_left.style.display = 'none';
                             }
                             refreshPagination(_paging);
                         }
                     } else {
+                        // This pagination has reached the limited index.
+                        // Just change the active item.
                         if (a_index != 0) {
                             if(_active.classList.contains('active'))
                                 _active.classList.remove('active');
@@ -272,10 +329,13 @@
                     }
                 }
 
+                // CASE-1.3: press on to-the-first btn.
                 if (_this.classList.contains('first')) {
+                    // Change visible item.
                     for (var i = 0; i < vis.length; i++) {
                         vis[i] = i;                        
                     }
+                    // Change active item.
                     if (_active.classList.contains('active'))
                         _active.classList.remove('active');
                     a_index = 0;
@@ -284,11 +344,14 @@
                         _active.classList.add('active');
                     refreshPagination(_paging);
                 }
-                
+
+                // CASE-1.4: press on to-the-last btn.
                 if (_this.classList.contains('last')) {
+                    // Change visible item.
                     for (var i = 0; i < vis.length; i++) {
                         vis[i] = totalCount - visibleCount + i;
                     }
+                    // Change active item.
                     if (_active.classList.contains('active'))
                         _active.classList.remove('active');
                     a_index = visibleCount - 1;
@@ -305,19 +368,22 @@
                         hided_right.style.display = 'inline-block';                        
                     }
                 } else if (vis[visibleCount - 1] == totalCount - 1 && hided_right) {
+                    // hided Hided-right icon.
                     hided_right.style.display = 'none';
                     if(totalCount > visibleCount) {
                         hided_left.style.display = 'inline-block';                        
                     }
                 } else {
+                    // display hided icon.
                     hided_left.style.display = 'inline-block';
                     hided_right.style.display = 'inline-block';
                 }
 
             }
 
+            // CASE-2: press on a pagination item.
             if (_target.parentElement.classList.contains('yuko-pagination_item')) {
-                // press on a pagination item.
+                
                 _this = _target.parentElement;
                 _paging = _this.parentElement.parentElement;
                 hided_left = _paging.querySelectorAll('.yuko-pagination_func.hided')[0];
@@ -325,6 +391,7 @@
                 middle_index = Math.floor(visibleCount / 2);
                 middle_item = _paging.querySelectorAll('.yuko-pagination_item')[middle_index];
                 
+                // Init _active, a_index, _this_index.
                 if(!_active) {
                     for (var i = 0; i < _this.parentElement.children.length; i++) {
                         var item = _this.parentElement.children[i];
@@ -337,6 +404,7 @@
                         }
                     }
                 }
+
                 if (_this != _active) {
                     // Get visible item list.
                     var p_index; // Index of current pagination in paginations list.
@@ -346,8 +414,10 @@
                         }
                     }
 
-                    var vis = visibles[p_index];
-                    var step = Math.floor(_this_index - middle_index),
+                    var vis = visibles[p_index],
+                        // step: Length of _this to middle item.
+                        step = Math.floor(_this_index - middle_index),
+                        // overflow: Is reach the limited index or not.
                         overflow = false;
                     // Change visible item list.
                     if(step > 0) {
@@ -372,36 +442,44 @@
                             vis[i] += step;
                         }
                         refreshPagination(_paging);
-                        // Set style of hided icon if exist.
-                        if(vis[0] == 0 && hided_left) {
-                            // hided Hided-left icon.
-                            hided_left.style.display = 'none';
-                        } else if(vis[visibleCount-1] == totalCount-1 && hided_right){
-                            hided_right.style.display = 'none';
-                        } else {
-                            hided_left.style.display = 'inline-block';
-                            hided_right.style.display = 'inline-block';
-                        }
                         // Set active item.
                         if(overflow) {
-                            _active = _paging.querySelectorAll('.yuko-pagination_item')[middle_index+step+1];
+                            a_index = middle_index+step+1;
+                            _active = _paging.querySelectorAll('.yuko-pagination_item')[a_index];
                         } else {
+                            a_index = middle_index;
                             _active = middle_item;
                         }
                     } else {
-                        if(vis[0] == 0 && hided_left) {
-                            // hided Hided-left icon.
-                            hided_left.style.display = 'none';
-                        }
+                        a_index = _this_index;
                         _active = _this;
                     }
                     if(!_active.classList.contains('active'))
                         _active.classList.add('active');
+                    
+                    // Set style of hided icon if exist.
+                    if (vis[0] == 0 && hided_left) {
+                        // hided Hided-left icon.
+                        hided_left.style.display = 'none';
+                        if(totalCount > visibleCount) {
+                            hided_right.style.display = 'inline-block';
+                        }
+                    } else if (vis[visibleCount - 1] == totalCount - 1 && hided_right) {
+                        // hided Hided-right icon.
+                        hided_right.style.display = 'none';
+                        if(totalCount > visibleCount) {
+                            hided_left.style.display = 'inline-block';
+                        }
+                    } else {
+                        hided_left.style.display = 'inline-block';
+                        hided_right.style.display = 'inline-block';
+                    }
                 }
 
             }
         }
         Yuko.utility.addEvent(document, fingerdown, paginationHandler);
+
     </script>
 </body>
 
