@@ -11,16 +11,16 @@
   <link rel="stylesheet" href="../common/style/yuko.component.css">
 </head>
 
-<body>
+<body class="yuko-docs">
   <div class="yuko-tooltip_container">
-    <div class="material-icons" style="margin: 10% 45%">add</div>
+    <div class="material-icons yuko-tooltip_trigger" style="margin: 10% 45%">add</div>
     <div class="yuko-tooltip">
       Follow
     </div>
   </div>
   <script src="../common/script/Yuko.js"></script>
   <script>
-    var tooltipIcons = document.querySelectorAll('.yuko-tooltip_container .material-icons');
+    var tooltipIcons = document.querySelectorAll('.yuko-tooltip_container .yuko-tooltip_trigger');
     for (var i = 0; i < tooltipIcons.length; i++) {
       Yuko.utility.addEvent(tooltipIcons[i], 'mouseover', function (evt) {
         var tooltip = this.nextElementSibling,

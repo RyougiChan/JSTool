@@ -17,24 +17,24 @@
 
     .yuko-snackbar_container {
       -webkit-tap-highlight-color: transparent;
-      -webkit-tap-highlight-color: rgba(0,0,0,0);
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     }
   </style>
 </head>
 
-<body>
+<body class="yuko-docs">
   <div class="yuko-snackbar_container">
-    <div class="yuko-snackbar_trigger yuko-button yuko-button_raised yuko-button_colored yuko-button_bordered yuko-button_ripple">
+    <div class="yuko-snackbar_trigger yuko-button yuko-button_raised yuko-button_colored yuko-button_bordered yuko-button_ripple" name="share">
       <i class="material-icons">share</i>
     </div>
-    <div class="yuko-snackbar">
+    <div class="yuko-snackbar" name="share">
       <div class="yuko-snackbar_text">Share your feeling now?</div>
       <div class="yuko-snackbar_action">Start</div>
     </div>
   </div>
   <script src="../common/script/Yuko.js"></script>
   <script>
-    
+
     function isMobile() {
       if ((navigator.userAgent.match(/(iPhone|iPod|Android|ios|SymbianOS)/i))) {
         return true;
@@ -43,22 +43,31 @@
     }
 
     var fingerdown, fingermove, fingerup;
-    if(isMobile()) {
+    if (isMobile()) {
       fingerdown = 'touchstart';
       fingermove = 'touchmove';
       fingerup = 'touchend';
-    }else{
+    } else {
       fingerdown = 'mousedown';
       fingermove = 'mousemove';
       fingerup = 'mouseup';
     }
 
     var snackbar_trigger = document.querySelectorAll('.yuko-snackbar_trigger');
-    // for (var i = 0; i < snackbar_trigger.length; i++) {
-    //   Yuko.utility.addEvent(snackbar_trigger[i], 'click', function (evt) {
-    //     var snackbar = this.nextElementSibling,
-    //       iconBound = this.getBoundingClientRect(),
-    //       snackbarBound = snackbar.getBoundingClientRect();
+    // var snackbarHandler = function (evt) {
+    //   // snackbar: snackbar
+    //   var _target = evt.target,
+    //   snackbar,
+    //   snackbarBound;
+
+    //   if(_target.classList.contains('yuko-snackbar_trigger')) {
+    //     snackbar = _target.nextElementSibling;
+    //   }
+    //   if(_target.parentElement.classList.contains('yuko-snackbar_trigger')) {
+    //     snackbar = _target.parentElement.nextElementSibling;
+    //   }
+    //   if(snackbar != undefined) {
+    //     snackbarBound = snackbar.getBoundingClientRect();
     //     if (!snackbar.classList.contains('is-active')) {
     //       snackbar.classList.add('is-active');
     //     }
@@ -67,21 +76,27 @@
     //         snackbar.classList.remove('is-active');
     //       }
     //     }, 4000);
-    //   });
+    //   }
+
     // }
     var snackbarHandler = function (evt) {
-      // snackbar: snackbar
       var _target = evt.target,
-      snackbar,
-      snackbarBound;
+        snackbarTrigger,
+        snackbar,
+        snackbarBound,
+        ancestor = Yuko.utility.hasAncestor(_target, { className: 'yuko-snackbar_trigger' });
 
-      if(_target.classList.contains('yuko-snackbar_trigger')) {
-        snackbar = _target.nextElementSibling;
+      if (_target.classList.contains('yuko-snackbar_trigger')) {
+        // itself
+        snackbarTrigger = _target;
+      } else if (ancestor) {
+        snackbarTrigger = ancestor;
       }
-      if(_target.parentElement.classList.contains('yuko-snackbar_trigger')) {
-        snackbar = _target.parentElement.nextElementSibling;
-      }
-      if(snackbar != undefined) {
+      if(!snackbarTrigger) return;
+      var s = snackbarTrigger.getAttribute('name');
+      snackbar = document.querySelector('.yuko-snackbar[name="'+s+'"]');
+
+      if (snackbar != undefined) {
         snackbarBound = snackbar.getBoundingClientRect();
         if (!snackbar.classList.contains('is-active')) {
           snackbar.classList.add('is-active');
@@ -92,7 +107,6 @@
           }
         }, 4000);
       }
-
     }
     Yuko.utility.addEvent(document, fingerdown, snackbarHandler);
   </script>

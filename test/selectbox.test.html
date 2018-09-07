@@ -11,14 +11,14 @@
         /*the container must be positioned relative:*/
 
         body.yuko-docs .yuko-select {position: relative; width:200px; font-family: Arial; -webkit-tap-highlight-color: transparent; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; }
-body.yuko-docs .yuko-select select {display: none;}
-body.yuko-docs .yuko-select .yuko-select_selected {background-color: #3f51b5; }
-body.yuko-docs .yuko-select .yuko-select_selected:after {position: absolute; content: ""; top: 14px; right: 10px; width: 0; height: 0; border: 6px solid transparent; border-color: #fff transparent transparent transparent; }
-body.yuko-docs .yuko-select_selected.yuko-select_arrow-active:after {border-color: transparent transparent #fff transparent; top: 7px; }
-body.yuko-docs .yuko-select_items div,.yuko-select_selected {position: relative; color: #ffffff; padding: 8px 16px; border: 1px solid transparent; border-color: transparent transparent rgba(255, 255, 255, 0.1) transparent; cursor: pointer; overflow: hidden; }
-body.yuko-docs .yuko-select_items {position: absolute; background-color: #3f51b5; top: 100%; left: 0; right: 0; z-index: 99; }
-body.yuko-docs .yuko-select_hide {display: none; }
-body.yuko-docs .yuko-select_items div:hover {background-color: rgba(0, 0, 0, 0.1); }
+        body.yuko-docs .yuko-select select {display: none;}
+        body.yuko-docs .yuko-select .yuko-select_selected {background-color: #3f51b5; }
+        body.yuko-docs .yuko-select .yuko-select_selected:after {position: absolute; content: ""; top: 14px; right: 10px; width: 0; height: 0; border: 6px solid transparent; border-color: #fff transparent transparent transparent; }
+        body.yuko-docs .yuko-select_selected.yuko-select_arrow-active:after {border-color: transparent transparent #fff transparent; top: 7px; }
+        body.yuko-docs .yuko-select_items div,.yuko-select_selected {position: relative; color: #ffffff; padding: 8px 16px; border: 1px solid transparent; border-color: transparent transparent rgba(255, 255, 255, 0.1) transparent; cursor: pointer; overflow: hidden; }
+        body.yuko-docs .yuko-select_items {position: absolute; background-color: #3f51b5; top: 100%; left: 0; right: 0; z-index: 99; }
+        body.yuko-docs .yuko-select_hide {display: none; }
+        body.yuko-docs .yuko-select_items div:hover {background-color: rgba(0, 0, 0, 0.1); }
 
     </style>
 </head>
@@ -126,8 +126,8 @@ body.yuko-docs .yuko-select_items div:hover {background-color: rgba(0, 0, 0, 0.1
         var x,
             y,
             i;
-        x = document.getElementsByClassName("yuko-select_items");
-        y = document.getElementsByClassName("yuko-select_selected");
+        x = document.querySelectorAll(".yuko-select_items");
+        y = document.querySelectorAll(".yuko-select_selected");
         except = typeof(except) == 'number' ? x[except] : except;
 
         for (i = 0; i < x.length; i++) {
@@ -197,6 +197,8 @@ body.yuko-docs .yuko-select_items div:hover {background-color: rgba(0, 0, 0, 0.1
             }
         }
 
+        console.log(_this);
+console.log(_items);
         if (_this == undefined) {
             // press down out of yuko-selectbox
             closeAllSelect();

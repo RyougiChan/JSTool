@@ -11,7 +11,7 @@
 </head>
 
 <body class="yuko-docs">
-    <div class="yuko-pagination yuko-pagination__round yuko-pagination__async">
+    <div class="yuko-pagination yuko-pagination__round yuko-pagination__async" data-pagination="p1">
         <span class="yuko-pagination_func backward">
             <a>&lt;</a>
         </span>
@@ -52,7 +52,7 @@
         </span>
     </div>
 
-    <div class="yuko-pagination yuko-pagination__round yuko-pagination__async">
+    <div class="yuko-pagination yuko-pagination__round yuko-pagination__async" data-pagination="p2">
         <span class="yuko-pagination_func backward">
             <a>&lt;</a>
         </span>
@@ -92,7 +92,47 @@
             <a>&gt;</a>
         </span>
     </div>
-    <div class="yuko-pagination yuko-pagination__round yuko-pagination__async">
+    <div class="yuko-pagination yuko-pagination__round yuko-pagination__async" data-pagination="p3">
+        <span class="yuko-pagination_func backward">
+            <a>&lt;</a>
+        </span>
+        <span class="yuko-pagination_func first">
+            <a>F</a>
+        </span>
+        <span class="yuko-pagination_func hided">
+            <a>...</a>
+        </span>
+        <ul class="yuko-pagination_list">
+            <li class="yuko-pagination_item active">
+                <a>7</a>
+            </li>
+            <li class="yuko-pagination_item">
+                <a>8</a>
+            </li>
+            <li class="yuko-pagination_item">
+                <a>9</a>
+            </li>
+            <li class="yuko-pagination_item">
+                <a>10</a>
+            </li>
+            <li class="yuko-pagination_item">
+                <a>11</a>
+            </li>
+            <li class="yuko-pagination_item">
+                <a>12</a>
+            </li>
+        </ul>
+        <span class="yuko-pagination_func hided">
+            <a>...</a>
+        </span>
+        <span class="yuko-pagination_func last">
+            <a>L</a>
+        </span>
+        <span class="yuko-pagination_func forward">
+            <a>&gt;</a>
+        </span>
+    </div>
+    <div class="yuko-pagination yuko-pagination-vertical yuko-pagination__round yuko-pagination__async" data-pagination="p4">
         <span class="yuko-pagination_func backward">
             <a>&lt;</a>
         </span>
@@ -140,6 +180,8 @@
         Yuko.widget.pagination(p2, 5, 5, true, true, true);
         var p3 = document.querySelectorAll('.yuko-pagination')[2];
         Yuko.widget.pagination(p3, 6, 5, true, false, true);
+        var p4 = document.querySelectorAll('.yuko-pagination')[3];
+        Yuko.widget.pagination(p4, 6, 5, true, false, false);
 
         var count = 0;
         p.addEventListener('click', function () {
