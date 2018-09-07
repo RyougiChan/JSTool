@@ -1296,7 +1296,10 @@
             // Default main style
             for (var i = 0; i < mains.length; i++) {
                 if (!mains[i].children[0]) continue;
-                mains[i].style.height = mains[i].children[0].offsetHeight + 'px';
+                var realOffetHeight = mains[i].children[0].scrollHeight + Yuko.utility.getComputedSizeInPx(mains[i].children[0].children[0], 'margin-top');
+                mains[i].style.height = realOffetHeight + 'px';
+                
+                console.log(mains[i].style.height);
 
                 //if (mains[i] && mains[i].parentNode.classList.contains('yuko-tab_container')) {
                 //    mains[i].style.height =  mains[i].children[0].offsetHeight + 'px';
@@ -1344,7 +1347,7 @@
             for (var i = 0; i < snackbars.length; i++) {
                 var s = snackbars[i],
                     h = s.offsetHeight;
-                s.style.transform = 'translate(-50%, ' + h + 'px)';
+                //s.style.transform = 'translate(-50%, ' + h + 'px)';
             }
         }
 
@@ -1443,6 +1446,17 @@
         }
 
         /**
+         * Hide a specific active snackbar
+         * @param {String} snackbar snackbar's selector
+         */
+        function hideSnackbar(selector) {
+            var snackbar = document.querySelector(selector);
+            if (snackbar.classList.contains('is-active')) {
+                snackbar.classList.remove('is-active');
+            }
+        }
+
+        /**
          * Trigger a specific dialog
          * @param {String} selector dialog's selector
          * @param {String} content dialog's text content
@@ -1462,6 +1476,7 @@
             bindDrawerNavItemToPage: bindDrawerNavItemToPage,
             bindListItemToPage: bindListItemToPage,
             triggerSnackbar: triggerSnackbar,
+            hideSnackbar: hideSnackbar,
             triggerDialog: triggerDialog
         };
 
@@ -2715,6 +2730,11 @@
                 console.log('error-param: Pagination required or parameter in invalid format.');
                 return;
             }
+
+            if (totalCount < 1) {
+                pagination.classList.add('yuko-pagination-invisible');
+            }
+
             if (!totalCount || totalCount < 0) {
                 console.log('error-param: Total count of pagination items required or parameter in invalid format.');
                 return;
@@ -2754,9 +2774,9 @@
                 visibleCount = totalCount;
             }
 
-            var paginations = document.querySelectorAll('.yuko-pagination'),
+            var paginations = document.getElementsByClassName('yuko-pagination'),
                 pagination_list = pagination.querySelector('.yuko-pagination_list'),
-                pagination_items = pagination.querySelectorAll('.yuko-pagination_item'),
+                pagination_items = pagination.getElementsByClassName('yuko-pagination_item'),
                 visibles = Yuko.fields.pagination_visible_arr,
                 visible = [];
             // Refresh [all] pagination.
@@ -2764,7 +2784,7 @@
                 if (pagination) {
                     // refresh pagination
                     var index = identify,
-                        items = pagination.querySelectorAll('.yuko-pagination_item'),
+                        items = pagination.getElementsByClassName('yuko-pagination_item'),
                         vis = visibles[index].visible;
                     for (var i = 0; i < vis.length; i++) {
                         // Change content of items
@@ -2773,10 +2793,11 @@
                         if (!items[i]) {
                             var new_paging_item = document.createElement('li');
                             new_paging_item.classList.add('yuko-pagination_item');
+                            if (i == 0) new_paging_item.classList.add('active');
                             var new_a = document.createElement('a');
                             new_paging_item.appendChild(new_a);
                             pagination_list.appendChild(new_paging_item);
-                            items[i] = new_paging_item;
+                            // items[i] = new_paging_item;
                         }
                         var item = items[i].children[0];
                         item.innerText = (vis[i] + 1);
@@ -2789,7 +2810,7 @@
                             paging = document.querySelector('.yuko-pagination[data-pagination="' + i + '"]');
                         pagination_list = paging.querySelector('.yuko-pagination_list');
                         if (paging) {
-                            var items = paging.querySelectorAll('.yuko-pagination_item');
+                            var items = paging.getElementsByClassName('yuko-pagination_item');
                             for (var j = 0; j < vis.length; j++) {
                                 // Change content of items
                                 //items[j].innerHTML = "<a>" + (vis[j] + 1) + "</a>";
@@ -2797,10 +2818,11 @@
                                 if (!items[j]) {
                                     var new_paging_item = document.createElement('li');
                                     new_paging_item.classList.add('yuko-pagination_item');
+                                    if (j == 0) new_paging_item.classList.add('active');
                                     var new_a = document.createElement('a');
                                     new_paging_item.appendChild(new_a);
                                     pagination_list.appendChild(new_paging_item);
-                                    items[j] = new_paging_item;
+                                    // items[j] = new_paging_item;
                                 }
                                 var item = items[j].children[0];
                                 item.innerText = (vis[j] + 1);
@@ -3056,18 +3078,18 @@
                             // hided Hided-left icon.
                             hided_left.style.display = 'none';
                             if (totalCount > visibleCount) {
-                                hided_right.style.display = _paging.classList.contains('yuko-pagination') ? 'block' : 'inline-block';
+                                hided_right.style.display = _paging.classList.contains('yuko-pagination-vertical') ? 'block' : 'inline-block';
                             }
                         } else if (vis[visibleCount - 1] == totalCount - 1 && hided_right) {
                             // hided Hided-right icon.
                             hided_right.style.display = 'none';
                             if (totalCount > visibleCount) {
-                                hided_left.style.display = _paging.classList.contains('yuko-pagination') ? 'block' : 'inline-block';
+                                hided_left.style.display = _paging.classList.contains('yuko-pagination-vertical') ? 'block' : 'inline-block';
                             }
                         } else {
                             // display hided icon.
-                            hided_left.style.display = _paging.classList.contains('yuko-pagination') ? 'block' : 'inline-block';
-                            hided_right.style.display = _paging.classList.contains('yuko-pagination') ? 'block' : 'inline-block';
+                            hided_left.style.display = _paging.classList.contains('yuko-pagination-vertical') ? 'block' : 'inline-block';
+                            hided_right.style.display = _paging.classList.contains('yuko-pagination-vertical') ? 'block' : 'inline-block';
                         }
                     }
 
@@ -3157,17 +3179,17 @@
                                 // hided Hided-left icon.
                                 hided_left.style.display = 'none';
                                 if (totalCount > visibleCount) {
-                                    hided_right.style.display = _paging.classList.contains('yuko-pagination') ? 'block' : 'inline-block';
+                                    hided_right.style.display = _paging.classList.contains('yuko-pagination-vertical') ? 'block' : 'inline-block';
                                 }
                             } else if (vis[visibleCount - 1] == totalCount - 1 && hided_right) {
                                 // hided Hided-right icon.
                                 hided_right.style.display = 'none';
                                 if (totalCount > visibleCount) {
-                                    hided_left.style.display = _paging.classList.contains('yuko-pagination') ? 'block' : 'inline-block';
+                                    hided_left.style.display = _paging.classList.contains('yuko-pagination-vertical') ? 'block' : 'inline-block';
                                 }
                             } else {
-                                hided_left.style.display = _paging.classList.contains('yuko-pagination') ? 'block' : 'inline-block';
-                                hided_right.style.display = _paging.classList.contains('yuko-pagination') ? 'block' : 'inline-block';
+                                hided_left.style.display = _paging.classList.contains('yuko-pagination-vertical') ? 'block' : 'inline-block';
+                                hided_right.style.display = _paging.classList.contains('yuko-pagination-vertical') ? 'block' : 'inline-block';
                             }
                         }
                     }
@@ -3320,7 +3342,7 @@
                                 }
                                 var item = items[j].children[0];
                                 item.innerText = (vis[j] + 1);
-                                items[j].style.display = paging.classList.contains('yuko-pagination') ? 'block' : 'inline-block';
+                                items[j].style.display = paging.classList.contains('yuko-pagination-vertical') ? 'block' : 'inline-block';
                             }
 
                             // Hide left ellipse icon
@@ -3370,7 +3392,7 @@
                 if (totalCount > visible.length) {
                     var hided_right = _paging.querySelectorAll('.hided')[1];
                     if (hided_right)
-                        hided_right.style.display = _paging.classList.contains('yuko-pagination') ? 'block' : 'inline-block';
+                        hided_right.style.display = _paging.classList.contains('yuko-pagination-vertical') ? 'block' : 'inline-block';
                 }
             }
         }

@@ -5,9 +5,9 @@
   src: url(MaterialIcons-Regular.eot); /* For IE6-8 */
   src: local('Material Icons'),
        local('MaterialIcons-Regular'),
-       url(../font/MaterialIcons-Regular.woff2) format('woff2'),
-       url(../font/MaterialIcons-Regular.woff) format('woff'),
-       url(../font/MaterialIcons-Regular.ttf) format('truetype');
+       url('../Others/font/MaterialIcons-Regular.woff2') format('woff2'),
+       url('../Others/font/MaterialIcons-Regular.woff') format('woff'),
+       url('../Others/font/MaterialIcons-Regular.ttf') format('truetype');
 }
 
 .material-icons {
@@ -22,6 +22,7 @@
   word-wrap: normal;
   white-space: nowrap;
   direction: ltr;
+  user-select: none;
 
   /* Support for all WebKit browsers. */
   -webkit-font-smoothing: antialiased;

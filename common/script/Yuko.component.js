@@ -1,5 +1,4 @@
 (function () {
-    'use strict';
 
     function isMobile() {
         if ((navigator.userAgent.match(/(iPhone|iPod|Android|ios|SymbianOS)/i))) {
@@ -117,7 +116,7 @@
 
             Yuko.utility.addEvent(document.body, fingerdown, function (evt) {
                 var _target = event.target;
-                if (_target.className.indexOf('yuko-checkbox') >= 0) {
+                if (Yuko.utility.hasAncestor(_target, { className: 'yuko-checkbox' })) {
                     // _this: yuko-checkbox
                     var _this, _last, _input;
                     if (_target.classList.contains('yuko-checkbox_ripple')) {
@@ -129,7 +128,7 @@
                         if (!_rc.classList.contains('is-visible')) {
                             _rc.classList.add('is-visible');
                         }
-                    } else if (_target.className.indexOf('yuko-checkbox_tick-outline') >= 0) {
+                    } else if (_target.classList.contains('yuko-checkbox_tick-outline') ) {
                         // There is not a ripple container
                         _this = _target.parentElement.parentElement;
                     } else {
@@ -181,7 +180,7 @@
 
             Yuko.utility.addEvent(document.body, fingerup, function (evt) {
                 var _target = event.target;
-                if (_target.className.indexOf('yuko-checkbox') >= 0) {
+                if (Yuko.utility.hasAncestor(_target, { className: 'yuko-checkbox'})) {
                     var _this, _last, _input;
                     if (_target.classList.contains('yuko-checkbox_ripple')) {
                         // Set ripple container visible
@@ -215,7 +214,7 @@
 
             Yuko.utility.addEvent(document.body, fingerdown, function (evt) {
                 var _target = event.target;
-                if (_target.className.indexOf('yuko-radio') >= 0) {
+                if (Yuko.utility.hasAncestor(_target, { className: 'yuko-radio' })) {
                     // _this: yuko-radio
                     var _this, _last, _input;
                     _this = _target.parentElement;
@@ -247,7 +246,7 @@
 
             Yuko.utility.addEvent(document.body, fingerup, function (evt) {
                 var _target = event.target;
-                if (_target.className.indexOf('yuko-radio') >= 0) {
+                if (Yuko.utility.hasAncestor(_target, { className: 'yuko-radio' })) {
                     var _this, _last, _input;
                     _this = _target.parentElement;
                     _last = _this.lastElementChild;
@@ -269,7 +268,7 @@
 
             Yuko.utility.addEvent(document.body, fingerdown, function (evt) {
                 var _target = event.target;
-                if (_target.className.indexOf('yuko-switch') >= 0) {
+                if (Yuko.utility.hasAncestor(_target, { className: 'yuko-switch' })) {
                     // _this: yuko-switch
                     var _this;
                     if (_target.classList.contains('yuko-switch_ripple') || _target.classList.contains('yuko-switch_slider')) {
@@ -293,7 +292,7 @@
 
             Yuko.utility.addEvent(document.body, fingerup, function (evt) {
                 var _target = event.target;
-                if (_target.className.indexOf('yuko-switch') >= 0) {
+                if (Yuko.utility.hasAncestor(_target, { className: 'yuko-switch' })) {
                     var _this;
                     if (_target.classList.contains('yuko-switch_ripple') || _target.classList.contains('yuko-switch_slider')) {
                         // is a children click
