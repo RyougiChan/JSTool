@@ -1,6 +1,6 @@
 # Yuko.js
 
-> An implementation of Material Design components developed width CSS, JS, and HTML.
+> An implementation of Material Design components developed with CSS, JS, and HTML.
 
 Yuko.js contains a series of widgets to help you to build your websites with Material Design look. It doesn't rely on any JavaScript frameworks or libraries.
 
@@ -13,17 +13,23 @@ To use this widget in your project, using following folders/files:
 ```text
 [script]    /common/script/Yuko.js | required
             /common/script/Yuko.component.js | required
-[style]     /common/style/yuko-reset.css | require
-            /common/style/yuko-global.css | require
-            /common/style/yuko.css | require
-            /common/style/yuko.component.css | require
+[style]     /common/style/yuko-reset.css | required
+            /common/style/yuko-global.css | required
+            /common/style/yuko.css | required
+            /common/style/yuko.component.css | required
 ```
 
 ## Examples
 
-- [Navigation Drawer](examples/Navigation_Drawer_v2.0/drawer.html)
-- [Carousel](examples/Carousel_v2.0/carousel.html)
-- [Component](examples/Component/component.html)
+- **Navigation Drawer**
+  - [demo](https://rypugichan.com/ymd/drawer.html)
+  - [source](examples/Navigation_Drawer_v2.0/drawer.html)
+- **Carousel**
+  - [demo](https://rypugichan.com/ymd/carousel.html)
+  - [source](examples/Carousel_v2.0/carousel.html)
+- **Component**
+  - [demo](https://rypugichan.com/ymd/component.html)
+  - [source](examples/Component/component.html)
 
 ## Declaration
 
