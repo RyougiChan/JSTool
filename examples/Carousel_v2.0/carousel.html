@@ -5,27 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>Yuko Carousel</title>
-	<link rel="stylesheet" type="text/css" href="../common/style/yuko-reset.css">
-	<link rel="stylesheet" type="text/css" href="../common/style/yuko.css">
+	<link rel="stylesheet" type="text/css" href="../../common/style/yuko-reset.css">
+	<link rel="stylesheet" type="text/css" href="../../common/style/yuko.css">
 </head>
 <body class="yuko-docs">
 	<!-- Carousel Start -->
 	<div class="yuko-carousel-v2-container">
 		<!-- Previous Icon -->
-	    <div class="yuko-carousel-v2-pre" style="z-index:10;"></div>
+	    <div class="yuko-carousel-v2-pre" style="z-index:10;background: rgba(255,255,255,.3)"></div>
 	    <!-- Carousel List Start -->
 	    <ul class="yuko-carousel-v2">
-	        <li class="yuko-carousel-v2-item_a"></li>
-	        <li class="yuko-carousel-v2-item_b"></li>
-	        <li class="yuko-carousel-v2-item_c"></li>
-	        <li class="yuko-carousel-v2-item_d"></li>
-	        <li class="yuko-carousel-v2-item_e"></li>
-	        <li class="yuko-carousel-v2-item_f"></li>
-	        <li class="yuko-carousel-v2-item_g"></li>
+	        <li class="yuko-carousel-v2-item_a" style="background: red"></li>
+	        <li class="yuko-carousel-v2-item_b" style="background: orange"></li>
+	        <li class="yuko-carousel-v2-item_c" style="background: yellow"></li>
+	        <li class="yuko-carousel-v2-item_d" style="background: green"></li>
+	        <li class="yuko-carousel-v2-item_e" style="background: blue"></li>
+	        <li class="yuko-carousel-v2-item_f" style="background: cyan"></li>
+	        <li class="yuko-carousel-v2-item_g" style="background: purple"></li>
 	    </ul>
 		<!-- Carousel List End -->
 		<!-- Next Icon -->
-	    <div class="yuko-carousel-v2-next" style="z-index:10;"></div>
+	    <div class="yuko-carousel-v2-next" style="z-index:10;background: rgba(255,255,255,.3)"></div>
 
 	    <!-- Carousel Switch icons Start -->
 	    <ul class="yuko-carousel-v2-bar">
@@ -40,7 +40,7 @@
 	    <!-- Carousel Switch icons End-->
 	</div>	
 	<!-- Carousel End -->
-	<script src="../common/script/Yuko.js"></script>
+	<script src="../../common/script/Yuko.js"></script>
 	<script>
 		var carouselList = document.querySelectorAll('.yuko-carousel-v2 > li');
 		yuko.widget.carouselV2(carouselList, 'default', {

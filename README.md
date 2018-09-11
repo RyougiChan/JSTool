@@ -22,13 +22,16 @@ To use this widget in your project, using following folders/files:
 ## Examples
 
 - **Navigation Drawer**
-  - [demo](https://rypugichan.com/ymd/drawer.html)
+  - [demo](https://rypugichan.com/ymd/Drawer/drawer.html)
   - [source](examples/Navigation_Drawer_v2.0/drawer.html)
 - **Carousel**
-  - [demo](https://rypugichan.com/ymd/carousel.html)
+  - [demo](https://rypugichan.com/ymd/Carousel/carousel.html)
   - [source](examples/Carousel_v2.0/carousel.html)
+- **Carousel_v2.0**
+  - [demo](https://rypugichan.com/ymd/Carouselv2/carousel.html)
+  - [source](examples/Carousel/carousel.html)
 - **Component**
-  - [demo](https://rypugichan.com/ymd/component.html)
+  - [demo](https://rypugichan.com/ymd/Component/component.html)
   - [source](examples/Component/component.html)
 
 ## Declaration
