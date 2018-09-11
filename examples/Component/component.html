@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Yuko Material Design Components</title>
+    <link rel="stylesheet" href="../../common/style/yuko-reset.css">
+    <link rel="stylesheet" href="../../common/style/material-icons.css">
+    <link rel="stylesheet" href="../../common/style/yuko-global.css">
+    <link rel="stylesheet" href="../../common/style/yuko.css">
+    <link rel="stylesheet" href="../../common/style/yuko.component.css">
+    <style>
+        h1,h3 {
+            line-height: 2em;
+            margin-top: 1em;
+        }
+
+        hr {
+            border: 1px dashed;
+        }
+    </style>
+</head>
+
+<body style="background:#f1f1f1">
+    <div id="main" style="margin: 0 auto; padding: 60px; background: #ffffff; width: 60%;">
+        <h1>Yuko Material Design Components</h1>
+        <h3>Button</h3>
+        <hr>
+        <div id="button">
+            <div class="yuko-button yuko-button_fab yuko-button_colored yuko-button_bordered yuko-button_ripple">
+                <i class="material-icons">add</i>
+            </div>
+            <div class="yuko-button yuko-button_fab yuko-button_bordered yuko-button_plain">
+                <i class="material-icons">add</i>
+            </div>
+            <div class="yuko-button yuko-button_raised yuko-button_colored yuko-button_bordered yuko-button_ripple">
+                <i class="material-icons">add</i>
+            </div>
+            <div class="yuko-button yuko-button_raised yuko-button_bordered yuko-button_plain">
+                <i class="material-icons">add</i>
+            </div>
+            <div class="yuko-button yuko-button_ripple yuko-button_null yuko-button_colored">
+                <i class="">Button</i>
+            </div>
+            <div class="yuko-button yuko-button_plain yuko-button_null">
+                <i class="">Button</i>
+            </div>
+        </div>
+        <h3>Card</h3>
+        <hr>
+        <div id="card">
+            <div class="yuko-card_container">
+                <div class="yuko-card_avatar">
+                    <div class="yuko-card_avatar-icon">
+                        <i class="material-icons">share</i>
+                    </div>
+                    <div class="yuko-card_avatar-title"> Google&Alphabet </div>
+                </div>
+                <div class="yuko-card_content">
+                    On August 10, 2015, Google announced plans to reorganize its various interests as a conglomerate called Alphabet. Google
+                    became Alphabet's leading subsidiary, and will continue to be the umbrella company for Alphabet's Internet
+                    interests. Upon completion of the restructure, Sundar Pichai became CEO of Google, replacing Larry Page,
+                    who became CEO of Alphabet.
+                </div>
+                <div class="yuko-card_trigger">
+                    <div>
+                        <span>GET STARTED</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h3>Checkbox</h3>
+        <hr>
+        <div id="checkbox">
+            <div class="yuko-select_container">
+                <span class="yuko-checkbox yuko-checkbox-all">
+                    <input type="checkbox" class="yuko-checkbox_input" name="cb">
+                    <span class="yuko-checkbox_box-outline">
+                        <span class="yuko-checkbox_tick-outline"></span>
+                    </span>
+                </span>
+                <span class="yuko-checkbox">
+                    <input type="checkbox" class="yuko-checkbox_input" name="cb">
+                    <span class="yuko-checkbox_box-outline">
+                        <span class="yuko-checkbox_tick-outline"></span>
+                    </span>
+                    <span class="yuko-checkbox_ripple yuko-js-ripple-effect yuko-ripple--center">
+                        <span class="yuko-ripple is-animating"></span>
+                    </span>
+                </span>
+                <span class="yuko-checkbox">
+                    <input type="checkbox" class="yuko-checkbox_input" name="cb">
+                    <span class="yuko-checkbox_box-outline">
+                        <span class="yuko-checkbox_tick-outline"></span>
+                    </span>
+                </span>
+            </div>
+        </div>
+        <h3>Image Card</h3>
+        <hr>
+        <div id="imgcard">
+            <div class="yuko-imgcard">
+                <div class="yuko-imgcard_title">
+                    <h1>その他</h1>
+                </div>
+                <div class="yuko-imgcard_info">
+                    <p>放送期間</p>
+                </div>
+                <div class="yuko-imgcard_content">
+                    <a href="#">
+                        <div class="yuko-imgcard_content-img">
+                            <img src="https://ws1.sinaimg.cn/large/005ODKsIgy1fip1i5u5v7j30iw0c7myf.jpg" alt="" />
+                        </div>
+                        <div class="yuko-imgcard_content-text">
+                            <p>
+                                本編上映に先立ち、渚より劇場内の注意事項について説明アナウンスがなされる。これは、各映画館独自の注意事項アナウンスに追加する形で上映される。渚のほかにも智代・杏バージョンが存在するが、これらは池袋シネマサンシャイン限定だった。なお、これらはDVDスペシャルエディション版特典DVDに収録されている。
+                                池袋シネマサンシャインでは最長期間のロングラン公開が行われ、最終上映ではファン感謝祭の開催場所になった。また、公開直前には前作・劇場版『AIR』のリバイバル上映も行われている。
+                                本編には登場していないが、『AIR』のリバイバル上映の際には風子のデザイン画が掲載されたチラシが全員に配布されている。 後に発売されたサウンドトラックには、前作『AIR』には収録されていた「原作BGMのアレンジバージョン」が収録されず、本作のために製作された楽曲のみとなった。アレンジBGMを収録したCD等は、その後リリースされていない。
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <h3>Image List</h3>
+        <hr>
+        <div id="imglist">
+            <div class="yuko-imglist">
+                <ul>
+                    <li>
+                        <a href="">
+                            <div class="yuko-imglist_img" style="background:url(https://ws1.sinaimg.cn/large/005ODKsIgy1fip1i5u5v7j30iw0c7myf.jpg) 50% 50% no-repeat / cover"></div>
+                            <p class="yuko-imglist_abstract">忍者ツールズ</p>
+                            <p class="yuko-imglist_sort">添付ファイル
+                                <span class="yuko-material-icons">
+                                    <i class="material-icons md-18">more_vert</i>
+                                </span>
+                            </p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <div class="yuko-imglist_img" style="background:url(https://ws1.sinaimg.cn/large/005ODKsIgy1fip1i5u5v7j30iw0c7myf.jpg) 50% 50% no-repeat / cover"></div>
+                            <p class="yuko-imglist_abstract text-overflow">忍者ツールズ忍者ツールズ忍者ツールズ</p>
+                            <p class="yuko-imglist_sort">添付ファイル
+                                <span class="yuko-material-icons">
+                                    <i class="material-icons md-18">more_vert</i>
+                                </span>
+                            </p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <div class="yuko-imglist_img" style="background:url(https://ws1.sinaimg.cn/large/005ODKsIgy1fip1i5u5v7j30iw0c7myf.jpg) 50% 50% no-repeat / cover"></div>
+                            <p class="yuko-imglist_abstract">忍者ツールズ</p>
+                            <p class="yuko-imglist_sort">添付ファイル
+                                <span class="yuko-material-icons">
+                                    <i class="material-icons md-18">more_vert</i>
+                                </span>
+                            </p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <div class="yuko-imglist_img" style="background:url(https://ws1.sinaimg.cn/large/005ODKsIgy1fip1i5u5v7j30iw0c7myf.jpg) 50% 50% no-repeat / cover"></div>
+                            <p class="yuko-imglist_abstract">忍者ツールズ</p>
+                            <p class="yuko-imglist_sort">添付ファイル
+                                <span class="yuko-material-icons">
+                                    <i class="material-icons md-18">more_vert</i>
+                                </span>
+                            </p>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <h3>List</h3>
+        <hr>
+        <div id="list" style="width: 50%;">
+            <ul class="yuko-list">
+                <li class="yuko-list_item">
+                    <span class="yuko-list_item-action yuko-material-icons">
+                        ICON
+                    </span>
+                    <span class="yuko-list_item-content">
+                        <i class="yuko-list_item-avatar material-icons">menu</i>
+                        <span>
+                            <span class="title text_ellipsis">TITLE</span>
+                            <span class="abstract text_ellipsis">ABSTRACT</span>
+                        </span>
+                    </span>
+                </li>
+
+                <li class="yuko-list_item">
+                    <span class="yuko-list_item-action">
+                        ICON
+                    </span>
+                    <span class="yuko-list_item-content">
+                        <i class="yuko-list_item-avatar material-icons">menu</i>
+                        <span>
+                            <span class="title text_ellipsis">TITLE</span>
+                            <span class="abstract text_ellipsis">ABSTRACT</span>
+                        </span>
+                    </span>
+                </li>
+
+                <li class="yuko-list_item">
+                    <span class="yuko-list_item-action">
+                        ICON
+                    </span>
+                    <span class="yuko-list_item-content">
+                        <i class="yuko-list_item-avatar material-icons">menu</i>
+                        <span>
+                            <span class="title text_ellipsis">TITLE</span>
+                            <span class="abstract text_ellipsis">ABSTRACT</span>
+                        </span>
+                    </span>
+                </li>
+            </ul>
+        </div>
+        <h3>Progress</h3>
+        <hr>
+        <div id="progress">
+            <div class="yuko-loading_progressbar">
+                <div class="bar progressbar"></div>
+                <div class="bar bufferbar"></div>
+            </div>
+            <div class="yuko-loading_progressbar yuko-loading_progressbar-indeterminate">
+                <div class="bar progressbar"></div>
+                <div class="bar bufferbar"></div>
+            </div>
+        </div>
+        <h3>Menu</h3>
+        <hr>
+        <div id="menu">
+            <div class="yuko-menu_container" style="height: 280px">
+                <div class="trigger-button">Menu</div>
+                <!-- data-orientation: l,t,r,b,lt,rt,lb,rb,m -->
+                <div class="yuko-menu" data-show="false" data-orientation="lt">
+                    <ul>
+                        <li>Yuki</li>
+                        <li>Yuko</li>
+                        <li>Yuri</li>
+                        <li>Yui</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <h3>Pagination</h3>
+        <hr>
+        <div id="pagination">
+            <!-- See initial js below -->
+            <div class="yuko-pagination yuko-pagination__round yuko-pagination__async" data-pagination="p1">
+                <span class="yuko-pagination_func backward">
+                    <a>&lt;</a>
+                </span>
+                <span class="yuko-pagination_func first">
+                    <a>F</a>
+                </span>
+                <span class="yuko-pagination_func hided">
+                    <a>...</a>
+                </span>
+                <ul class="yuko-pagination_list">
+                    <li class="yuko-pagination_item active">
+                        <a>7</a>
+                    </li>
+                </ul>
+                <span class="yuko-pagination_func hided">
+                    <a>...</a>
+                </span>
+                <span class="yuko-pagination_func last">
+                    <a>L</a>
+                </span>
+                <span class="yuko-pagination_func forward">
+                    <a>&gt;</a>
+                </span>
+            </div>
+            <div class="yuko-pagination yuko-pagination__round yuko-pagination__async" data-pagination="p2">
+                <span class="yuko-pagination_func backward">
+                    <a>&lt;</a>
+                </span>
+                <span class="yuko-pagination_func first">
+                    <a>F</a>
+                </span>
+                <span class="yuko-pagination_func hided">
+                    <a>...</a>
+                </span>
+                <ul class="yuko-pagination_list">
+                    <li class="yuko-pagination_item active">
+                        <a>7</a>
+                    </li>
+                </ul>
+                <span class="yuko-pagination_func hided">
+                    <a>...</a>
+                </span>
+                <span class="yuko-pagination_func last">
+                    <a>L</a>
+                </span>
+                <span class="yuko-pagination_func forward">
+                    <a>&gt;</a>
+                </span>
+            </div>
+            <div class="yuko-pagination yuko-pagination__round yuko-pagination__async" data-pagination="p3">
+                <span class="yuko-pagination_func backward">
+                    <a>&lt;</a>
+                </span>
+                <span class="yuko-pagination_func first">
+                    <a>F</a>
+                </span>
+                <span class="yuko-pagination_func hided">
+                    <a>...</a>
+                </span>
+                <ul class="yuko-pagination_list">
+                    <li class="yuko-pagination_item active">
+                        <a>7</a>
+                    </li>
+                </ul>
+                <span class="yuko-pagination_func hided">
+                    <a>...</a>
+                </span>
+                <span class="yuko-pagination_func last">
+                    <a>L</a>
+                </span>
+                <span class="yuko-pagination_func forward">
+                    <a>&gt;</a>
+                </span>
+            </div>
+            <div class="yuko-pagination yuko-pagination-vertical yuko-pagination__round yuko-pagination__async" data-pagination="p4">
+                <span class="yuko-pagination_func backward">
+                    <a>&lt;</a>
+                </span>
+                <span class="yuko-pagination_func first">
+                    <a>F</a>
+                </span>
+                <span class="yuko-pagination_func hided">
+                    <a>...</a>
+                </span>
+                <ul class="yuko-pagination_list">
+                    <li class="yuko-pagination_item active">
+                        <a>7</a>
+                    </li>
+                </ul>
+                <span class="yuko-pagination_func hided">
+                    <a>...</a>
+                </span>
+                <span class="yuko-pagination_func last">
+                    <a>L</a>
+                </span>
+                <span class="yuko-pagination_func forward">
+                    <a>&gt;</a>
+                </span>
+            </div>
+        </div>
+        <h3>Radio</h3>
+        <hr>
+        <div id="radio">
+            <div class="yuko-select_container">
+                <span class="yuko-radio">
+                    <input type="radio" class="yuko-radio_input" name="rd">
+
+                    <span class="yuko-radio_outer-circle"></span>
+                    <span class="yuko-radio_inner-circle"></span>
+                </span>
+                <span class="yuko-radio">
+                    <input type="radio" class="yuko-radio_input" name="rd">
+
+                    <span class="yuko-radio_outer-circle"></span>
+                    <span class="yuko-radio_inner-circle"></span>
+                </span>
+                <span class="yuko-radio">
+                    <input type="radio" class="yuko-radio_input" name="rd">
+
+                    <span class="yuko-radio_outer-circle"></span>
+                    <span class="yuko-radio_inner-circle"></span>
+                </span>
+            </div>
+        </div>
+        <h3>Scalable Container</h3>
+        <hr>
+        <div id="scalable">
+            <!-- See initial js below -->
+            <div class="yuko-button yuko-button_raised yuko-button_colored yuko-button_bordered yuko-button_ripple open">
+                open
+            </div>
+            <div class="yuko-button yuko-button_raised yuko-button_colored yuko-button_bordered yuko-button_ripple close">
+                close
+            </div>
+            <div class="box" style="position: relative;overflow: hidden; width: 100%; max-width: 411px; height: 731px;">
+                <div class="scale yuko-scalable-container" style="background: linear-gradient(0.25turn, #3f87a6, #ebf8e1, #f69d3c);">
+                    <div class="page yuko-scalable-page" style="position: absolute; z-index: 3; top: 0; width: 100%; height: 100% !important; background: linear-gradient(0.25turn, #3f87a6, #ebf8e1, #f69d3c);">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h3>Select</h3>
+        <hr>
+        <div id="select">
+            <div class="yuko-select" style=" float:right">
+                <div class="yuko-select_selected">Mini</div>
+                <div class="yuko-select_items yuko-select_hide">
+                    <div>Audi</div>
+                    <div>BMW</div>
+                    <div>Citroen</div>
+                    <div>Ford</div>
+                    <div>Honda</div>
+                    <div>Jaguar</div>
+                    <div>Land Rover</div>
+                    <div>Mercedes</div>
+                    <div>Mini</div>
+                    <div>Nissan</div>
+                    <div>Toyota</div>
+                    <div>Volvo</div>
+                </div>
+            </div>
+            <div class="yuko-select">
+                <div class="yuko-select_selected">Mini</div>
+                <div class="yuko-select_items yuko-select_hide">
+                    <div>Audi</div>
+                    <div>BMW</div>
+                    <div>Citroen</div>
+                    <div>Ford</div>
+                    <div>Honda</div>
+                    <div>Jaguar</div>
+                    <div>Land Rover</div>
+                    <div>Mercedes</div>
+                    <div>Mini</div>
+                    <div>Nissan</div>
+                    <div>Toyota</div>
+                    <div>Volvo</div>
+                </div>
+            </div>
+        </div>
+        <h3>Snackbar</h3>
+        <hr>
+        <div id="snackbar">
+            <div class="yuko-snackbar_trigger yuko-button yuko-button_raised yuko-button_colored yuko-button_bordered yuko-button_ripple"
+                name="share">
+                <i class="material-icons">share</i>
+            </div>
+            <div class="yuko-snackbar" name="share">
+                <div class="yuko-snackbar_text">Share your feeling now?</div>
+                <div class="yuko-snackbar_action">Start</div>
+            </div>
+        </div>
+        <h3>Switcher</h3>
+        <hr>
+        <div id="switcher">
+            <!-- Rectangular yuko-switch -->
+            <label class="yuko-switch">
+                <input type="checkbox">
+                <span class="yuko-switch_slider"></span>
+                <span class="yuko-switch_ripple yuko-js-ripple-effect yuko-ripple--center">
+                    <span class="yuko-ripple"></span>
+                </span>
+            </label>
+
+            <!-- Rounded yuko-switch -->
+            <label class="yuko-switch">
+                <input type="checkbox">
+                <span class="yuko-switch_slider round"></span>
+                <span class="yuko-switch_ripple yuko-js-ripple-effect yuko-ripple--center">
+                    <span class="yuko-ripple"></span>
+                </span>
+            </label>
+
+            <!-- Rectangular yuko-switch -->
+            <label class="yuko-switch">
+                <input type="checkbox">
+                <span class="yuko-switch_slider"></span>
+
+            </label>
+
+            <!-- Rounded yuko-switch -->
+            <label class="yuko-switch">
+                <input type="checkbox">
+                <span class="yuko-switch_slider round"></span>
+
+            </label>
+        </div>
+        <h3>Tab</h3>
+        <hr>
+        <div id="tab">
+            <ul class="yuko-tab">
+                <li class="yuko-tab_item">
+                    <span class="yuko-tab_item-avatar">
+                        1
+                    </span>
+                    <span class="yuko-tab_item-content">
+                        TAB_1
+                    </span>
+                </li>
+                <li class="yuko-tab_item">
+                    <span class="yuko-tab_item-avatar">
+                        2
+                    </span>
+                    <span class="yuko-tab_item-content">
+                        TAB_2
+                    </span>
+                </li>
+                <li class="yuko-tab_item">
+                    <span class="yuko-tab_item-avatar">
+                        3
+                    </span>
+                    <span class="yuko-tab_item-content">
+                        TAB_3
+                    </span>
+                </li>
+                <li class="yuko-tab_item">
+                    <span class="yuko-tab_item-avatar">
+                        4
+                    </span>
+                    <span class="yuko-tab_item-content">
+                        TAB_4
+                    </span>
+                </li>
+                <li class="yuko-tab_item-bar" data-disabled="true"></li>
+            </ul>
+        </div>
+        <h3>Text Fields</h3>
+        <hr>
+        <div id="textfields">
+            <div class="yuko-textfield yuko-js-textfield">
+                <input class="yuko-textfield_input" type="text" pattern="^-?[0-9]*\.?[0-9]+$" id="yuko-input1">
+                <label class="yuko-textfield_label" for="yuko-input1">Number...</label>
+                <span class="yuko-textfield_error">Input is not a number!</span>
+            </div>
+
+            <div class="yuko-textfield yuko-js-textfield yuko-textfield_floating-label">
+                <input class="yuko-textfield_input" type="text" pattern="^-?[0-9]*\.?[0-9]+$" id="yuko-input2">
+                <label class="yuko-textfield_label" for="yuko-input2">Number...</label>
+                <span class="yuko-textfield_error">Input is not a number!</span>
+            </div>
+
+            <div class="yuko-textfield yuko-js-textfield yuko-textfield_expandable">
+                <label class="yuko-button yuko-button-icon" for="yuko-input3">
+                    <i class="material-icons">&#xe8b6;</i>
+                </label>
+                <input class="yuko-textfield_input" type="text" pattern="^-?[0-9]*\.?[0-9]+$" id="yuko-input3">
+                <label class="yuko-textfield_label" for="yuko-input3">Number...</label>
+                <span class="yuko-textfield_error">Input is not a number!</span>
+            </div>
+        </div>
+        <h3>Tooltip</h3>
+        <hr>
+        <div id="tooltip">
+            <div class="yuko-tooltip_container">
+                <div class="material-icons yuko-tooltip_trigger" data-title="Follow" style="margin: 10% 45%">add</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../common/script/Yuko.js"></script>
+    <script src="../../common/script/Yuko.component.js"></script>
+
+    <script>
+        // init pagination
+        var p = document.querySelector('.yuko-pagination');
+        Yuko.widget.pagination(p, 30, 5, true, true, true);
+        var p2 = document.querySelectorAll('.yuko-pagination')[1];
+        Yuko.widget.pagination(p2, 5, 5, true, true, true);
+        var p3 = document.querySelectorAll('.yuko-pagination')[2];
+        Yuko.widget.pagination(p3, 6, 5, true, false, true);
+        var p4 = document.querySelectorAll('.yuko-pagination')[3];
+        Yuko.widget.pagination(p4, 6, 5, true, false, false);
+        // init scalable container
+        Yuko.widget.scaleContainer('.open', '.close', '.scale', '.page', 200);
+    </script>
+</body>
+
+</html>

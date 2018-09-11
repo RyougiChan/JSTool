@@ -508,7 +508,8 @@
 }
 
 .yuko-scalable-container {
-    position: fixed;
+    /* position: fixed; */
+    position: absolute;
     z-index: 4;
     border-radius: 100%;
     overflow: hidden;

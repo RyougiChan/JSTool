@@ -128,7 +128,7 @@
                         if (!_rc.classList.contains('is-visible')) {
                             _rc.classList.add('is-visible');
                         }
-                    } else if (_target.classList.contains('yuko-checkbox_tick-outline') ) {
+                    } else if (_target.classList.contains('yuko-checkbox_tick-outline')) {
                         // There is not a ripple container
                         _this = _target.parentElement.parentElement;
                     } else {
@@ -137,7 +137,7 @@
                     }
                     _last = _this.lastElementChild;
                     _input = _this.firstElementChild;
-                    var checkallbox = document.querySelector('.yuko-checkbox-all input[name="'+_input.name+'"]');
+                    var checkallbox = document.querySelector('.yuko-checkbox-all input[name="' + _input.name + '"]');
 
                     // If is a check-all checkbox
                     if (_this.classList.contains('yuko-checkbox-all')) {
@@ -166,9 +166,9 @@
                         _input.setAttribute('checked', '');
                         isCancel = false;
                     } else {
-                        if(checkallbox) {
+                        if (checkallbox) {
                             var checkallparent = checkallbox.parentElement;
-                            if(checkallparent.classList.contains('is-checked'))
+                            if (checkallparent.classList.contains('is-checked'))
                                 checkallparent.classList.remove('is-checked');
                             checkallbox.removeAttribute('checked');
                         }
@@ -180,7 +180,7 @@
 
             Yuko.utility.addEvent(document.body, fingerup, function (evt) {
                 var _target = event.target;
-                if (Yuko.utility.hasAncestor(_target, { className: 'yuko-checkbox'})) {
+                if (Yuko.utility.hasAncestor(_target, { className: 'yuko-checkbox' })) {
                     var _this, _last, _input;
                     if (_target.classList.contains('yuko-checkbox_ripple')) {
                         // Set ripple container visible
@@ -428,10 +428,10 @@
         'initSnackbar': function initSnackbar() {
             var snackbarHandler = function (evt) {
                 var _target = evt.target,
-                  snackbarTrigger,
-                  snackbar,
-                  snackbarBound,
-                  ancestor = Yuko.utility.hasAncestor(_target, { className: 'yuko-snackbar_trigger' });
+                    snackbarTrigger,
+                    snackbar,
+                    snackbarBound,
+                    ancestor = Yuko.utility.hasAncestor(_target, { className: 'yuko-snackbar_trigger' });
                 if (_target.classList.contains('yuko-snackbar_action')) {
                     snackbar = _target.parentElement;
                     var action = _target.getAttribute('data-action'),
@@ -447,54 +447,57 @@
                         actionHandler[action.toLowerCase()]();
                     }
                 }
-        
+
                 if (_target.classList.contains('yuko-snackbar_trigger')) {
-                  // itself
-                  snackbarTrigger = _target;
+                    // itself
+                    snackbarTrigger = _target;
                 } else if (ancestor) {
-                  snackbarTrigger = ancestor;
+                    snackbarTrigger = ancestor;
                 }
-                if(!snackbarTrigger) return;
+                if (!snackbarTrigger) return;
                 var s = snackbarTrigger.getAttribute('name');
-                snackbar = document.querySelector('.yuko-snackbar[name="'+s+'"]');
-          
+                snackbar = document.querySelector('.yuko-snackbar[name="' + s + '"]');
+
                 if (snackbar != undefined) {
-                  snackbarBound = snackbar.getBoundingClientRect();
-                  if (!snackbar.classList.contains('is-active')) {
-                    snackbar.classList.add('is-active');
-                  }
-                  setTimeout(function () {
-                    if (snackbar.classList.contains('is-active')) {
-                      snackbar.classList.remove('is-active');
+                    snackbarBound = snackbar.getBoundingClientRect();
+                    if (!snackbar.classList.contains('is-active')) {
+                        snackbar.classList.add('is-active');
                     }
-                  }, 4000);
+                    setTimeout(function () {
+                        if (snackbar.classList.contains('is-active')) {
+                            snackbar.classList.remove('is-active');
+                        }
+                    }, 4000);
                 }
-              };
+            };
             Yuko.utility.addEvent(document, 'click', snackbarHandler);
         },
         // List
         'initList': function initList() {
+            var listItems = document.querySelectorAll('.yuko-list .yuko-list_item');
+            for (var i = 0; i < listItems.length; i++) {
+                Yuko.utility.addEvent(listItems[i], 'click', Yuko.effect.rippleEffect);
+            }
             var list = document.querySelectorAll('.yuko-list'),
                 listClickHandler = function (evt) {
                     var _this = this,
                         _target = evt.target,
                         activeItem = _this.querySelector('.yuko-list_item.is-active'),
                         item;
-                    if(_target.classList.contains('yuko-list_item')) {
+                    if (_target.classList.contains('yuko-list_item')) {
                         item = _target;
-                    }else {
-                        item = Yuko.utility.hasAncestor(_target, { className: 'yuko-list_item'} );
+                    } else {
+                        item = Yuko.utility.hasAncestor(_target, { className: 'yuko-list_item' });
                     }
-                    
-                    if(!item) return;
-                    if(activeItem) activeItem.classList.remove('is-active');
+
+                    if (!item) return;
+                    if (activeItem) activeItem.classList.remove('is-active');
                     item.classList.add('is-active');
                     activeItem = item;
                 };
 
-            for(var i = 0; i < list.length; i++)
-            {
-                Yuko.utility.addEvent(list[i], fingerup, listClickHandler);
+            for (var i = 0; i < list.length; i++) {
+                Yuko.utility.addEvent(list[i], fingerdown, listClickHandler);
             }
         },
         // File Upload
@@ -586,6 +589,103 @@
             // In our test, touchstart event can not trigger `_input.click()` on mobile device. 
             Yuko.utility.addEvent(document, 'click', fileUploadHandler);
         },
+        // ProgressBar
+        'initProgressBar': function initProgressBar() {
+            var progressbar = document.querySelectorAll('.yuko-loading_progressbar-indeterminate > .progressbar');
+            for (var i = 0; i < progressbar.length; i++) {
+                Yuko.utility.animate(
+                    progressbar[i],
+                    {
+                        properties: { left: '100%', width: '80%' },
+                        // easing: 'cubic-bezier(.4,0,.2,1)',
+                        easings: ['cubic-bezier(.65,0,.65,0)', 'cubic-bezier(.4,0,.4,1)'],
+                        duration: 1500,
+                        cycle: true
+                    }
+                );
+            }
+        },
+        // Menu
+        'initMenu': function initMenu() {
+            var trigs = document.querySelectorAll('.trigger-button');
+
+            function callback(e) {
+                var menuContainer = e.target.nextElementSibling,
+                    isshow = menuContainer.getAttribute('data-show') === 'false' ? false : true,
+                    orientation = menuContainer.getAttribute('data-orientation') ? menuContainer.getAttribute('data-orientation') : 't',
+                    index = parseInt(e.target.getAttribute('data-index')),
+                    menuHeight = menuContainer.offsetHeight,
+                    menuWidth = menuContainer.offsetWidth,
+                    clip = {
+                        'lt': [
+                            // left-top
+                            'rect(' + 0 + 'px,' + 0 + 'px,' + 0 + 'px,' + 0 + 'px)',
+                            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,' + 0 + 'px)'
+                        ],
+                        'rt': [
+                            // right-top
+                            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + 0 + 'px,' + (menuWidth + 10) + 'px)',
+                            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,' + 0 + 'px)'
+                        ],
+                        'lb': [
+                            // left-bottom
+                            'rect(' + (menuHeight + 10) + 'px,' + 0 + 'px,' + (menuHeight + 10) + 'px,' + 0 + 'px)',
+                            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,' + 0 + 'px)'
+                        ],
+                        'rb': [
+                            // right-bottom
+                            'rect(' + (menuHeight + 10) + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,' + (menuWidth + 10) + 'px)',
+                            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,' + 0 + 'px)'
+                        ],
+                        'l': [
+                            // left
+                            'rect(' + 0 + 'px,' + 0 + 'px,' + (menuHeight + 10) + 'px,' + 0 + 'px)',
+                            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,' + 0 + 'px)'
+                        ],
+                        't': [
+                            // top
+                            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + 0 + 'px,' + 0 + 'px)',
+                            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,' + 0 + 'px)'
+                        ],
+                        'r': [
+                            // right
+                            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,' + (menuWidth + 10) + 'px)',
+                            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,' + 0 + 'px)'
+                        ],
+                        'b': [
+                            // bottom
+                            'rect(' + (menuHeight + 10) + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,' + 0 + 'px)',
+                            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,' + 0 + 'px)'
+                        ],
+                        'm': [
+                            // middle
+                            'rect(' + (menuHeight + 10) + 'px,' + 0 + 'px,' + 0 + 'px,' + (menuWidth + 10) + 'px)',
+                            'rect(' + 0 + 'px,' + (menuWidth + 10) + 'px,' + (menuHeight + 10) + 'px,' + 0 + 'px)'
+                        ]
+                    };
+                if (!clip.hasOwnProperty(orientation)) orientation = 't';
+                if (isshow) {
+                    Yuko.utility.animate(menuContainer, {
+                        properties: { clip: clip[orientation][0], opacity: 0 },
+                        duration: 500,
+                        easing: 'cubic-bezier(0.46, 0.03, 0.52, 0.96)'
+                    });
+                    menuContainer.setAttribute('data-show', 'false');
+                    // menuContainer.style.display = 'none';
+                } else {
+                    menuContainer.style.display = 'block';
+                    Yuko.utility.animate(menuContainer, {
+                        properties: { clip: clip[orientation][1], opacity: 1 },
+                        duration: 500,
+                        easing: 'cubic-bezier(0.46, 0.03, 0.52, 0.96)'
+                    });
+                    menuContainer.setAttribute('data-show', 'true');
+                }
+            }
+            for (var i = 0; i < trigs.length; i++) {
+                Yuko.utility.addEvent(trigs[i], fingerdown, callback);
+            }
+        },
         // Tooltip
         'initToolTip': function initToolTip() {
             var tooltip, // tooptip
@@ -613,12 +713,13 @@
                         tooltip.classList.toggle('yuko-tooltip');
                         tooltip.classList.toggle('is-active');
                         tooltip.innerHTML = title;
+                        container.appendChild(tooltip);
                         tooltip_bound = tooltip.getBoundingClientRect();
                         // tooltip.style.top = trigger_bound.bottom + 4 + 'px';
-                        tooltip.style.top = container_bound.bottom + 4 + 'px';
+                        tooltip.style.top = trigger_bound.bottom + 4 + 'px';
                         // tooltip.style.left = trigger_bound.left + (trigger.offsetWidth - tooltip.offsetWidth) / 2 + 'px';
-                        tooltip.style.left = container_bound.left + 'px';
-                        container.appendChild(tooltip);
+                        tooltip.style.left = trigger_bound.left + (trigger.offsetWidth - tooltip.offsetWidth)/2 + 'px';
+                        // container.appendChild(tooltip);
                     }
 
                 },
