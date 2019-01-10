@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>僕の紹介</title>
+    <style>
+        html,
+        body,
+        root {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+            /* user-select: none; */
+            cursor: grab;
+            cursor: -webkit-grab;
+            background: white;
+        }
+
+        body:active {
+            cursor: grabbing;
+            cursor: -webkit-grabbing;
+        }
+
+        #ruretto-display {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 362;
+            width: 100%;
+            height: 100%;
+            transform: translateX(-2560px);
+            -webkit-transform: translateX(-2560px);
+            transition: transform 1.2s cubic-bezier(0.075, 0.82, 0.165, 1);
+            -webkit-transition: transform 1.2s cubic-bezier(0.075, 0.82, 0.165, 1);
+            background: #f1f1f1;
+            color: #e4faff;
+            cursor: default;
+        }
+
+        #ruretto-display.show {
+            transform: translateX(0);
+            -webkit-transform: translateX(0);
+        }
+
+        #button-close {
+            position: fixed;
+            right: 44px;
+            top: 48%;
+            width: 44px;
+            height: 44px;
+            border: 1px #000000 solid;
+            border-radius: 50%;
+            z-index: 1;
+            cursor: pointer;
+            background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIj8+Cjxzdmcgd2lkdGg9IjQ4MCIgaGVpZ2h0PSI0ODAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6c3ZnPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiA8IS0tIENyZWF0ZWQgd2l0aCBTVkctZWRpdCAtIGh0dHA6Ly9zdmctZWRpdC5nb29nbGVjb2RlLmNvbS8gLS0+CiA8Zz4KICA8dGl0bGU+TGF5ZXIgMTwvdGl0bGU+CiAgPGxpbmUgdHJhbnNmb3JtPSJyb3RhdGUoNDUgMjM4LjAwMzg0NTIxNDg0MzcyLDIzMikgIiBpZD0ic3ZnXzQiIHkyPSIyMzIiIHgyPSIzNjguMDA3NjkyIiB5MT0iMjMyIiB4MT0iMTA4IiBzdHJva2Utd2lkdGg9IjEwIiBzdHJva2U9IiMwMDAwMDAiIGZpbGw9Im5vbmUiLz4KICA8bGluZSB0cmFuc2Zvcm09InJvdGF0ZSgxMzUgMjM4LDIzMy41MDAwMDAwMDAwMDAwMykgIiBpZD0ic3ZnXzUiIHkyPSIyMzMuNSIgeDI9IjM2OC4wMDM4NDciIHkxPSIyMzMuNSIgeDE9IjEwNy45OTYxNTUiIHN0cm9rZS13aWR0aD0iMTAiIHN0cm9rZT0iIzAwMDAwMCIgZmlsbD0ibm9uZSIvPgogPC9nPgo8L3N2Zz4=) no-repeat center center;
+            background-size: contain; 
+            display: none;
+        }
+
+        #button-close.show {
+            display: block;
+            background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIj8+Cjxzdmcgd2lkdGg9IjQ4MCIgaGVpZ2h0PSI0ODAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6c3ZnPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiA8IS0tIENyZWF0ZWQgd2l0aCBTVkctZWRpdCAtIGh0dHA6Ly9zdmctZWRpdC5nb29nbGVjb2RlLmNvbS8gLS0+CiA8Zz4KICA8dGl0bGU+TGF5ZXIgMTwvdGl0bGU+CiAgPGxpbmUgc3Ryb2tlPSIjZmZmZmZmIiB0cmFuc2Zvcm09InJvdGF0ZSg0NSAyMzguMDAzODQ1MjE0ODQzNzIsMjMyKSAiIGlkPSJzdmdfNCIgeTI9IjIzMiIgeDI9IjM2OC4wMDc2OTIiIHkxPSIyMzIiIHgxPSIxMDgiIHN0cm9rZS13aWR0aD0iMTAiIGZpbGw9Im5vbmUiLz4KICA8bGluZSBzdHJva2U9IiNmZmZmZmYiIHRyYW5zZm9ybT0icm90YXRlKDEzNSAyMzgsMjMzLjUwMDAwMDAwMDAwMDAzKSAiIGlkPSJzdmdfNSIgeTI9IjIzMy41IiB4Mj0iMzY4LjAwMzg0NyIgeTE9IjIzMy41IiB4MT0iMTA3Ljk5NjE1NSIgc3Ryb2tlLXdpZHRoPSIxMCIgZmlsbD0ibm9uZSIvPgogPC9nPgo8L3N2Zz4=) no-repeat center center;
+            border: 1px #ffffff solid;
+            background-size: contain; 
+            z-index: 364;
+        }
+
+        #button-close:hover {
+            border: 1px #000000 solid;
+            background: #000000 url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIj8+Cjxzdmcgd2lkdGg9IjQ4MCIgaGVpZ2h0PSI0ODAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6c3ZnPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiA8IS0tIENyZWF0ZWQgd2l0aCBTVkctZWRpdCAtIGh0dHA6Ly9zdmctZWRpdC5nb29nbGVjb2RlLmNvbS8gLS0+CiA8Zz4KICA8dGl0bGU+TGF5ZXIgMTwvdGl0bGU+CiAgPGxpbmUgc3Ryb2tlPSIjZmZmZmZmIiB0cmFuc2Zvcm09InJvdGF0ZSg0NSAyMzguMDAzODQ1MjE0ODQzNzIsMjMyKSAiIGlkPSJzdmdfNCIgeTI9IjIzMiIgeDI9IjM2OC4wMDc2OTIiIHkxPSIyMzIiIHgxPSIxMDgiIHN0cm9rZS13aWR0aD0iMTAiIGZpbGw9Im5vbmUiLz4KICA8bGluZSBzdHJva2U9IiNmZmZmZmYiIHRyYW5zZm9ybT0icm90YXRlKDEzNSAyMzgsMjMzLjUwMDAwMDAwMDAwMDAzKSAiIGlkPSJzdmdfNSIgeTI9IjIzMy41IiB4Mj0iMzY4LjAwMzg0NyIgeTE9IjIzMy41IiB4MT0iMTA3Ljk5NjE1NSIgc3Ryb2tlLXdpZHRoPSIxMCIgZmlsbD0ibm9uZSIvPgogPC9nPgo8L3N2Zz4=) no-repeat center center;
+            background-size: contain; 
+        }
+
+        .ruretto-item,
+        .ruretto-text.text,
+        .ruretto-title.text,
+        .ruretto-content.text,
+        .ruretto-desc.text,
+        .ruretto-index.text {
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            -o-user-select: none;
+            user-select: none;
+        }
+
+        .ruretto-item {
+            position: absolute;
+            width: 220px;
+            height: 310px;
+            transform: translate3d(850px, 512px, 0px) rotateZ(360deg) scale(1);
+            -webkit-transform: translate3d(850px, 512px, 0px) rotateZ(360deg) scale(1);
+            /* transition: transform 1.2s cubic-bezier(0.075, 0.82, 0.165, 1); */
+            /* -webkit-transition: transform 1.2s cubic-bezier(0.075, 0.82, 0.165, 1); */
+            background: rgb(74, 66, 173);
+            z-index: 100;
+            visibility: inherit;
+            opacity: 1;
+            color: white;
+        }
+
+        .ruretto-item:hover {
+            box-shadow: 4px 4px 10px 0px #848484;
+        }
+
+        .ruretto-item.show {
+            z-index: 363 !important;
+            box-shadow: none;
+            border: 1px solid white;
+            /* transform: translate3d(850px, 320px, 0px) rotateZ(360deg) scale(2.0) !important; */
+            /* transform: translate3d(520px, 320px, 0px) rotateZ(360deg) scale(2.0) !important; */
+            transition: transform 1.0s cubic-bezier(0.6, 0.25, 0.5, 0.8);
+        }
+
+        .ruretto-item.show.remove {
+            transform: translate3d(-2560px, 320px, 0px) rotateZ(360deg) scale(2.0) !important;
+        }
+
+        .ruretto-text {
+            width: 100%;
+            height: 100%;
+        }
+
+        .ruretto-title {
+            font-size: 2.5em;
+            padding: 24px;
+        }
+
+        .ruretto-content {
+            font-size: 1.2em;
+            padding: 0 24px;
+        }
+
+        .ruretto-desc {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            max-width: 42%;
+            font-size: 0.8em;
+            padding: 24px;
+        }
+
+        .ruretto-index {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            max-width: 42%;
+            font-size: 3.2em;
+            padding: 24px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root">
+        <div id="ruretto">
+
+        </div>
+
+        <div id="ruretto-display">
+            <div class="ruretto-title">
+                恐れ入りますが、
+            </div>
+            <div class="ruretto-content">
+                八幡西区アニメ動画玲英子ありがとうございます。ポテトチップス八幡西区アニメ動画玲英子ありがとうございます。ポテトチップス八幡西区アニメ動画玲英子ありがとうございます。ポテトチップス八幡西区アニメ動画玲英子ありがとうございます。ポテトチップス八幡西区アニメ動画玲英子ありがとうございます。ポテトチップス八幡西区アニメ動画玲英子ありがとうございます。ポテトチップス
+            </div>
+            <div class="ruretto-desc">
+                八幡西区アニメ動画玲英子ありがとうございます。ポテトチップス
+            </div>
+        </div>
+
+        <div id="button-close">
+            
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            'use strict';
+
+            var RURETTO_ITEM_NUMBER = 32,
+                WINDOW_WIDTH,
+                WINDOW_HEIGHT,
+                INERTANCE_VALUE = 24,
+                SACLE_RATIO = 0.04,
+                RURETTO_ITEM_REMOVE_DURATION = 1.5,
+                ruretto = document.getElementById('ruretto'),
+                rurettoDisplay = document.getElementById('ruretto-display'),
+                buttonClose = document.getElementById('button-close'),
+                propCollection = [],
+                rurettoItems = [],
+                transform,
+                originPositionY,
+                rotateAngle,
+                cicleRadius,
+                ciclePosition,
+                data = [];
+
+            for (var k = 0; k < RURETTO_ITEM_NUMBER; k++) {
+                data.push({
+                    title: '恐れ入りますが、',
+                    content: '',
+                    // content: 'content' + k　+ '八幡西区アニメ動画玲英子ありがとうございます。ポテトチップス',
+                    desc: 'desc' + k + '八幡西区アニメ動画玲英子ありがとうございます。ポテトチップス',
+                    index: k + 1 < 10 ? '0' + (k + 1) : '' + (k + 1)
+                });
+            }
+            window.onload = function () {
+
+                WINDOW_WIDTH = document.documentElement.offsetWidth;
+                WINDOW_HEIGHT = document.documentElement.offsetHeight;
+
+                var w = WINDOW_WIDTH,
+                    h = WINDOW_HEIGHT - originPositionY,
+                    prop;
+                transform = { position: { x: 0, y: 0, z: 0 }, rotation: 0, scale: 0 };
+                originPositionY = 512;
+                rotateAngle = 360 / RURETTO_ITEM_NUMBER;
+                cicleRadius = w / 2.4;
+                ciclePosition = { x: w / 2 - 110, y: originPositionY + cicleRadius, z: 0 };
+
+                for (var i = 0; i < RURETTO_ITEM_NUMBER; i++) {
+                    var rurettoItem = document.createElement('div'),
+                        rurettoText = document.createElement('div'),
+                        rurettoTitle = document.createElement('div'),
+                        rurettoContent = document.createElement('div'),
+                        rurettoDesc = document.createElement('div'),
+                        rurettoIndex = document.createElement('div'),
+                        mark = { x: 1, y: 1 };
+                    rurettoItem.setAttribute('item-id', i + 1);
+                    rurettoItem.classList.add('ruretto-item');
+                    rurettoText.classList.add('ruretto-text');
+                    rurettoTitle.classList.add('ruretto-title');
+                    rurettoContent.classList.add('ruretto-content');
+                    rurettoDesc.classList.add('ruretto-desc');
+                    rurettoIndex.classList.add('ruretto-index');
+                    rurettoText.classList.add('text');
+                    rurettoTitle.classList.add('text');
+                    rurettoContent.classList.add('text');
+                    rurettoDesc.classList.add('text');
+                    rurettoIndex.classList.add('text');
+
+                    rurettoTitle.innerText = data[i].title;
+                    rurettoContent.innerText = data[i].content;
+                    rurettoDesc.innerText = data[i].desc;
+                    rurettoIndex.innerText = data[i].index;
+
+                    transform.rotation = rotateAngle * i;
+
+                    if (transform.rotation > 360) {
+                        transform.rotation -= 360;
+                    } else if (transform.rotation < 0) {
+                        transform.rotation += 360;
+                    }
+
+                    if (transform.rotation >= 0 && transform.rotation < 90) {
+                        mark.x = 1;
+                        mark.y = -1;
+                    } else if (transform.rotation >= 90 && transform.rotation < 180) {
+                        mark.x = 1;
+                        mark.y = 1;
+                    } else if (transform.rotation >= 180 && transform.rotation < 270) {
+                        mark.x = -1;
+                        mark.y = 1;
+                    } else {
+                        mark.x = -1;
+                        mark.y = -1;
+                    }
+
+                    if (transform.rotation < 180) {
+                        transform.scale = 1 - (transform.rotation) / RURETTO_ITEM_NUMBER * 2 * SACLE_RATIO;
+                        rurettoItem.style.zIndex = Math.round(180 - transform.rotation);
+                    } else {
+                        transform.scale = 1 - (360 - transform.rotation) / RURETTO_ITEM_NUMBER * 2 * SACLE_RATIO;
+                        rurettoItem.style.zIndex = Math.round(transform.rotation - 180);
+                    }
+
+                    transform.position.x = ciclePosition.x + mark.x * Math.abs(cicleRadius * Math.sin(Math.PI * (360 - transform.rotation) / 180));
+                    transform.position.y = ciclePosition.y + mark.y * Math.abs(cicleRadius * Math.cos(Math.PI * (360 - transform.rotation) / 180));
+                    transform.position.z = 0;
+
+                    rurettoItem.style.transform = 'translate3d(' + transform.position.x + 'px, ' + transform.position.y + 'px, ' + transform.position.z + 'px) rotateZ(' + transform.rotation + 'deg) scale(' + transform.scale + ')  perspective(0) rotateY(0)';
+                    var red = Math.round(Math.random() * 255),
+                        green = Math.round(Math.random() * 255),
+                        blue = Math.round(Math.random() * 255);
+
+                    red = red < 50 ? red + 50 : red;
+                    // red = red > 200 ? red - 50 : red;
+                    green = green < 50 ? green + 50 : green;
+                    // green = green > 200 ? green - 50 : green;
+                    blue = blue < 50 ? blue + 50 : blue;
+                    // blue = blue > 200 ? blue - 50 : blue;
+
+                    rurettoItem.style.background = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
+                    rurettoText.appendChild(rurettoTitle);
+                    rurettoText.appendChild(rurettoContent);
+                    rurettoText.appendChild(rurettoDesc);
+                    rurettoText.appendChild(rurettoIndex);
+                    rurettoItem.appendChild(rurettoText);
+                    appendRurettoItem(ruretto, rurettoItem, data);
+                    prop = {
+                        position: { x: transform.position.x, y: transform.position.y, z: transform.position.z },
+                        scale: transform.scale,
+                        rotation: transform.rotation,
+                        style: {
+                            transform: rurettoItem.style.transform,
+                            background: rurettoItem.style.background,
+                            zIndex: rurettoItem.style.zIndex
+                        }
+                    };
+                    propCollection.push(prop);
+                    rurettoItems.push(rurettoItem);
+                }
+            }
+
+            var isMouseDown = false,
+                pressDownPosition = 0,
+                pressMoveDistance = 0,
+                pressMoveKeyframeDistance = 0,
+                tempRotationAngle = 0;
+
+            document.addEventListener('mousedown', function (evt) {
+                isMouseDown = true;
+                pressDownPosition = 0;
+                pressMoveDistance = 0;
+                pressMoveKeyframeDistance = 0;
+                tempRotationAngle = 0;
+                pressDownPosition = evt.pageX;
+            });
+
+            document.addEventListener('mousemove', function (evt) {
+                if (isMouseDown && evt.target.id != 'ruretto-display' && !hasAncestor(evt.target, { id: 'ruretto-display' })) {
+                    pressMoveKeyframeDistance = evt.pageX - pressDownPosition - pressMoveDistance;
+                    pressMoveDistance = evt.pageX - pressDownPosition;
+                    tempRotationAngle = pressMoveKeyframeDistance / 10;
+                    refreshRurettoItem(tempRotationAngle);
+                }
+            });
+
+            document.addEventListener('mouseup', function (evt) {
+                isMouseDown = false;
+                var tar = evt.target;
+
+                if(tar.id === 'button-close') {
+                    var showingItem = document.querySelector('.ruretto-item.show');
+                    if(showingItem) hideRurettoItem(showingItem);
+                }
+
+                if (tar.classList.contains('text') && evt.pageX - pressDownPosition === 0) {
+                    var thisItem = hasAncestor(tar, { className: 'ruretto-item' });
+                    var thisRotation = parseFloat(/rotateZ?\((\d+\.?\d*\w+)\)/.exec(thisItem.style.transform)[1]);
+                    if (thisRotation >= 360) thisRotation -= 360;
+                    var keyframeRotation = thisRotation / 16.7,
+                        rotateAnimate = function () {
+                            if (thisRotation > 0) {
+                                refreshRurettoItem(-keyframeRotation);
+                                thisRotation -= keyframeRotation;
+                                requestAnimationFrame(rotateAnimate);
+                            } else {
+                                thisRotation = parseFloat(/rotateZ?\((\d+\.?\d*\w+)\)/.exec(thisItem.style.transform)[1]);
+                                refreshRurettoItem(360 - thisRotation);
+                                showRurettoItem(thisItem);
+                            }
+                        };
+                    requestAnimationFrame(rotateAnimate);
+                } else {
+                    if(evt.pageX - pressDownPosition === 0 || evt.target.id == 'ruretto-display' || hasAncestor(evt.target, { id: 'ruretto-display' }) != undefined) return;
+                    rurettoInertance(evt.pageX - pressDownPosition > 0 ? -INERTANCE_VALUE :  INERTANCE_VALUE);
+                }
+            }, true);
+
+            function showRurettoItem(theItem) {
+                rurettoDisplay.style.backgroundColor = theItem.style.backgroundColor;
+                rurettoDisplay.style.color = rgbColorReverse(theItem.style.backgroundColor);
+                var ot = theItem.style.transform;
+                theItem.classList.add('show');
+                theItem.style.transform = 'translate3d('+((WINDOW_WIDTH - theItem.offsetWidth)/2)+'px, '+((WINDOW_HEIGHT-theItem.offsetHeight)/2)+'px, 0px) rotateZ(360deg) scale(2.0)';
+                buttonClose.classList.add('show');
+                rurettoDisplay.classList.add('show');
+                setTimeout(function(){
+                    theItem.classList.add('remove');
+                    theItem.style.transform = ot;
+                    appendRurettoItemContent();
+                }, RURETTO_ITEM_REMOVE_DURATION * 1000);
+            }
+
+            function rgbColorReverse(color) {
+                var rgb = /rgb\((\d+),\s*(\d+),\s*(\d+)\)/ig.exec(color);
+                return 'rgb(' + [255 - rgb[1], 255 - rgb[2], 255 - rgb[3]].join(',') + ')';
+            }
+
+            function appendRurettoItemContent() {
+                // rurettoDisplay.innerHTML = '';
+
+            }
+            
+            function hideRurettoItem(theItem) {
+                theItem.classList.remove('show');
+                theItem.classList.remove('remove');
+                buttonClose.classList.remove('show');
+                rurettoDisplay.classList.remove('show');
+            }
+
+            function appendRurettoItem(target, item, data) {
+                if (!item || !target) return;
+                target.appendChild(item);
+            }
+
+            function rurettoInertance(rotationInertance) {
+                if (rotationInertance >= 360) rotationInertance -= 360;
+                if (rotationInertance <= -360) rotationInertance += 360;
+                var keyframeRotation = rotationInertance / 16.7,
+                    isAnticlockwise = rotationInertance < 0,
+                    rotateAnimate = function () {
+                        if (!isAnticlockwise && rotationInertance > 0) {
+                            refreshRurettoItem(-keyframeRotation);
+                            rotationInertance -= keyframeRotation;
+                            requestAnimationFrame(rotateAnimate);
+                        }
+                        if (isAnticlockwise && rotationInertance < 0) {
+                            refreshRurettoItem(-keyframeRotation);
+                            rotationInertance -= keyframeRotation;
+                            requestAnimationFrame(rotateAnimate);
+                        }
+                    };
+                requestAnimationFrame(rotateAnimate);
+            }
+
+            function refreshRurettoItem(rotationAngle) {
+                for (var i = 0; i < RURETTO_ITEM_NUMBER; i++) {
+                    var rurettoItem = rurettoItems[i],
+                        data,
+                        mark = { x: 1, y: 1 },
+                        prop;
+
+                    transform = {
+                        position: propCollection[i].position,
+                        rotation: propCollection[i].rotation,
+                        scale: propCollection[i].scale
+                    };
+
+                    transform.rotation = transform.rotation + rotationAngle;
+
+                    if (transform.rotation > 360) {
+                        transform.rotation -= 360;
+                    } else if (transform.rotation < 0) {
+                        transform.rotation += 360;
+                    }
+
+                    if (transform.rotation >= 0 && transform.rotation < 90) {
+                        mark.x = 1;
+                        mark.y = -1;
+                    } else if (transform.rotation >= 90 && transform.rotation < 180) {
+                        mark.x = 1;
+                        mark.y = 1;
+                    } else if (transform.rotation >= 180 && transform.rotation < 270) {
+                        mark.x = -1;
+                        mark.y = 1;
+                    } else {
+                        mark.x = -1;
+                        mark.y = -1;
+                    }
+
+                    if (transform.rotation < 180) {
+                        transform.scale = 1 - (transform.rotation) / RURETTO_ITEM_NUMBER * 2 * SACLE_RATIO;
+                        rurettoItem.style.zIndex = Math.round(180 - transform.rotation);
+                    } else {
+                        transform.scale = 1 - (360 - transform.rotation) / RURETTO_ITEM_NUMBER * 2 * SACLE_RATIO;
+                        rurettoItem.style.zIndex = Math.round(transform.rotation - 180);
+                    }
+
+                    transform.position.x = ciclePosition.x + mark.x * Math.abs(cicleRadius * Math.sin(Math.PI * (360 - transform.rotation) / 180));
+                    transform.position.y = ciclePosition.y + mark.y * Math.abs(cicleRadius * Math.cos(Math.PI * (360 - transform.rotation) / 180));
+                    transform.position.z = 0;
+                    
+                    rurettoItem.style.transform = 'translate3d(' + transform.position.x + 'px, ' + transform.position.y + 'px, ' + transform.position.z + 'px) rotate(' + transform.rotation + 'deg) scale(' + transform.scale + ')  perspective(0) rotateY(0)';
+                    
+                    prop = {
+                        position: { x: transform.position.x, y: transform.position.y, z: transform.position.z },
+                        scale: transform.scale,
+                        rotation: transform.rotation,
+                        style: {
+                            transform: rurettoItem.style.transform,
+                            background: rurettoItem.style.background,
+                            zIndex: rurettoItem.style.zIndex
+                        }
+                    };
+                    propCollection[i] = prop;
+                }
+            }
+
+            /**
+             * Check if element has the specific ancestor
+             * @param {Element} ele this element
+             * @param {{id:string, className:string, nodeName:string}} prop specific properties
+             * 
+             * @returns return the first matched element if exist, else return null.
+             */
+            function hasAncestor(ele, prop) {
+                if (!ele || !prop) return;
+                var id = prop.id,
+                    className = prop.className,
+                    nodeName = prop.nodeName;
+                if (!(id || className || nodeName)) return;
+
+                var parent,
+                    tempTarget;
+
+                if (id) {
+                    parent = ele.parentElement;
+                    if(null == parent) return;
+                    while (parent != document.documentElement && parent.nodeName.toLocaleLowerCase() != 'body') {
+                        if (parent.id == id) {
+                            tempTarget = parent;
+                            break;
+                        } else {
+                            parent = parent.parentElement;
+                        }
+                    }
+                }
+                if (className) {
+                    if (tempTarget) {
+                        if (!tempTarget.classList.contains(className)) {
+                            tempTarget = null;
+                        }
+                    } else {
+                        parent = ele.parentElement;
+                        while (null != parent && parent != document.documentElement && parent.nodeName.toLocaleLowerCase() != 'body') {
+                            if (parent.classList.contains(className)) {
+                                tempTarget = parent;
+                                break;
+                            } else {
+                                parent = parent.parentElement;
+                            }
+                        }
+                    }
+                }
+                if (nodeName) {
+                    nodeName = nodeName.toLocaleLowerCase();
+                    if (tempTarget) {
+                        if (tempTarget.nodeName.toLocaleLowerCase() != nodeName) {
+                            tempTarget = null;
+                        }
+                    } else {
+                        parent = ele.parentElement;
+                        while (parent.nodeName.toLocaleLowerCase() != 'body') {
+                            if (parent.nodeName.toLocaleLowerCase() == nodeName) {
+                                tempTarget = parent;
+                                break;
+                            } else {
+                                parent = parent.parentElement;
+                            }
+                        }
+                    }
+                }
+                return tempTarget;
+            }
+        })();
+    </script>
+</body>
+
+</html>
